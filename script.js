@@ -9,6 +9,15 @@ const PRICE = {
   Immortal: 30000
 };
 
+const PAKET = {
+  "Epic 10": 65000,
+  "Legend 10": 75000,
+  "Mythic 10": 170000,
+  "Honor 10": 200000,
+  "Glory 10": 250000,
+  "Immortal 10": 290000
+};
+
 const RANK_ORDER = [
   "Master","GM","Epic","Legend",
   "Mythic","Honor","Glory","Immortal"
@@ -19,36 +28,46 @@ const DIVISI = ["V","IV","III","II","I"];
 const STAR_PER_DIV = 5;
 const STAR_PER_RANK = 25;
 
-// Populate rank
-const rankAwal = document.getElementById("rankAwal");
-const divAwal = document.getElementById("divAwal");
+// ---------- INIT ----------
+function fillRank(selectId) {
+  const s = document.getElementById(selectId);
+  RANK_ORDER.forEach(r => {
+    let o = document.createElement("option");
+    o.value = r;
+    o.textContent = r;
+    s.appendChild(o);
+  });
+}
 
-RANK_ORDER.forEach(r => {
-  let o = document.createElement("option");
-  o.value = r;
-  o.textContent = r;
-  rankAwal.appendChild(o);
-});
+["rank1","rankA","rankB"].forEach(fillRank);
 
-rankAwal.onchange = updateDivisi;
-updateDivisi();
-
-function updateDivisi() {
-  divAwal.innerHTML = "";
-  if (RANK_DIVISI.includes(rankAwal.value)) {
+function updateDiv(rankId, divId) {
+  const rank = document.getElementById(rankId).value;
+  const div = document.getElementById(divId);
+  div.innerHTML = "";
+  if (RANK_DIVISI.includes(rank)) {
     DIVISI.forEach(d => {
       let o = document.createElement("option");
       o.value = d;
       o.textContent = d;
-      divAwal.appendChild(o);
+      div.appendChild(o);
     });
   } else {
     let o = document.createElement("option");
     o.textContent = "-";
-    divAwal.appendChild(o);
+    div.appendChild(o);
   }
 }
 
+updateDiv("rank1","div1");
+updateDiv("rankA","divA");
+updateDiv("rankB","divB");
+
+rank1.onchange = () => updateDiv("rank1","div1");
+rankA.onchange = () => updateDiv("rankA","divA");
+rankB.onchange = () => updateDiv("rankB","divB");
+
+// ---------- LOGIC ----------
 function rankToStar(rank, div, star) {
   let r = RANK_ORDER.indexOf(rank);
   if (RANK_DIVISI.includes(rank)) {
@@ -58,15 +77,7 @@ function rankToStar(rank, div, star) {
   return r * STAR_PER_RANK + star;
 }
 
-function hitung() {
-  let rank = rankAwal.value;
-  let div = divAwal.value;
-  let star = parseInt(document.getElementById("starAwal").value);
-  let add = parseInt(document.getElementById("tambahStar").value);
-
-  let start = rankToStar(rank, div, star);
-  let end = start + add;
-
+function hitung(start, end) {
   let detail = {};
   RANK_ORDER.forEach(r => detail[r] = 0);
 
@@ -75,19 +86,43 @@ function hitung() {
     detail[r]++;
   }
 
-  let output = "--- DETAIL INVOICE ---\n";
+  let out = "--- DETAIL INVOICE ---\n";
   let total = 0;
 
   for (let r of RANK_ORDER) {
     if (detail[r] > 0) {
-      let harga = detail[r] * PRICE[r];
-      total += harga;
-      output += `${r.padEnd(10)}: ${detail[r]}⭐ x Rp${PRICE[r].toLocaleString()} = Rp${harga.toLocaleString()}\n`;
+      let h = detail[r] * PRICE[r];
+      total += h;
+      out += `${r.padEnd(10)}: ${detail[r]}⭐ x Rp${PRICE[r].toLocaleString()} = Rp${h.toLocaleString()}\n`;
     }
   }
+  out += "------------------------------\n";
+  out += `TOTAL        : Rp${total.toLocaleString()}`;
+  hasil.textContent = out;
+}
 
-  output += "------------------------------\n";
-  output += `TOTAL        : Rp${total.toLocaleString()}`;
+// ---------- MENU ----------
+function hitungPerBintang() {
+  let start = rankToStar(rank1.value, div1.value, +star1.value);
+  hitung(start, start + +addStar.value);
+}
 
-  document.getElementById("hasil").textContent = output;
+function hitungAntarRank() {
+  let start = rankToStar(rankA.value, divA.value, +starA.value);
+  let end = rankToStar(rankB.value, divB.value, +starB.value);
+  hitung(start, end);
+}
+
+// ---------- UI ----------
+function showTab(id) {
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+// Paket
+const p = document.getElementById("paketList");
+for (let k in PAKET) {
+  let li = document.createElement("li");
+  li.textContent = `${k} — Rp${PAKET[k].toLocaleString()}`;
+  p.appendChild(li);
 }
