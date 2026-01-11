@@ -1,36 +1,36 @@
 body {
-  background: #0b0b0b;
-  color: #00ff88;
-  font-family: monospace;
-  padding: 20px;
+  background:#0b0b0b;
+  color:#00ff99;
+  font-family:monospace;
+  padding:20px;
 }
 
-h2 {
-  text-align: center;
+h1 { text-align:center; }
+
+.tabs button {
+  width:32%;
+  padding:10px;
+  background:#000;
+  color:#00ff99;
+  border:1px solid #00ff99;
+  cursor:pointer;
 }
 
-.box {
-  border: 1px solid #00ff88;
-  padding: 10px;
-  margin-bottom: 10px;
-}
+.tab { display:none; margin-top:15px; }
+.tab.active { display:block; }
 
-select, input, button {
-  width: 100%;
-  padding: 6px;
-  margin-top: 5px;
-  background: #000;
-  color: #00ff88;
-  border: 1px solid #00ff88;
-}
-
-button {
-  cursor: pointer;
+select,input,button {
+  width:100%;
+  margin:5px 0;
+  padding:6px;
+  background:#000;
+  color:#00ff99;
+  border:1px solid #00ff99;
 }
 
 pre {
-  background: #000;
-  padding: 10px;
-  margin-top: 15px;
-  white-space: pre-wrap;
+  background:#000;
+  padding:10px;
+  margin-top:15px;
+  white-space:pre-wrap;
 }
