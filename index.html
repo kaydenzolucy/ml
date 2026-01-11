@@ -7,57 +7,57 @@
 </head>
 <body>
 
-<h1>JOKI MLBB CALCULATOR PRO</h1>
+<div class="container">
+  <h1>JOKI MLBB CALCULATOR PRO</h1>
 
-<div class="tabs">
-  <button onclick="showTab('bintang')">⭐ Per Bintang</button>
-  <button onclick="showTab('antar')">🔁 Antar Rank</button>
-  <button onclick="showTab('paket')">📦 Paket</button>
+  <div class="menu">
+    <button onclick="showMenu(1)">⭐ Joki Per Bintang</button>
+    <button onclick="showMenu(2)">🔁 Joki Antar Rank</button>
+    <button onclick="showMenu(3)">📦 Paket Joki</button>
+    <button onclick="showMenu(4)">⚙ Update Harga</button>
+  </div>
+
+  <!-- MENU 1 -->
+  <div class="box" id="menu1">
+    <h2>Joki Per Bintang</h2>
+    <select id="rank1"></select>
+    <select id="div1"></select>
+    <input type="number" id="star1" placeholder="Bintang sekarang">
+    <input type="number" id="addStar" placeholder="Tambah bintang">
+    <button onclick="hitungPerBintang()">Hitung</button>
+  </div>
+
+  <!-- MENU 2 -->
+  <div class="box" id="menu2">
+    <h2>Joki Antar Rank</h2>
+    <h3>Rank Awal</h3>
+    <select id="rankA"></select>
+    <select id="divA"></select>
+    <input type="number" id="starA" placeholder="Bintang awal">
+
+    <h3>Rank Tujuan</h3>
+    <select id="rankB"></select>
+    <select id="divB"></select>
+    <input type="number" id="starB" placeholder="Bintang tujuan">
+
+    <button onclick="hitungAntarRank()">Hitung</button>
+  </div>
+
+  <!-- MENU 3 -->
+  <div class="box" id="menu3">
+    <h2>Paket Joki</h2>
+    <div id="paketList"></div>
+  </div>
+
+  <!-- MENU 4 -->
+  <div class="box" id="menu4">
+    <h2>Update Harga Per Bintang</h2>
+    <div id="priceEdit"></div>
+    <button onclick="alert('✔ Harga tersimpan')">Simpan</button>
+  </div>
+
+  <pre id="hasil"></pre>
 </div>
-
-<!-- PER BINTANG -->
-<div id="bintang" class="tab active">
-  <h3>Joki Rank per Bintang</h3>
-
-  <label>Rank</label>
-  <select id="rank1"></select>
-
-  <label>Divisi</label>
-  <select id="div1"></select>
-
-  <label>Bintang Sekarang</label>
-  <input type="number" id="star1" value="0">
-
-  <label>Tambah Bintang</label>
-  <input type="number" id="addStar" value="1">
-
-  <button onclick="hitungPerBintang()">Hitung</button>
-</div>
-
-<!-- ANTAR RANK -->
-<div id="antar" class="tab">
-  <h3>Joki Antar Rank</h3>
-
-  <h4>Rank Awal</h4>
-  <select id="rankA"></select>
-  <select id="divA"></select>
-  <input type="number" id="starA" placeholder="Bintang awal">
-
-  <h4>Rank Tujuan</h4>
-  <select id="rankB"></select>
-  <select id="divB"></select>
-  <input type="number" id="starB" placeholder="Bintang tujuan">
-
-  <button onclick="hitungAntarRank()">Hitung</button>
-</div>
-
-<!-- PAKET -->
-<div id="paket" class="tab">
-  <h3>Paket Joki</h3>
-  <ul id="paketList"></ul>
-</div>
-
-<pre id="hasil"></pre>
 
 <script src="script.js"></script>
 </body>
