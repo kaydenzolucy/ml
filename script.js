@@ -1,82 +1,79 @@
-const PRICE = {
-  Master:3000, GM:4000, Epic:5000, Legend:6000,
-  Mythic:13000, Honor:14000, Glory:20000, Immortal:24000
-};
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Joki MLBB Calculator Pro</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-const PAKET = {
-  "Epic 10":40000, "Legend 10":55000,
-  "Mythic 10":120000, "Honor 10":130000,
-  "Glory 10":250000, "Immortal 10":230000
-};
+<div class="container">
+  <h1>JOKI MLBB CALCULATOR PRO</h1>
 
-const RANK_ORDER = ["Master","GM","Epic","Legend","Mythic","Honor","Glory","Immortal"];
-const RANK_DIVISI = ["Master","GM","Epic","Legend"];
-const DIVISI = ["V","IV","III","II","I"];
-const STAR_PER_DIV = 5;
-const STAR_PER_RANK = 25;
+  <div class="menu">
+    <button onclick="showMenu(1)">⭐ Joki Per Bintang</button>
+    <button onclick="showMenu(2)">🔁 Joki Antar Rank</button>
+    <button onclick="showMenu(3)">🔥 Gendong Per Bintang</button>
+    <button onclick="showMenu(4)">🔥 Gendong Antar Rank</button>
+  </div>
 
-function fillRank(id){
-  let el=document.getElementById(id);
-  RANK_ORDER.forEach(r=>el.innerHTML+=`<option>${r}</option>`);
-}
-function fillDiv(id){ DIVISI.forEach(d=>document.getElementById(id).innerHTML+=`<option>${d}</option>`); }
+  <!-- MENU 1 -->
+  <div class="box" id="menu1">
+    <h2>Joki Per Bintang</h2>
+    <select id="rank1"></select>
+    <select id="div1"></select>
+    <input type="number" id="star1" placeholder="Bintang sekarang">
+    <input type="number" id="addStar" placeholder="Tambah bintang">
+    <button onclick="hitungPerBintang()">Hitung</button>
+  </div>
 
-["rank1","rankA","rankB"].forEach(fillRank);
-["div1","divA","divB"].forEach(fillDiv);
+  <!-- MENU 2 -->
+  <div class="box" id="menu2">
+    <h2>Joki Antar Rank</h2>
 
-function showMenu(n){
-  document.querySelectorAll(".box").forEach(b=>b.style.display="none");
-  document.getElementById("menu"+n).style.display="block";
-}
+    <h3>Rank Awal</h3>
+    <select id="rankA"></select>
+    <select id="divA"></select>
+    <input type="number" id="starA" placeholder="Bintang awal">
 
-function rankToStar(rank, div, star){
-  let r=RANK_ORDER.indexOf(rank);
-  if(RANK_DIVISI.includes(rank)){
-    let d=DIVISI.indexOf(div);
-    return r*STAR_PER_RANK + d*STAR_PER_DIV + star;
-  }
-  return r*STAR_PER_RANK + star;
-}
+    <h3>Rank Tujuan</h3>
+    <select id="rankB"></select>
+    <select id="divB"></select>
+    <input type="number" id="starB" placeholder="Bintang tujuan">
 
-function hitungDetail(start,end){
-  let d={}; RANK_ORDER.forEach(r=>d[r]=0);
-  for(let s=start;s<end;s++){
-    d[RANK_ORDER[Math.floor(s/STAR_PER_RANK)]]++;
-  }
-  return d;
-}
+    <button onclick="hitungAntarRank()">Hitung</button>
+  </div>
 
-function tampilInvoice(start,end){
-  let detail=hitungDetail(start,end), total=0, out="--- DETAIL INVOICE ---\n";
-  for(let r in detail){
-    if(detail[r]>0){
-      let h=detail[r]*PRICE[r]; total+=h;
-      out+=`${r.padEnd(10)}: ${detail[r]}⭐ x Rp${PRICE[r].toLocaleString()} = Rp${h.toLocaleString()}\n`;
-    }
-  }
-  out+=`-----------------------------\nTOTAL : Rp${total.toLocaleString()}`;
-  document.getElementById("hasil").textContent=out;
-}
+  <!-- MENU 3 -->
+  <div class="box" id="menu3">
+    <h2>Gendong Per Bintang</h2>
+    <select id="rankG1"></select>
+    <select id="divG1"></select>
+    <input type="number" id="starG1" placeholder="Bintang sekarang">
+    <input type="number" id="addStarG" placeholder="Tambah bintang">
+    <button onclick="hitungGendongBintang()">Hitung</button>
+  </div>
 
-function hitungPerBintang(){
-  let s=rankToStar(rank1.value,div1.value,+star1.value);
-  tampilInvoice(s,s+ +addStar.value);
-}
+  <!-- MENU 4 -->
+  <div class="box" id="menu4">
+    <h2>Gendong Antar Rank</h2>
 
-function hitungAntarRank(){
-  let s=rankToStar(rankA.value,divA.value,+starA.value);
-  let e=rankToStar(rankB.value,divB.value,+starB.value);
-  tampilInvoice(s,e);
-}
+    <h3>Rank Awal</h3>
+    <select id="rankGA"></select>
+    <select id="divGA"></select>
+    <input type="number" id="starGA" placeholder="Bintang awal">
 
-// Paket
-let pk="";
-for(let p in PAKET){ pk+=`${p} : Rp${PAKET[p].toLocaleString()}\n`; }
-paketList.textContent=pk;
+    <h3>Rank Tujuan</h3>
+    <select id="rankGB"></select>
+    <select id="divGB"></select>
+    <input type="number" id="starGB" placeholder="Bintang tujuan">
 
-// Update harga
-let pe="";
-for(let r in PRICE){
-  pe+=`${r} : <input value="${PRICE[r]}" oninput="PRICE['${r}']=+this.value"><br>`;
-}
-priceEdit.innerHTML=pe;
+    <button onclick="hitungGendongRank()">Hitung</button>
+  </div>
+
+  <pre id="hasil"></pre>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
