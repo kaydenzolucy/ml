@@ -13,8 +13,8 @@
   <div class="menu">
     <button onclick="showMenu(1)">⭐ Joki Per Bintang</button>
     <button onclick="showMenu(2)">🔁 Joki Antar Rank</button>
-    <button onclick="showMenu(3)">🔥 Gendong Per Bintang</button>
-    <button onclick="showMenu(4)">🔥 Gendong Antar Rank</button>
+    <button class="gendong" onclick="showMenu(3)">🔥 Gendong Per Bintang</button>
+    <button class="gendong" onclick="showMenu(4)">🔥 Gendong Antar Rank</button>
   </div>
 
   <!-- MENU 1 -->
@@ -51,7 +51,7 @@
     <select id="divG1"></select>
     <input type="number" id="starG1" placeholder="Bintang sekarang">
     <input type="number" id="addStarG" placeholder="Tambah bintang">
-    <button onclick="hitungGendongBintang()">Hitung</button>
+    <button class="gendong" onclick="hitungGendongBintang()">Hitung</button>
   </div>
 
   <!-- MENU 4 -->
@@ -68,7 +68,7 @@
     <select id="divGB"></select>
     <input type="number" id="starGB" placeholder="Bintang tujuan">
 
-    <button onclick="hitungGendongRank()">Hitung</button>
+    <button class="gendong" onclick="hitungGendongRank()">Hitung</button>
   </div>
 
   <pre id="hasil"></pre>
