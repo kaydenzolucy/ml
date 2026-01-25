@@ -1,7 +1,7 @@
 body {
   background:#0e0e0e;
   color:#fff;
-  font-family:Arial;
+  font-family:Arial, sans-serif;
 }
 
 .container {
@@ -17,7 +17,7 @@ h1 {
 
 .menu {
   display:grid;
-  grid-template-columns:repeat(2,1fr);
+  grid-template-columns:repeat(auto-fit, minmax(200px,1fr));
   gap:15px;
   margin-bottom:20px;
 }
@@ -30,6 +30,10 @@ button {
   background:#00ff88;
   color:#000;
   border-radius:8px;
+}
+
+button.gendong {
+  background:#ff9800;
 }
 
 .box {
@@ -52,4 +56,5 @@ pre {
   padding:20px;
   font-size:16px;
   border-radius:10px;
+  white-space:pre-wrap;
 }
