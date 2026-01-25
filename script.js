@@ -1,79 +1,99 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <title>Joki MLBB Calculator Pro</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+const PRICE = {
+  Master:3000, GM:4000, Epic:5000, Legend:6000,
+  Mythic:13000, Honor:14000, Glory:20000, Immortal:24000
+};
 
-<div class="container">
-  <h1>JOKI MLBB CALCULATOR PRO</h1>
+// HARGA GENDONG
+const GENDONG = {
+  Epic:9000,
+  Legend:10000,
+  Mythic:15000,
+  Honor:16000,
+  Glory:25000,
+  Immortal:35000
+};
 
-  <div class="menu">
-    <button onclick="showMenu(1)">⭐ Joki Per Bintang</button>
-    <button onclick="showMenu(2)">🔁 Joki Antar Rank</button>
-    <button onclick="showMenu(3)">🔥 Gendong Per Bintang</button>
-    <button onclick="showMenu(4)">🔥 Gendong Antar Rank</button>
-  </div>
+const RANK_ORDER = ["Master","GM","Epic","Legend","Mythic","Honor","Glory","Immortal"];
+const RANK_DIVISI = ["Master","GM","Epic","Legend"];
+const DIVISI = ["V","IV","III","II","I"];
+const STAR_PER_DIV = 5;
+const STAR_PER_RANK = 25;
 
-  <!-- MENU 1 -->
-  <div class="box" id="menu1">
-    <h2>Joki Per Bintang</h2>
-    <select id="rank1"></select>
-    <select id="div1"></select>
-    <input type="number" id="star1" placeholder="Bintang sekarang">
-    <input type="number" id="addStar" placeholder="Tambah bintang">
-    <button onclick="hitungPerBintang()">Hitung</button>
-  </div>
+function fillRank(id){
+  let el=document.getElementById(id);
+  RANK_ORDER.forEach(r=>el.innerHTML+=`<option>${r}</option>`);
+}
+function fillDiv(id){
+  DIVISI.forEach(d=>document.getElementById(id).innerHTML+=`<option>${d}</option>`);
+}
 
-  <!-- MENU 2 -->
-  <div class="box" id="menu2">
-    <h2>Joki Antar Rank</h2>
+[
+ "rank1","rankA","rankB",
+ "rankG1","rankGA","rankGB"
+].forEach(fillRank);
 
-    <h3>Rank Awal</h3>
-    <select id="rankA"></select>
-    <select id="divA"></select>
-    <input type="number" id="starA" placeholder="Bintang awal">
+[
+ "div1","divA","divB",
+ "divG1","divGA","divGB"
+].forEach(fillDiv);
 
-    <h3>Rank Tujuan</h3>
-    <select id="rankB"></select>
-    <select id="divB"></select>
-    <input type="number" id="starB" placeholder="Bintang tujuan">
+function showMenu(n){
+  document.querySelectorAll(".box").forEach(b=>b.style.display="none");
+  document.getElementById("menu"+n).style.display="block";
+}
 
-    <button onclick="hitungAntarRank()">Hitung</button>
-  </div>
+function rankToStar(rank, div, star){
+  let r=RANK_ORDER.indexOf(rank);
+  if(RANK_DIVISI.includes(rank)){
+    let d=DIVISI.indexOf(div);
+    return r*STAR_PER_RANK + d*STAR_PER_DIV + star;
+  }
+  return r*STAR_PER_RANK + star;
+}
 
-  <!-- MENU 3 -->
-  <div class="box" id="menu3">
-    <h2>Gendong Per Bintang</h2>
-    <select id="rankG1"></select>
-    <select id="divG1"></select>
-    <input type="number" id="starG1" placeholder="Bintang sekarang">
-    <input type="number" id="addStarG" placeholder="Tambah bintang">
-    <button onclick="hitungGendongBintang()">Hitung</button>
-  </div>
+function hitungDetail(start,end){
+  let d={}; RANK_ORDER.forEach(r=>d[r]=0);
+  for(let s=start;s<end;s++){
+    d[RANK_ORDER[Math.floor(s/STAR_PER_RANK)]]++;
+  }
+  return d;
+}
 
-  <!-- MENU 4 -->
-  <div class="box" id="menu4">
-    <h2>Gendong Antar Rank</h2>
+function tampilInvoice(start,end,price,title){
+  let detail=hitungDetail(start,end), total=0;
+  let out=`--- ${title} ---\n`;
 
-    <h3>Rank Awal</h3>
-    <select id="rankGA"></select>
-    <select id="divGA"></select>
-    <input type="number" id="starGA" placeholder="Bintang awal">
+  for(let r in detail){
+    if(detail[r]>0 && price[r]){
+      let h=detail[r]*price[r];
+      total+=h;
+      out+=`${r.padEnd(10)}: ${detail[r]}⭐ x Rp${price[r].toLocaleString()} = Rp${h.toLocaleString()}\n`;
+    }
+  }
+  out+=`-----------------------------\nTOTAL : Rp${total.toLocaleString()}`;
+  hasil.textContent=out;
+}
 
-    <h3>Rank Tujuan</h3>
-    <select id="rankGB"></select>
-    <select id="divGB"></select>
-    <input type="number" id="starGB" placeholder="Bintang tujuan">
+// JOKI NORMAL
+function hitungPerBintang(){
+  let s=rankToStar(rank1.value,div1.value,+star1.value);
+  tampilInvoice(s,s+ +addStar.value,PRICE,"JOKI PER BINTANG");
+}
 
-    <button onclick="hitungGendongRank()">Hitung</button>
-  </div>
+function hitungAntarRank(){
+  let s=rankToStar(rankA.value,divA.value,+starA.value);
+  let e=rankToStar(rankB.value,divB.value,+starB.value);
+  tampilInvoice(s,e,PRICE,"JOKI ANTAR RANK");
+}
 
-  <pre id="hasil"></pre>
-</div>
+// GENDONG
+function hitungGendongBintang(){
+  let s=rankToStar(rankG1.value,divG1.value,+starG1.value);
+  tampilInvoice(s,s+ +addStarG.value,GENDONG,"GENDONG PER BINTANG");
+}
 
-<script src="script.js"></script>
-</body>
-</html>
+function hitungGendongRank(){
+  let s=rankToStar(rankGA.value,divGA.value,+starGA.value);
+  let e=rankToStar(rankGB.value,divGB.value,+starGB.value);
+  tampilInvoice(s,e,GENDONG,"GENDONG ANTAR RANK");
+}
