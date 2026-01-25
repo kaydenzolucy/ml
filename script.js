@@ -1,12 +1,12 @@
 const PRICE = {
-  Master:4000, GM:5000, Epic:6000, Legend:7000,
-  Mythic:15000, Honor:17000, Glory:22000, Immortal:30000
+  Master:3000, GM:4000, Epic:5000, Legend:6000,
+  Mythic:13000, Honor:14000, Glory:20000, Immortal:24000
 };
 
 const PAKET = {
-  "Epic 10":65000, "Legend 10":75000,
-  "Mythic 10":170000, "Honor 10":200000,
-  "Glory 10":250000, "Immortal 10":290000
+  "Epic 10":40000, "Legend 10":55000,
+  "Mythic 10":120000, "Honor 10":130000,
+  "Glory 10":250000, "Immortal 10":230000
 };
 
 const RANK_ORDER = ["Master","GM","Epic","Legend","Mythic","Honor","Glory","Immortal"];
