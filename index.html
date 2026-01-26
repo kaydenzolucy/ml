@@ -4,22 +4,87 @@
   <meta charset="UTF-8">
   <title>Joki MLBB Kesayangan Yapici❤️</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <!-- Font GTA SA untuk judul saja -->
+
+  <!-- CSS asli + font GTA SA untuk judul -->
   <style>
+    /* Font GTA SA hanya untuk judul */
     @font-face {
       font-family: 'GTA SA';
       src: url('fonts/gta-sa.ttf') format('truetype');
     }
-    .title-glow {
-      font-family: 'GTA SA', sans-serif;
+
+    *{box-sizing:border-box}
+    body{
+      background:linear-gradient(180deg,#1a0f2e,#12081f);
+      color:#fff;
+      font-family:"Segoe UI",Arial,sans-serif;
+      margin:0
+    }
+    .container{max-width:100%;padding:18px}
+    .title-glow{
+      text-align:center;
+      font-size:28px;
+      font-weight:700;
+      margin-bottom:20px;
+      color:#ffb6e6;
+      text-shadow:0 0 8px rgba(255,182,230,.6),0 0 18px rgba(255,105,180,.4);
+      font-family: 'GTA SA', sans-serif; /* hanya judul */
+    }
+    .menu{
+      display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px
+    }
+    .menu button{
+      padding:18px 12px;font-size:16px;font-weight:600;border:none;border-radius:18px;
+      background:linear-gradient(135deg,#ff7ac8,#ff4fa7);color:#fff;cursor:pointer;
+      box-shadow:0 6px 16px rgba(255,79,167,.35)
+    }
+    .menu button.gendong{background:linear-gradient(135deg,#ffb347,#ff9800)}
+    .menu button.link-btn{background:linear-gradient(135deg,#8fd3f4,#84fab0);color:#0b2b1f}
+    .box{
+      display:none;
+      background:rgba(255,255,255,.08);
+      padding:18px;
+      border-radius:20px;
+      margin-bottom:18px;
+      box-shadow:0 8px 22px rgba(0,0,0,.35);
+      transition:all 0.3s ease
+    }
+    .box.show{display:block !important;}
+    h2{font-size:20px;margin-bottom:12px;color:#ffd6ec}
+    h3{font-size:16px;margin:10px 0 6px;color:#ffc1df}
+    label{font-size:14px;opacity:.9}
+    select,input{
+      width:100%;
+      padding:15px;
+      margin:6px 0 14px;
+      font-size:16px;
+      border-radius:16px;
+      border:none;
+      background:#2b1b3a;color:#fff;transition:all 0.3s ease
+    }
+    input::placeholder{color:#cfa3bf}
+    .box button{
+      width:100%;padding:16px;font-size:17px;font-weight:600;border:none;border-radius:18px;
+      background:linear-gradient(135deg,#ff7ac8,#ff4fa7);color:#fff;cursor:pointer;
+      box-shadow:0 6px 18px rgba(255,79,167,.4)
+    }
+    .box button.gendong{background:linear-gradient(135deg,#ffb347,#ff9800)}
+    pre{
+      background:#12071f;
+      padding:16px;
+      border-radius:18px;
+      white-space:pre-wrap;
+      font-size:14px;
+      line-height:1.6;
+      margin-top:16px;
+      box-shadow:inset 0 0 10px rgba(255,255,255,.05)
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1 class="title-glow">Joki MLBB Kesayangan Yapici❤️</h1>
-    
+
     <div class="menu">
       <button onclick="showMenu(1)">⭐ Joki Per Bintang</button>
       <button onclick="showMenu(2)">🔁 Joki Antar Rank</button>
@@ -30,7 +95,7 @@
       <button class="link-btn" onclick="openLink()">💌 Jangan Dibuka</button>
     </div>
 
-    <!-- MENU 1: Joki Per Bintang -->
+    <!-- MENU 1 -->
     <div class="box" id="menu1">
       <h2>Joki Per Bintang</h2>
       <label>Rank</label>
@@ -44,7 +109,7 @@
       <button onclick="hitungPerBintang()">Hitung</button>
     </div>
 
-    <!-- MENU 2: Joki Antar Rank -->
+    <!-- MENU 2 -->
     <div class="box" id="menu2">
       <h2>Joki Antar Rank</h2>
       <h3>Rank Awal</h3>
@@ -64,7 +129,7 @@
       <button onclick="hitungAntarRank()">Hitung</button>
     </div>
 
-    <!-- MENU 3: Gendong Per Bintang -->
+    <!-- MENU 3 -->
     <div class="box" id="menu3">
       <h2>Gendong Per Bintang</h2>
       <label>Rank</label>
@@ -78,7 +143,7 @@
       <button class="gendong" onclick="hitungGendongBintang()">Hitung</button>
     </div>
 
-    <!-- MENU 4: Gendong Antar Rank -->
+    <!-- MENU 4 -->
     <div class="box" id="menu4">
       <h2>Gendong Antar Rank</h2>
       <h3>Rank Awal</h3>
@@ -98,7 +163,7 @@
       <button class="gendong" onclick="hitungGendongRank()">Hitung</button>
     </div>
 
-    <!-- MENU 5: Estimasi Nominal -->
+    <!-- MENU 5 -->
     <div class="box" id="menu5">
       <h2>Estimasi Berdasarkan Nominal</h2>
       <label>Mode</label>
@@ -117,7 +182,7 @@
       <button onclick="estimasiNominal()">Estimasi</button>
     </div>
 
-    <!-- MENU 6: Price List -->
+    <!-- MENU 6 -->
     <div class="box" id="menu6">
       <h2>Price List Joki & Gendong</h2>
       <pre id="pricelist"></pre>
