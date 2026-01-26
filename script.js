@@ -40,6 +40,7 @@ function fillDiv(id){
   });
 }
 
+// apply fill
 [
 "rank1","rankA","rankB","rankG1","rankGA","rankGB","rankE"
 ].forEach(fillRank);
@@ -48,7 +49,17 @@ function fillDiv(id){
 ].forEach(fillDiv);
 
 // ======================
-// HIDE DIVISI untuk Mythic+
+// SHOW/HIDE MENU
+// ======================
+function showMenu(n){
+  document.querySelectorAll(".box").forEach(b=>b.style.display="none");
+  const target=document.getElementById("menu"+n);
+  if(target) target.style.display="block";
+  if(n===6) showPriceList();
+}
+
+// ======================
+// HIDE DIVISI UNTUK MYTHIC+
 function updateDivisi(rankElId, divElId){
   const rankEl=document.getElementById(rankElId);
   const divEl=document.getElementById(divElId);
