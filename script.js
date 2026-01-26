@@ -53,12 +53,14 @@ function fillDiv(id){
 
 [
   "rank1","rankA","rankB",
-  "rankG1","rankGA","rankGB"
+  "rankG1","rankGA","rankGB",
+  "rankE"
 ].forEach(fillRank);
 
 [
   "div1","divA","divB",
-  "divG1","divGA","divGB"
+  "divG1","divGA","divGB",
+  "divE"
 ].forEach(fillDiv);
 
 // ======================
@@ -82,35 +84,67 @@ function rankToStar(rank, div, star){
   return r * STAR_PER_RANK + star;
 }
 
-function hitungDetail(start,end){
-  let d={};
-  RANK_ORDER.forEach(r=>d[r]=0);
-  for(let s=start; s<end; s++){
-    d[RANK_ORDER[Math.floor(s/STAR_PER_RANK)]]++;
-  }
-  return d;
+function starToRank(totalStar){
+  let rankIndex = Math.floor(totalStar / STAR_PER_RANK);
+  let sisa = totalStar % STAR_PER_RANK;
+  let div = Math.floor(sisa / STAR_PER_DIV);
+  let star = sisa % STAR_PER_DIV;
+  return `${RANK_ORDER[rankIndex]} ${DIVISI[div]} (${star}⭐)`;
 }
 
-function tampilInvoice(start,end,price,title){
-  let detail=hitungDetail(start,end);
-  let total=0;
-  let out=`--- ${title} ---\n`;
+// ======================
+// ESTIMASI NOMINAL
+// ======================
+function estimasiNominal(){
+  let mode = document.getElementById("mode").value;
+  let harga = mode === "PRICE" ? PRICE : GENDONG;
 
-  for(let r in detail){
-    if(detail[r]>0 && price[r]){
-      let h = detail[r]*price[r];
-      total+=h;
-      out+=`${r.padEnd(10)} : ${detail[r]}⭐ x Rp${price[r].toLocaleString()} = Rp${h.toLocaleString()}\n`;
+  let start = rankToStar(
+    rankE.value,
+    divE.value,
+    +starE.value
+  );
+
+  let saldo = +nominal.value;
+  let now = start;
+  let spent = 0;
+
+  while(true){
+    let r = RANK_ORDER[Math.floor(now / STAR_PER_RANK)];
+    let cost = harga[r];
+    if(!cost || saldo < cost) break;
+    saldo -= cost;
+    spent += cost;
+    now++;
+  }
+
+  let out = `--- ESTIMASI ${mode === "PRICE" ? "JOKI" : "GENDONG"} ---\n`;
+  out += `Bintang didapat : ${now - start}\n`;
+  out += `Rank akhir     : ${starToRank(now)}\n`;
+  out += `Terpakai       : Rp${spent.toLocaleString()}\n`;
+  out += `Sisa saldo     : Rp${saldo.toLocaleString()}`;
+
+  document.getElementById("hasil").textContent = out;
+}
+
+// ======================
+// HITUNG NORMAL
+// ======================
+function tampilInvoice(start,end,price,title){
+  let total=0;
+  let out = `--- ${title} ---\n`;
+
+  for(let s=start; s<end; s++){
+    let r = RANK_ORDER[Math.floor(s/STAR_PER_RANK)];
+    if(price[r]){
+      total += price[r];
     }
   }
 
-  out+=`-----------------------------\nTOTAL : Rp${total.toLocaleString()}`;
-  document.getElementById("hasil").textContent=out;
+  out += `TOTAL : Rp${total.toLocaleString()}`;
+  document.getElementById("hasil").textContent = out;
 }
 
-// ======================
-// JOKI NORMAL
-// ======================
 function hitungPerBintang(){
   let s = rankToStar(rank1.value, div1.value, +star1.value);
   tampilInvoice(s, s + +addStar.value, PRICE, "JOKI PER BINTANG");
@@ -122,9 +156,6 @@ function hitungAntarRank(){
   tampilInvoice(s, e, PRICE, "JOKI ANTAR RANK");
 }
 
-// ======================
-// GENDONG
-// ======================
 function hitungGendongBintang(){
   let s = rankToStar(rankG1.value, divG1.value, +starG1.value);
   tampilInvoice(s, s + +addStarG.value, GENDONG, "GENDONG PER BINTANG");
@@ -136,7 +167,5 @@ function hitungGendongRank(){
   tampilInvoice(s, e, GENDONG, "GENDONG ANTAR RANK");
 }
 
-// ======================
-// DEFAULT MENU
 // ======================
 showMenu(1);
