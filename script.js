@@ -19,7 +19,6 @@ const STAR_PER_RANK=25;
 
 // ======================
 // INIT SELECT
-// ======================
 function fillRank(id){
   const el=document.getElementById(id); if(!el) return;
   el.innerHTML="";
@@ -38,20 +37,15 @@ function fillDiv(id){
 }
 
 // apply fill
-[
-"rank1","rankA","rankB","rankG1","rankGA","rankGB","rankE"
-].forEach(fillRank);
-[
-"div1","divA","divB","divG1","divGA","divGB","divE"
-].forEach(fillDiv);
+["rank1","rankA","rankB","rankG1","rankGA","rankGB","rankE"].forEach(fillRank);
+["div1","divA","divB","divG1","divGA","divGB","divE"].forEach(fillDiv);
 
 // ======================
 // MENU
-// ======================
 function showMenu(n){
-  document.querySelectorAll(".box").forEach(b=>b.style.display="none");
+  document.querySelectorAll(".box").forEach(b=>b.classList.remove("show"));
   const target=document.getElementById("menu"+n);
-  if(target) target.style.display="block";
+  if(target) target.classList.add("show");
   if(n===6) showPriceList();
 }
 
@@ -64,12 +58,10 @@ function updateDivisi(rankElId, divElId){
 
   rankEl.addEventListener("change", ()=>{
     if(!RANK_DIVISI.includes(rankEl.value)){
-      divEl.style.maxHeight="0";
-      divEl.style.overflow="hidden";
+      divEl.style.display="none";
       divEl.value="";
     } else {
-      divEl.style.maxHeight="100px";
-      divEl.style.overflow="visible";
+      divEl.style.display="block";
     }
   });
 }
