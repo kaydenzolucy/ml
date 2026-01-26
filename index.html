@@ -20,84 +20,55 @@
   }
   .container{max-width:100%;padding:18px;}
 
-  /* ============================= */
-  /* JUDUL GLITCH NEON HALUS */
-  .title-glitch {
-    font-family: 'Black Ops One', cursive;
-    font-size: 48px;
-    text-align: center;
-    position: relative;
-    color: #ff4fa7;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    animation: flicker 3s infinite;
-    text-shadow:
-      0 0 5px #ff4fa7,
-      0 0 10px #ff4fa7,
-      0 0 15px #ff69b4,
-      0 0 25px #ff69b4,
-      0 0 40px #ff00ff;
-  }
+  /* JUDUL PROFESIONAL SUBTLE GLITCH */
+.title-glitch {
+  font-family: 'Black Ops One', cursive;
+  font-size: 48px;
+  text-align: center;
+  position: relative;
+  color: #ff4fa7; /* Warna utama judul, bisa diganti */
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-shadow:
+    0 0 5px rgba(255, 79, 167, 0.7),
+    0 0 10px rgba(255, 79, 167, 0.5),
+    0 0 20px rgba(255, 79, 167, 0.4);
+}
 
-  .title-glitch::before,
-  .title-glitch::after {
-    content: attr(data-text);
-    position: absolute;
-    left: 0;
-    width: 100%;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-  }
+/* Efek glitch halus dengan pergeseran tipis */
+.title-glitch::before,
+.title-glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  color: inherit;
+}
 
-  .title-glitch::before {
-    left: 2px;
-    text-shadow: -2px 0 #00fff9, 2px 0 #ff00ff;
-    animation: glitchTop 3s infinite linear;
-  }
+.title-glitch::before {
+  top: 2px;
+  clip: rect(0, 9999px, 2px, 0);
+  opacity: 0.6;
+  transform: translateX(-1px);
+}
 
-  .title-glitch::after {
-    left: -2px;
-    text-shadow: -2px 0 #ff0000, 2px 0 #00ff00;
-    animation: glitchBottom 3s infinite linear;
-  }
+.title-glitch::after {
+  top: -2px;
+  clip: rect(2px, 9999px, 4px, 0);
+  opacity: 0.6;
+  transform: translateX(1px);
+}
 
-  @keyframes flicker {
-    0%, 20%, 40%, 60%, 80%, 100% {opacity:1;}
-    10%, 30%, 50%, 70%, 90% {opacity:0.85;}
-  }
+/* Animasi flicker very subtle */
+@keyframes flicker {
+  0%, 20%, 40%, 60%, 80%, 100% { opacity: 1; }
+  10%, 30%, 50%, 70%, 90% { opacity: 0.92; }
+}
 
-  @keyframes glitchTop {
-    0% {clip: rect(0, 9999px, 0, 0);}
-    10% {clip: rect(2px, 9999px, 12px, 0);}
-    20% {clip: rect(5px, 9999px, 20px, 0);}
-    30% {clip: rect(3px, 9999px, 15px, 0);}
-    40% {clip: rect(0, 9999px, 0, 0);}
-    50% {clip: rect(4px, 9999px, 18px, 0);}
-    60% {clip: rect(0, 9999px, 0, 0);}
-    70% {clip: rect(2px, 9999px, 12px, 0);}
-    80% {clip: rect(0, 9999px, 0, 0);}
-    90% {clip: rect(3px, 9999px, 15px, 0);}
-    100% {clip: rect(0, 9999px, 0, 0);}
-  }
-
-  @keyframes glitchBottom {
-    0% {clip: rect(0, 9999px, 0, 0);}
-    10% {clip: rect(10px, 9999px, 22px, 0);}
-    20% {clip: rect(12px, 9999px, 25px, 0);}
-    30% {clip: rect(8px, 9999px, 20px, 0);}
-    40% {clip: rect(0, 9999px, 0, 0);}
-    50% {clip: rect(9px, 9999px, 23px, 0);}
-    60% {clip: rect(0, 9999px, 0, 0);}
-    70% {clip: rect(11px, 9999px, 25px, 0);}
-    80% {clip: rect(0, 9999px, 0, 0);}
-    90% {clip: rect(7px, 9999px, 19px, 0);}
-    100% {clip: rect(0, 9999px, 0, 0);}
-  }
-
-  @media screen and (max-width: 600px) {
-    .title-glitch { font-size: 32px; }
-  }
-
+.title-glitch {
+  animation: flicker 2.5s infinite;
+}
   /* ============================= */
   /* MENU & BOX */
   .menu{
