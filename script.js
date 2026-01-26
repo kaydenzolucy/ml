@@ -28,18 +28,16 @@ const RANK_ORDER = [
   "Master","GM","Epic","Legend",
   "Mythic","Honor","Glory","Immortal"
 ];
-
 const RANK_DIVISI = ["Master","GM","Epic","Legend"];
 const DIVISI = ["V","IV","III","II","I"];
-
-const STAR_PER_DIV = 5; // 0-5 bintang per divisi
-const STAR_PER_RANK = 25; // 5 divisi x 6 bintang
+const STAR_PER_DIV = 5;
+const STAR_PER_RANK = 25;
 
 // batas mythic+
 const MYTHIC_START   = 0;    // ⭐1
-const HONOR_START    = 25;   // ⭐26
-const GLORY_START    = 50;   // ⭐51
-const IMMORTAL_START = 100;  // ⭐101
+const HONOR_START    = 24;   // ⭐25
+const GLORY_START    = 49;   // ⭐50
+const IMMORTAL_START = 99;   // ⭐100
 
 // ======================
 // INIT SELECT
@@ -81,7 +79,7 @@ function fillDiv(id){
 ].forEach(fillDiv);
 
 // ======================
-// MENU
+// SHOW/HIDE MENU
 // ======================
 function showMenu(n){
   document.querySelectorAll(".box").forEach(b=>b.style.display="none");
@@ -91,43 +89,28 @@ function showMenu(n){
 }
 
 // ======================
-// RANK → TOTAL STAR
+// RANK → STAR
 // ======================
 function rankToStar(rank, div, star){
-  if(RANK_DIVISI.includes(rank)){
-    let rIndex = RANK_ORDER.indexOf(rank);
-    return rIndex*STAR_PER_RANK + DIVISI.indexOf(div)*STAR_PER_DIV + star;
+  if (RANK_DIVISI.includes(rank)) {
+    let r = RANK_ORDER.indexOf(rank);
+    return r * STAR_PER_RANK + (DIVISI.indexOf(div) * STAR_PER_DIV) + star;
   }
-
-  // Mythic+
-  if(rank === "Mythic")   return MYTHIC_START + star;
-  if(rank === "Honor")    return HONOR_START + (star - 26);
-  if(rank === "Glory")    return GLORY_START + (star - 51);
-  if(rank === "Immortal") return IMMORTAL_START + (star - 101);
-
+  if(rank === "Mythic") return MYTHIC_START + star;
+  if(rank === "Honor") return HONOR_START + star;
+  if(rank === "Glory") return GLORY_START + star;
+  if(rank === "Immortal") return IMMORTAL_START + star;
   return 0;
 }
 
 // ======================
-// TOTAL STAR → RANK
+// STAR → RANK
 // ======================
 function starToRank(total){
-  // rank bawah
-  let rIndex = Math.floor(total / STAR_PER_RANK);
-  let rank = RANK_ORDER[rIndex] || "Immortal";
-
-  if(RANK_DIVISI.includes(rank)){
-    let sisa = total % STAR_PER_RANK;
-    let divIndex = Math.floor(sisa / STAR_PER_DIV);
-    let starInDiv = sisa % STAR_PER_DIV;
-    return `${rank} ${DIVISI[divIndex] || DIVISI[DIVISI.length-1]} ⭐${starInDiv}`;
-  }
-
-  // Mythic+
-  if(total < HONOR_START) return `Mythic ⭐${total + 1}`;
-  if(total < GLORY_START) return `Honor ⭐${total - HONOR_START + 26}`;
-  if(total < IMMORTAL_START) return `Glory ⭐${total - GLORY_START + 51}`;
-  return `Immortal ⭐${total - IMMORTAL_START + 101}`;
+  if(total < HONOR_START) return `Mythic ⭐${total}`;
+  if(total < GLORY_START) return `Honor ⭐${total - HONOR_START}`;
+  if(total < IMMORTAL_START) return `Glory ⭐${total - GLORY_START}`;
+  return `Immortal ⭐${total - IMMORTAL_START}`;
 }
 
 // ======================
@@ -139,15 +122,11 @@ function tampilInvoice(start, end, price, title){
   RANK_ORDER.forEach(r => detail[r] = 0);
 
   for(let s = start; s < end; s++){
-    let r = RANK_ORDER[Math.min(Math.floor(s / STAR_PER_RANK), RANK_ORDER.length - 1)];
-
-    // Mythic+
-    if(s >= MYTHIC_START){
-      if(s < HONOR_START) r = "Mythic";
-      else if(s < GLORY_START) r = "Honor";
-      else if(s < IMMORTAL_START) r = "Glory";
-      else r = "Immortal";
-    }
+    let r;
+    if(s < HONOR_START) r="Mythic";
+    else if(s < GLORY_START) r="Honor";
+    else if(s < IMMORTAL_START) r="Glory";
+    else r="Immortal";
 
     if(price[r]){
       detail[r]++;
@@ -164,7 +143,7 @@ function tampilInvoice(start, end, price, title){
 
   out += `-----------------------------\n`;
   out += `Total Bintang : ${end - start} ⭐\n`;
-  out += `Rank Akhir    : ${starToRank(end)}\n`;
+  out += `Rank Akhir    : ${starToRank(end-1)}\n`;
   out += `TOTAL         : Rp${total.toLocaleString()}`;
 
   hasil.textContent = out;
@@ -206,20 +185,17 @@ function hitungGendongRank(){
 // ======================
 function estimasiNominal(){
   let harga = mode.value === "PRICE" ? PRICE : GENDONG;
-
   let start = rankToStar(rankE.value, divE.value, +starE.value);
   let cur = start;
   let saldo = +nominal.value;
   let used = 0;
 
   while(true){
-    let r = RANK_ORDER[Math.min(Math.floor(cur / STAR_PER_RANK), RANK_ORDER.length - 1)];
-    if(cur >= MYTHIC_START){
-      if(cur < HONOR_START) r = "Mythic";
-      else if(cur < GLORY_START) r = "Honor";
-      else if(cur < IMMORTAL_START) r = "Glory";
-      else r = "Immortal";
-    }
+    let r;
+    if(cur < HONOR_START) r="Mythic";
+    else if(cur < GLORY_START) r="Honor";
+    else if(cur < IMMORTAL_START) r="Glory";
+    else r="Immortal";
 
     if(!harga[r] || saldo < harga[r]) break;
     saldo -= harga[r];
@@ -233,7 +209,7 @@ Rank Awal : ${rankE.value} ${divE.value} ⭐${starE.value}
 Modal     : Rp${(+nominal.value).toLocaleString()}
 -----------------------------
 Naik      : ${cur - start} ⭐
-Rank Akhir: ${starToRank(cur)}
+Rank Akhir: ${starToRank(cur-1)}
 Terpakai  : Rp${used.toLocaleString()}
 Sisa      : Rp${saldo.toLocaleString()}`;
 }
@@ -256,80 +232,42 @@ function showPriceList(){
 }
 
 // ======================
-// INPUT LIMIT + DIVISI ANIMASI + RESET STAR
+// HIDE/SHOW DIVISI + LIMIT STAR
 // ======================
-function updateInput(rankSelectId, divSelectId, starInputId){
-  const rankEl = document.getElementById(rankSelectId);
-  const divEl  = document.getElementById(divSelectId);
-  const starEl = document.getElementById(starInputId);
+function updateDivisi(rankElId, divElId, starElId){
+  const rankEl = document.getElementById(rankElId);
+  const divEl  = document.getElementById(divElId);
+  const starEl = document.getElementById(starElId);
+  if(!rankEl || !divEl || !starEl) return;
 
-  if(!rankEl || !starEl) return;
-
-  if(divEl){
-    divEl.style.transition = "all .3s ease";
-    divEl.style.overflow = "hidden";
-  }
-
-  function apply(){
+  rankEl.addEventListener("change", ()=>{
     const rank = rankEl.value;
-    starEl.value = "";
 
-    if(RANK_DIVISI.includes(rank)){
-      if(divEl){
-        divEl.style.display = "block";
-        divEl.style.opacity = "1";
-        divEl.style.maxHeight = "60px";
-        divEl.disabled = false;
-      }
-      starEl.min = 0;
-      starEl.max = 5;
-      starEl.placeholder = "0 - 5";
-      return;
-    }
-
-    if(divEl){
-      divEl.style.opacity = "0";
+    if(["Mythic","Honor","Glory","Immortal"].includes(rank)){
       divEl.style.maxHeight = "0";
-      setTimeout(()=> divEl.style.display = "none", 300);
-      divEl.disabled = true;
+      divEl.style.overflow = "hidden";
+      divEl.style.transition = "all 0.3s ease";
+      divEl.value = "";
+      starEl.value = 0;
+      starEl.max = 1000; // unlimited for mythic+
+    } else {
+      divEl.style.maxHeight = "100px";
+      divEl.style.overflow = "visible";
+      starEl.value = 0;
+      starEl.max = 5; // limit per divisi
     }
-
-    if(rank === "Mythic"){
-      starEl.min = 1;
-      starEl.max = 25;
-      starEl.placeholder = "1 - 25";
-    }
-    else if(rank === "Honor"){
-      starEl.min = 26;
-      starEl.max = 50;
-      starEl.placeholder = "26 - 50";
-    }
-    else if(rank === "Glory"){
-      starEl.min = 51;
-      starEl.max = 100;
-      starEl.placeholder = "51 - 100";
-    }
-    else if(rank === "Immortal"){
-      starEl.min = 101;
-      starEl.max = 9999;
-      starEl.placeholder = "101+";
-    }
-  }
-
-  rankEl.addEventListener("change", apply);
-  apply();
+  });
 }
 
-// ======================
-// APPLY KE SEMUA INPUT
-// ======================
-updateInput("rank1","div1","star1");
-updateInput("rankA","divA","starA");
-updateInput("rankB","divB","starB");
-updateInput("rankG1","divG1","starG1");
-updateInput("rankGA","divGA","starGA");
-updateInput("rankGB","divGB","starGB");
-updateInput("rankE","divE","starE");
+// APPLY TO ALL MENUS
+updateDivisi("rank1","div1","star1");
+updateDivisi("rankA","divA","starA");
+updateDivisi("rankB","divB","starB");
+updateDivisi("rankG1","divG1","starG1");
+updateDivisi("rankGA","divGA","starGA");
+updateDivisi("rankGB","divGB","starGB");
+updateDivisi("rankE","divE","starE");
 
 // ======================
 showMenu(1);
+showPriceList();
