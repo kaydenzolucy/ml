@@ -58,19 +58,42 @@
     <button onclick="hitungGendongRank()">Hitung</button>
   </div>
 
-  <div class="box" id="menu5">
-    <h2>Estimasi Berdasarkan Nominal</h2>
-    <select id="mode">
-      <option value="PRICE">Joki</option>
-      <option value="GENDONG">Gendong</option>
-    </select>
-    <select id="rankE"></select>
-    <select id="divE"></select>
-    <input type="number" id="starE">
-    <input type="number" id="nominal">
-    <button onclick="estimasiNominal()">Estimasi</button>
-  </div>
+  <!-- MENU 5 -->
+<div class="box" id="menu5">
+  <h2>Estimasi Berdasarkan Nominal</h2>
 
+  <label>Mode Joki</label>
+  <select id="mode">
+    <option value="PRICE">Joki (Solo)</option>
+    <option value="GENDONG">Gendong</option>
+  </select>
+
+  <h3>Rank Awal</h3>
+
+  <label>Rank</label>
+  <select id="rankE"></select>
+
+  <label>Divisi</label>
+  <select id="divE"></select>
+
+  <label>Bintang Sekarang</label>
+  <input 
+    type="number" 
+    id="starE" 
+    placeholder="Contoh: 2"
+    min="0" max="5"
+  >
+
+  <label>Masukkan Nominal (Rp)</label>
+  <input 
+    type="number" 
+    id="nominal" 
+    placeholder="Contoh: 100000"
+  >
+
+  <button onclick="estimasiNominal()">Estimasi</button>
+</div>
+  
   <pre id="hasil"></pre>
 </div>
 
