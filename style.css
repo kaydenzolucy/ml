@@ -13,14 +13,14 @@ body {
   padding: 18px;
 }
 
-/* JUDUL – FONT GAMER */
+/* JUDUL – RETRO GAMER */
 .title-glow {
   text-align: center;
   font-size: 26px;
   margin-bottom: 20px;
   color: #ffb6e6;
   text-shadow: 0 0 10px rgba(255,105,180,.7);
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Press Start 2P', cursive;
 }
 
 .menu {
