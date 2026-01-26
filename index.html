@@ -4,13 +4,166 @@
   <meta charset="UTF-8">
   <title>Joki MLBB Khusus pacar yapici❤️</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+  
+  <!-- Google Font Black Ops One -->
+  <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&display=swap" rel="stylesheet">
+
+  <style>
+  /* ============================= */
+  /* RESET & BODY */
+  *{box-sizing:border-box;}
+  body{
+    background:linear-gradient(180deg,#1a0f2e,#12081f);
+    color:#fff;
+    font-family:"Segoe UI",Arial,sans-serif;
+    margin:0;
+  }
+  .container{max-width:100%;padding:18px;}
+
+  /* ============================= */
+  /* JUDUL GLITCH NEON */
+  .title-glitch {
+    font-family: 'Black Ops One', cursive;
+    font-size: 48px;
+    text-align: center;
+    position: relative;
+    color: #ff4fa7;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    animation: flicker 2s infinite;
+    text-shadow:
+      0 0 5px #ff4fa7,
+      0 0 10px #ff4fa7,
+      0 0 20px #ff4fa7,
+      0 0 40px #ff69b4,
+      0 0 80px #ff69b4;
+  }
+  .title-glitch::before,
+  .title-glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+  }
+  .title-glitch::before {
+    left: 2px;
+    text-shadow: -2px 0 #00fff9, 2px 2px #ff00ff;
+    animation: glitchTop 2s infinite linear;
+  }
+  .title-glitch::after {
+    left: -2px;
+    text-shadow: -2px 0 #ff0000, 2px -2px #00ff00;
+    animation: glitchBottom 2s infinite linear;
+  }
+
+  @keyframes flicker {
+    0%,19%,21%,23%,25%,54%,56%,100% {opacity:1;}
+    20%,22%,24%,55% {opacity:0.4;}
+  }
+  @keyframes glitchTop {
+    0% {clip: rect(0, 9999px, 0, 0);}
+    5% {clip: rect(0, 9999px, 15px, 0);}
+    10% {clip: rect(5px, 9999px, 20px, 0);}
+    15% {clip: rect(0, 9999px, 10px, 0);}
+    20% {clip: rect(0, 9999px, 0, 0);}
+    100% {clip: rect(0, 9999px, 0, 0);}
+  }
+  @keyframes glitchBottom {
+    0% {clip: rect(0, 9999px, 0, 0);}
+    5% {clip: rect(10px, 9999px, 25px, 0);}
+    10% {clip: rect(15px, 9999px, 30px, 0);}
+    15% {clip: rect(5px, 9999px, 20px, 0);}
+    20% {clip: rect(0, 9999px, 0, 0);}
+    100% {clip: rect(0, 9999px, 0, 0);}
+  }
+
+  @media screen and (max-width: 600px) {
+    .title-glitch { font-size: 32px; }
+  }
+
+  /* ============================= */
+  /* MENU & BOX */
+  .menu{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+    margin-bottom:18px;
+  }
+  .menu button{
+    padding:18px 12px;
+    font-size:16px;
+    font-weight:600;
+    border:none;
+    border-radius:18px;
+    background:linear-gradient(135deg,#ff7ac8,#ff4fa7);
+    color:#fff;
+    cursor:pointer;
+    box-shadow:0 6px 16px rgba(255,79,167,.35);
+  }
+  .menu button.gendong{background:linear-gradient(135deg,#ffb347,#ff9800);}
+  .menu button.link-btn{background:linear-gradient(135deg,#8fd3f4,#84fab0);color:#0b2b1f;}
+
+  .box{
+    display:none;
+    background:rgba(255,255,255,.08);
+    padding:18px;
+    border-radius:20px;
+    margin-bottom:18px;
+    box-shadow:0 8px 22px rgba(0,0,0,.35);
+    transition:all 0.3s ease;
+  }
+  .box.show{display:block !important;}
+  h2{font-size:20px;margin-bottom:12px;color:#ffd6ec;}
+  h3{font-size:16px;margin:10px 0 6px;color:#ffc1df;}
+  label{font-size:14px;opacity:.9;}
+  select,input{
+    width:100%;
+    padding:15px;
+    margin:6px 0 14px;
+    font-size:16px;
+    border-radius:16px;
+    border:none;
+    background:#2b1b3a;
+    color:#fff;
+    transition:all 0.3s ease;
+  }
+  input::placeholder{color:#cfa3bf;}
+  .box button{
+    width:100%;
+    padding:16px;
+    font-size:17px;
+    font-weight:600;
+    border:none;
+    border-radius:18px;
+    background:linear-gradient(135deg,#ff7ac8,#ff4fa7);
+    color:#fff;
+    cursor:pointer;
+    box-shadow:0 6px 18px rgba(255,79,167,.4);
+  }
+  .box button.gendong{background:linear-gradient(135deg,#ffb347,#ff9800);}
+  pre{
+    background:#12071f;
+    padding:16px;
+    border-radius:18px;
+    white-space:pre-wrap;
+    font-size:14px;
+    line-height:1.6;
+    margin-top:16px;
+    box-shadow:inset 0 0 10px rgba(255,255,255,.05);
+  }
+  </style>
 </head>
 <body>
 
 <div class="container">
-  <h1 class="title-glow">Joki MLBB Khusus pacar yapici❤️</h1>
+  <!-- Judul Glitch Neon -->
+  <h1 class="title-glitch" data-text="Joki MLBB Khusus pacar yapici❤️">
+    Joki MLBB Khusus pacar yapici❤️
+  </h1>
 
+  <!-- MENU -->
   <div class="menu">
     <button onclick="showMenu(1)">⭐ Joki Per Bintang</button>
     <button onclick="showMenu(2)">🔁 Joki Antar Rank</button>
@@ -21,7 +174,7 @@
     <button class="link-btn" onclick="openLink()">💌 Jangan Dibuka</button>
   </div>
 
-  <!-- MENU 1: Joki Per Bintang -->
+  <!-- MENU BOXES -->
   <div class="box" id="menu1">
     <h2>Joki Per Bintang</h2>
     <label>Rank</label>
@@ -35,7 +188,6 @@
     <button onclick="hitungPerBintang()">Hitung</button>
   </div>
 
-  <!-- MENU 2: Joki Antar Rank -->
   <div class="box" id="menu2">
     <h2>Joki Antar Rank</h2>
     <h3>Rank Awal</h3>
@@ -45,7 +197,6 @@
     <select id="divA"></select>
     <label>Bintang</label>
     <input type="number" id="starA" placeholder="Contoh: 1">
-
     <h3>Rank Tujuan</h3>
     <label>Rank</label>
     <select id="rankB"></select>
@@ -53,11 +204,9 @@
     <select id="divB"></select>
     <label>Bintang</label>
     <input type="number" id="starB" placeholder="Contoh: 0">
-
     <button onclick="hitungAntarRank()">Hitung</button>
   </div>
 
-  <!-- MENU 3: Gendong Per Bintang -->
   <div class="box" id="menu3">
     <h2>Gendong Per Bintang</h2>
     <label>Rank</label>
@@ -71,7 +220,6 @@
     <button class="gendong" onclick="hitungGendongBintang()">Hitung</button>
   </div>
 
-  <!-- MENU 4: Gendong Antar Rank -->
   <div class="box" id="menu4">
     <h2>Gendong Antar Rank</h2>
     <h3>Rank Awal</h3>
@@ -81,7 +229,6 @@
     <select id="divGA"></select>
     <label>Bintang</label>
     <input type="number" id="starGA" placeholder="Contoh: 4">
-
     <h3>Rank Tujuan</h3>
     <label>Rank</label>
     <select id="rankGB"></select>
@@ -89,11 +236,9 @@
     <select id="divGB"></select>
     <label>Bintang</label>
     <input type="number" id="starGB" placeholder="Contoh: 0">
-
     <button class="gendong" onclick="hitungGendongRank()">Hitung</button>
   </div>
 
-  <!-- MENU 5: Estimasi Nominal -->
   <div class="box" id="menu5">
     <h2>Estimasi Berdasarkan Nominal</h2>
     <label>Mode</label>
@@ -112,7 +257,6 @@
     <button onclick="estimasiNominal()">Estimasi</button>
   </div>
 
-  <!-- MENU 6: Price List -->
   <div class="box" id="menu6">
     <h2>Price List Joki & Gendong</h2>
     <pre id="pricelist"></pre>
