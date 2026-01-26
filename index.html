@@ -5,121 +5,11 @@
   <title>Joki MLBB Khusus Kesayangan Yapici❤️</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Import font retro dari Google Fonts -->
+  <!-- Font retro dari Google -->
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-
-  <style>
-    *{box-sizing:border-box;}
-    body {
-      background: linear-gradient(180deg,#1a0f2e,#12081f);
-      color: #fff;
-      font-family: "Segoe UI", Arial, sans-serif;
-      margin: 0;
-    }
-
-    .container {
-      max-width: 100%;
-      padding: 18px;
-    }
-
-    /* Judul H1 pakai font retro */
-    .title-glow {
-      text-align: center;
-      font-size: 26px;
-      font-weight: 700;
-      margin-bottom: 20px;
-      color: #ffb6e6;
-      text-shadow: 0 0 8px rgba(255,182,230,.6), 0 0 18px rgba(255,105,180,.4);
-      font-family: 'Press Start 2P', cursive;
-    }
-
-    .menu {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-bottom: 18px;
-    }
-
-    .menu button {
-      padding: 18px 12px;
-      font-size: 16px;
-      font-weight: 600;
-      border: none;
-      border-radius: 18px;
-      background: linear-gradient(135deg,#ff7ac8,#ff4fa7);
-      color: #fff;
-      cursor: pointer;
-      box-shadow: 0 6px 16px rgba(255,79,167,.35);
-      transition: all 0.3s ease;
-    }
-
-    .menu button.gendong {
-      background: linear-gradient(135deg,#ffb347,#ff9800);
-    }
-
-    .menu button.link-btn {
-      background: linear-gradient(135deg,#8fd3f4,#84fab0);
-      color: #0b2b1f;
-    }
-
-    .box {
-      display: none;
-      background: rgba(255,255,255,.08);
-      padding: 18px;
-      border-radius: 20px;
-      margin-bottom: 18px;
-      box-shadow: 0 8px 22px rgba(0,0,0,.35);
-      transition: all 0.3s ease;
-    }
-
-    .box.show { display: block !important; }
-
-    h2 { font-size: 20px; margin-bottom: 12px; color: #ffd6ec; }
-    h3 { font-size: 16px; margin: 10px 0 6px; color: #ffc1df; }
-    label { font-size: 14px; opacity: 0.9; }
-
-    select, input {
-      width: 100%;
-      padding: 15px;
-      margin: 6px 0 14px;
-      font-size: 16px;
-      border-radius: 16px;
-      border: none;
-      background: #2b1b3a;
-      color: #fff;
-      transition: all 0.3s ease;
-    }
-
-    input::placeholder { color: #cfa3bf; }
-
-    .box button {
-      width: 100%;
-      padding: 16px;
-      font-size: 17px;
-      font-weight: 600;
-      border: none;
-      border-radius: 18px;
-      background: linear-gradient(135deg,#ff7ac8,#ff4fa7);
-      color: #fff;
-      cursor: pointer;
-      box-shadow: 0 6px 18px rgba(255,79,167,.4);
-      transition: all 0.3s ease;
-    }
-
-    .box button.gendong { background: linear-gradient(135deg,#ffb347,#ff9800); }
-
-    pre {
-      background: #12071f;
-      padding: 16px;
-      border-radius: 18px;
-      white-space: pre-wrap;
-      font-size: 14px;
-      line-height: 1.6;
-      margin-top: 16px;
-      box-shadow: inset 0 0 10px rgba(255,255,255,.05);
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
   <div class="container">
     <h1 class="title-glow">Joki MLBB Khusus Kesayangan Yapici❤️</h1>
@@ -139,32 +29,43 @@
       <h2>Joki Per Bintang</h2>
       <label>Rank</label>
       <select id="rank1"></select>
+
       <label>Divisi</label>
       <select id="div1"></select>
+
       <label>Bintang Sekarang</label>
       <input type="number" id="star1" placeholder="Contoh: 2">
+
       <label>Tambah Bintang</label>
       <input type="number" id="addStar" placeholder="Contoh: 10">
+
       <button onclick="hitungPerBintang()">Hitung</button>
     </div>
 
     <!-- MENU 2 -->
     <div class="box" id="menu2">
       <h2>Joki Antar Rank</h2>
+
       <h3>Rank Awal</h3>
       <label>Rank</label>
       <select id="rankA"></select>
+
       <label>Divisi</label>
       <select id="divA"></select>
+
       <label>Bintang</label>
       <input type="number" id="starA" placeholder="Contoh: 1">
+
       <h3>Rank Tujuan</h3>
       <label>Rank</label>
       <select id="rankB"></select>
+
       <label>Divisi</label>
       <select id="divB"></select>
+
       <label>Bintang</label>
       <input type="number" id="starB" placeholder="Contoh: 0">
+
       <button onclick="hitungAntarRank()">Hitung</button>
     </div>
 
@@ -173,51 +74,68 @@
       <h2>Gendong Per Bintang</h2>
       <label>Rank</label>
       <select id="rankG1"></select>
+
       <label>Divisi</label>
       <select id="divG1"></select>
+
       <label>Bintang Sekarang</label>
       <input type="number" id="starG1" placeholder="Contoh: 3">
+
       <label>Tambah Bintang</label>
       <input type="number" id="addStarG" placeholder="Contoh: 5">
+
       <button class="gendong" onclick="hitungGendongBintang()">Hitung</button>
     </div>
 
     <!-- MENU 4 -->
     <div class="box" id="menu4">
       <h2>Gendong Antar Rank</h2>
+
       <h3>Rank Awal</h3>
       <label>Rank</label>
       <select id="rankGA"></select>
+
       <label>Divisi</label>
       <select id="divGA"></select>
+
       <label>Bintang</label>
       <input type="number" id="starGA" placeholder="Contoh: 4">
+
       <h3>Rank Tujuan</h3>
       <label>Rank</label>
       <select id="rankGB"></select>
+
       <label>Divisi</label>
       <select id="divGB"></select>
+
       <label>Bintang</label>
       <input type="number" id="starGB" placeholder="Contoh: 0">
+
       <button class="gendong" onclick="hitungGendongRank()">Hitung</button>
     </div>
 
-    <!-- MENU 5 -->
+    <!-- MENU 5 (INI YANG KAMU CARI) -->
     <div class="box" id="menu5">
       <h2>Estimasi Berdasarkan Nominal</h2>
+
       <label>Mode</label>
       <select id="mode">
         <option value="PRICE">Joki Rank</option>
         <option value="GENDONG">Gendong</option>
       </select>
+
       <label>Rank</label>
       <select id="rankE"></select>
+
       <label>Divisi</label>
       <select id="divE"></select>
+
       <label>Bintang Sekarang</label>
       <input type="number" id="starE" placeholder="Contoh: 2">
+
       <label>Nominal (Rp)</label>
-      <input type="number" id="nominal" placeholder="Contoh: 100000">
+      <input type="number" id="nominal" placeholder="Contoh: 10000">
+
       <button onclick="estimasiNominal()">Estimasi</button>
     </div>
 
@@ -230,17 +148,16 @@
     <pre id="hasil"></pre>
   </div>
 
+  <script src="script.js"></script>
   <script>
-    function openLink() {
+    function openLink(){
       window.location.href="https://kaydenzolucy.github.io/18januari2026/";
     }
 
-    // Fungsi untuk toggle menu
-    function showMenu(n) {
-      const menus = document.querySelectorAll('.box');
-      menus.forEach(menu => menu.classList.remove('show'));
-      const target = document.getElementById('menu' + n);
-      if(target) target.classList.add('show');
+    function showMenu(n){
+      document.querySelectorAll('.box').forEach(b => b.classList.remove('show'));
+      const el = document.getElementById('menu'+n);
+      if(el) el.classList.add('show');
     }
   </script>
 </body>
