@@ -20,9 +20,6 @@ const DIVISI=["V","IV","III","II","I"];
 const STAR_PER_DIV=5;
 const STAR_PER_RANK=25;
 
-// Batas Mythic+
-const STAR_MYTHIC_LIMIT={Mythic:24, Honor:25, Glory:50, Immortal:Infinity};
-
 // ======================
 // INIT SELECT
 // ======================
@@ -51,87 +48,92 @@ function fillDiv(id){
 ].forEach(fillDiv);
 
 // ======================
-// HIDE DIVISI & LIMIT STAR
-// ======================
-function updateDivisi(rankElId, divElId, starElId){
+// HIDE DIVISI untuk Mythic+
+function updateDivisi(rankElId, divElId){
   const rankEl=document.getElementById(rankElId);
   const divEl=document.getElementById(divElId);
-  const starEl=document.getElementById(starElId);
-  if(!rankEl||!divEl||!starEl) return;
+  if(!rankEl||!divEl) return;
 
   rankEl.addEventListener("change", ()=>{
-    if(["Mythic","Honor","Glory","Immortal"].includes(rankEl.value)){
+    if(!RANK_DIVISI.includes(rankEl.value)){
       divEl.style.maxHeight="0";
       divEl.style.overflow="hidden";
       divEl.value="";
-      starEl.value=0;
-      starEl.max=STAR_MYTHIC_LIMIT[rankEl.value];
     } else {
       divEl.style.maxHeight="100px";
       divEl.style.overflow="visible";
-      starEl.value=0;
-      starEl.max=5;
     }
   });
 }
-
 ["rank1","rankA","rankB","rankG1","rankGA","rankGB","rankE"].forEach(id=>{
-  const divId=id.replace(/rank/,"div");
-  const starId=id.replace(/rank/,"star");
-  updateDivisi(id,divId,starId);
+  updateDivisi(id,id.replace(/rank/,"div"));
 });
 
 // ======================
-// LOGIC RANK → STAR
-// ======================
-function rankToStar(rank,div,star){
-  let r=RANK_ORDER.indexOf(rank);
-  if(RANK_DIVISI.includes(rank)){
-    return r*STAR_PER_RANK+(DIVISI.indexOf(div)*STAR_PER_DIV)+star;
+// RANK → STAR
+function rankToStar(rank, div, star){
+  let total=0;
+  for(let r of RANK_ORDER){
+    if(r===rank) break;
+    if(RANK_DIVISI.includes(r)) total += STAR_PER_RANK; 
+    else if(r==="Mythic") total+=24;
+    else if(r==="Honor") total+=25;
+    else if(r==="Glory") total+=50;
+    else if(r==="Immortal") total+=0; // Immortal dihitung akhir
   }
-  // Mythic+ disesuaikan batas
-  switch(rank){
-    case "Mythic": return star;
-    case "Honor": return STAR_MYTHIC_LIMIT.Mythic + star;
-    case "Glory": return STAR_MYTHIC_LIMIT.Mythic + STAR_MYTHIC_LIMIT.Honor + star;
-    case "Immortal": return STAR_MYTHIC_LIMIT.Mythic + STAR_MYTHIC_LIMIT.Honor + STAR_MYTHIC_LIMIT.Glory + star;
-  }
-  return 0;
+  if(RANK_DIVISI.includes(rank)) total += DIVISI.indexOf(div)*STAR_PER_DIV + star;
+  else total += star;
+  return total;
 }
 
 // ======================
-// LOGIC STAR → RANK
-// ======================
+// STAR → RANK
 function starToRank(total){
-  if(total <= STAR_MYTHIC_LIMIT.Mythic) return `Mythic ⭐${total}`;
-  else if(total <= STAR_MYTHIC_LIMIT.Mythic + STAR_MYTHIC_LIMIT.Honor) return `Honor ⭐${total-STAR_MYTHIC_LIMIT.Mythic}`;
-  else if(total <= STAR_MYTHIC_LIMIT.Mythic + STAR_MYTHIC_LIMIT.Honor + STAR_MYTHIC_LIMIT.Glory) return `Glory ⭐${total-STAR_MYTHIC_LIMIT.Mythic-STAR_MYTHIC_LIMIT.Honor}`;
-  else return `Immortal ⭐${total-STAR_MYTHIC_LIMIT.Mythic-STAR_MYTHIC_LIMIT.Honor-STAR_MYTHIC_LIMIT.Glory}`;
+  let stars=total;
+  let out="";
+  const limit={Mythic:24,Honor:25,Glory:50}; // Immortal unlimited
+
+  for(let r of RANK_ORDER){
+    let max=0;
+    if(RANK_DIVISI.includes(r)) max=STAR_PER_RANK;
+    else if(r==="Mythic") max=limit.Mythic;
+    else if(r==="Honor") max=limit.Honor;
+    else if(r==="Glory") max=limit.Glory;
+    else if(r==="Immortal") max=Infinity;
+
+    if(stars<max){
+      if(RANK_DIVISI.includes(r)){
+        let divIndex=Math.floor(stars/STAR_PER_DIV);
+        out=`${r} ${DIVISI[divIndex]} ⭐${stars%STAR_PER_DIV}`;
+      } else out=`${r} ⭐${stars}`;
+      break;
+    } else stars-=max;
+  }
+  return out;
 }
 
 // ======================
 // INVOICE
-// ======================
 function tampilInvoice(start,end,price,title){
-  let d={},total=0;
-  RANK_ORDER.forEach(r=>d[r]=0);
+  let detail={},total=0;
+  RANK_ORDER.forEach(r=>detail[r]=0);
 
-  for(let s=start;s<end;s++){
+  let s=start;
+  while(s<end){
     let r="";
-    if(s<=STAR_MYTHIC_LIMIT.Mythic) r="Mythic";
-    else if(s<=STAR_MYTHIC_LIMIT.Mythic+STAR_MYTHIC_LIMIT.Honor) r="Honor";
-    else if(s<=STAR_MYTHIC_LIMIT.Mythic+STAR_MYTHIC_LIMIT.Honor+STAR_MYTHIC_LIMIT.Glory) r="Glory";
+    if(s<24) r="Mythic";
+    else if(s<24+25) r="Honor";
+    else if(s<24+25+50) r="Glory";
     else r="Immortal";
 
-    d[r]++;
+    detail[r]++;
     total+=price[r]||0;
+    s++;
   }
 
   let out=`--- ${title} ---\n`;
   for(let r of RANK_ORDER){
-    if(d[r]>0){
-      out+=`${r.padEnd(10)} : ${d[r]} ⭐  Rp${(d[r]*price[r]).toLocaleString()}\n`;
-    }
+    if(detail[r]>0) out+=`${r.padEnd(10)} : ${detail[r]} ⭐  Rp${(detail[r]*price[r]).toLocaleString()}\n`;
   }
   out+=`-----------------------------\n`;
   out+=`Total Bintang : ${end-start} ⭐\n`;
@@ -142,7 +144,6 @@ function tampilInvoice(start,end,price,title){
 
 // ======================
 // HITUNG
-// ======================
 function hitungPerBintang(){
   let s=rankToStar(rank1.value,div1.value,+star1.value);
   tampilInvoice(s,s+ +addStar.value,PRICE,"JOKI PER BINTANG");
@@ -166,7 +167,6 @@ function hitungGendongRank(){
 
 // ======================
 // ESTIMASI NOMINAL
-// ======================
 function estimasiNominal(){
   let harga=mode.value==="PRICE"?PRICE:GENDONG;
   let cur=rankToStar(rankE.value,divE.value,+starE.value);
@@ -174,9 +174,9 @@ function estimasiNominal(){
 
   while(true){
     let r="";
-    if(cur<=STAR_MYTHIC_LIMIT.Mythic) r="Mythic";
-    else if(cur<=STAR_MYTHIC_LIMIT.Mythic+STAR_MYTHIC_LIMIT.Honor) r="Honor";
-    else if(cur<=STAR_MYTHIC_LIMIT.Mythic+STAR_MYTHIC_LIMIT.Honor+STAR_MYTHIC_LIMIT.Glory) r="Glory";
+    if(cur<24) r="Mythic";
+    else if(cur<24+25) r="Honor";
+    else if(cur<24+25+50) r="Glory";
     else r="Immortal";
 
     if(!harga[r]||saldo<harga[r]) break;
@@ -196,7 +196,6 @@ Sisa      : Rp${saldo.toLocaleString()}`;
 
 // ======================
 // PRICE LIST
-// ======================
 function showPriceList(){
   let out="=== JOKI PER BINTANG ===\n";
   for(let r of RANK_ORDER) if(PRICE[r])
@@ -211,6 +210,5 @@ function showPriceList(){
 
 // ======================
 // INIT
-// ======================
 showMenu(1);
 showPriceList();
