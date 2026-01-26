@@ -45,9 +45,9 @@ function fillDiv(id){
 // ======================
 // MENU
 function showMenu(n){
-  document.querySelectorAll(".box").forEach(b=>b.classList.remove("show"));
+  document.querySelectorAll(".box").forEach(b=>b.style.display="none");
   const target=document.getElementById("menu"+n);
-  if(target) target.classList.add("show");
+  if(target) target.style.display="block";
   if(n===6) showPriceList();
 }
 
@@ -78,17 +78,16 @@ function updateDivisi(rankElId, divElId){
 function rankToStar(rank, div, star){
   let r=RANK_ORDER.indexOf(rank);
   if(rank==="Glory"){
-    // Glory dimulai setelah bintang sebelum Glory
     let totalBeforeGlory=0;
     for(let i=0;i<RANK_ORDER.indexOf("Glory");i++){
-      totalBeforeGlory += RANK_DIVISI.includes(RANK_ORDER[i])?STAR_PER_RANK_STANDARD:STAR_PER_RANK_STANDARD;
+      totalBeforeGlory += STAR_PER_RANK_STANDARD;
     }
     return totalBeforeGlory + star;
   }
   if(rank==="Immortal"){
     let totalBeforeImmortal=0;
     for(let i=0;i<RANK_ORDER.indexOf("Glory");i++){
-      totalBeforeImmortal += RANK_DIVISI.includes(RANK_ORDER[i])?STAR_PER_RANK_STANDARD:STAR_PER_RANK_STANDARD;
+      totalBeforeImmortal += STAR_PER_RANK_STANDARD;
     }
     totalBeforeImmortal += STAR_GLORY;
     return totalBeforeImmortal + star;
@@ -130,20 +129,23 @@ function tampilInvoice(start,end,price,title){
   let d={},total=0;
   RANK_ORDER.forEach(r=>d[r]=0);
 
-  let s=start;
+  // hitung bintang per rank
+  let s = start;
   while(s<end){
     let rankName = starToRank(s).split(" ")[0];
-    if(price[rankName]){
-      d[rankName]++;
-      total+=price[rankName];
-    }
+    d[rankName]++;
+    total += price[rankName] || 0;
     s++;
   }
 
   let out=`--- ${title} ---\n`;
   for(let r of RANK_ORDER){
     if(d[r]>0){
-      out+=`${r.padEnd(10)} : ${d[r]} ⭐ x Rp${price[r].toLocaleString()} = Rp${(d[r]*price[r]).toLocaleString()}\n`;
+      let maxStar = STAR_PER_RANK_STANDARD;
+      if(r==="Glory") maxStar = STAR_GLORY;
+      if(r==="Immortal") maxStar = d[r]; // tampil semua bintang Immortal
+      let displayStar = Math.min(d[r], maxStar);
+      out+=`${r.padEnd(10)} : ${displayStar} ⭐ x Rp${price[r].toLocaleString()} = Rp${(displayStar*price[r]).toLocaleString()}\n`;
     }
   }
 
@@ -189,9 +191,11 @@ function estimasiNominal(){
   let saldo=+nominal.value,used=0,start=cur;
 
   while(true){
-    let r=RANK_ORDER[Math.floor(cur/STAR_PER_RANK_STANDARD)];
-    if(!harga[r]||saldo<harga[r]) break;
-    saldo-=harga[r]; used+=harga[r]; cur++;
+    let rankName = starToRank(cur).split(" ")[0];
+    if(!harga[rankName] || saldo < harga[rankName]) break;
+    saldo -= harga[rankName];
+    used += harga[rankName];
+    cur++;
   }
 
   hasil.textContent=
