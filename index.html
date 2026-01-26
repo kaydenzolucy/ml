@@ -4,123 +4,11 @@
   <meta charset="UTF-8">
   <title>Joki MLBB Khusus pacar yapici❤️</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <!-- GTASA Font -->
-  <link href="https://fonts.cdnfonts.com/css/gta-san-andreas" rel="stylesheet">
 
-  <style>
-    /* Reset & Basic */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'GTA San Andreas', sans-serif;
-    }
-    body {
-      background-color: #111;
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      padding: 20px;
-    }
-    .container {
-      width: 100%;
-      max-width: 900px;
-    }
+  <!-- Google Font Black Ops One -->
+  <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&display=swap" rel="stylesheet">
 
-    /* Judul */
-    .title-glow {
-      font-size: 28px;
-      text-align: center;
-      color: #ff3399;
-      text-shadow: 0 0 5px #ff3399, 0 0 10px #ff3399, 0 0 20px #ff66cc;
-      margin-bottom: 30px;
-    }
-
-    /* Menu tombol segi delapan */
-    .menu {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 15px;
-      justify-content: center;
-      margin-bottom: 30px;
-    }
-    .menu button {
-      background-color: #222;
-      color: #ff3399;
-      border: 2px solid #ff3399;
-      padding: 12px 20px;
-      cursor: pointer;
-      font-size: 16px;
-      font-family: 'GTA San Andreas', sans-serif;
-      clip-path: polygon(
-        30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%
-      ); /* segi delapan */
-      text-shadow: 0 0 3px #ff66cc, 0 0 5px #ff66cc;
-      transition: 0.3s;
-    }
-    .menu button:hover {
-      background-color: #ff3399;
-      color: #111;
-      text-shadow: 0 0 10px #fff;
-      box-shadow: 0 0 10px #ff3399, 0 0 20px #ff66cc;
-    }
-
-    /* Box menu */
-    .box {
-      display: none;
-      background-color: #1a1a1a;
-      border: 2px solid #ff3399;
-      padding: 20px;
-      margin-bottom: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #ff3399, 0 0 20px #ff66cc;
-    }
-    .box h2 {
-      color: #ff3399;
-      margin-bottom: 15px;
-    }
-    .box label {
-      display: block;
-      margin-top: 10px;
-      margin-bottom: 5px;
-    }
-    .box select, .box input {
-      width: 100%;
-      padding: 8px;
-      border-radius: 5px;
-      border: 1px solid #555;
-      background-color: #222; /* warna lebih gelap */
-      color: #fff;
-    }
-    .box button {
-      margin-top: 15px;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 5px;
-      background-color: #ff3399;
-      color: #111;
-      font-family: 'GTA San Andreas', sans-serif;
-      cursor: pointer;
-      box-shadow: 0 0 5px #ff3399, 0 0 10px #ff66cc;
-      transition: 0.3s;
-    }
-    .box button:hover {
-      background-color: #ff66cc;
-      color: #111;
-      box-shadow: 0 0 10px #ff3399, 0 0 20px #ff66cc;
-    }
-
-    /* Pre hasil */
-    pre#hasil, pre#pricelist {
-      background-color: #222;
-      padding: 10px;
-      border-radius: 5px;
-      border: 1px solid #ff3399;
-      white-space: pre-wrap;
-      color: #fff;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
@@ -129,14 +17,14 @@
     <div class="menu">
       <button onclick="showMenu(1)">⭐ Joki Per Bintang</button>
       <button onclick="showMenu(2)">🔁 Joki Antar Rank</button>
-      <button onclick="showMenu(3)">🔥 Gendong Per Bintang</button>
-      <button onclick="showMenu(4)">🔥 Gendong Antar Rank</button>
+      <button class="gendong" onclick="showMenu(3)">🔥 Gendong Per Bintang</button>
+      <button class="gendong" onclick="showMenu(4)">🔥 Gendong Antar Rank</button>
       <button onclick="showMenu(5)">💰 Estimasi Nominal</button>
       <button onclick="showMenu(6)">📋 Price List</button>
       <button class="link-btn" onclick="openLink()">💌 Jangan Dibuka</button>
     </div>
 
-    <!-- Contoh salah satu box -->
+    <!-- MENU 1 -->
     <div class="box" id="menu1">
       <h2>Joki Per Bintang</h2>
       <label>Rank</label>
@@ -150,18 +38,92 @@
       <button onclick="hitungPerBintang()">Hitung</button>
     </div>
 
+    <!-- MENU 2 -->
+    <div class="box" id="menu2">
+      <h2>Joki Antar Rank</h2>
+      <h3>Rank Awal</h3>
+      <label>Rank</label>
+      <select id="rankA"></select>
+      <label>Divisi</label>
+      <select id="divA"></select>
+      <label>Bintang</label>
+      <input type="number" id="starA" placeholder="Contoh: 1">
+      <h3>Rank Tujuan</h3>
+      <label>Rank</label>
+      <select id="rankB"></select>
+      <label>Divisi</label>
+      <select id="divB"></select>
+      <label>Bintang</label>
+      <input type="number" id="starB" placeholder="Contoh: 0">
+      <button onclick="hitungAntarRank()">Hitung</button>
+    </div>
+
+    <!-- MENU 3 -->
+    <div class="box" id="menu3">
+      <h2>Gendong Per Bintang</h2>
+      <label>Rank</label>
+      <select id="rankG1"></select>
+      <label>Divisi</label>
+      <select id="divG1"></select>
+      <label>Bintang Sekarang</label>
+      <input type="number" id="starG1" placeholder="Contoh: 3">
+      <label>Tambah Bintang</label>
+      <input type="number" id="addStarG" placeholder="Contoh: 5">
+      <button class="gendong" onclick="hitungGendongBintang()">Hitung</button>
+    </div>
+
+    <!-- MENU 4 -->
+    <div class="box" id="menu4">
+      <h2>Gendong Antar Rank</h2>
+      <h3>Rank Awal</h3>
+      <label>Rank</label>
+      <select id="rankGA"></select>
+      <label>Divisi</label>
+      <select id="divGA"></select>
+      <label>Bintang</label>
+      <input type="number" id="starGA" placeholder="Contoh: 4">
+      <h3>Rank Tujuan</h3>
+      <label>Rank</label>
+      <select id="rankGB"></select>
+      <label>Divisi</label>
+      <select id="divGB"></select>
+      <label>Bintang</label>
+      <input type="number" id="starGB" placeholder="Contoh: 0">
+      <button class="gendong" onclick="hitungGendongRank()">Hitung</button>
+    </div>
+
+    <!-- MENU 5 -->
+    <div class="box" id="menu5">
+      <h2>Estimasi Berdasarkan Nominal</h2>
+      <label>Mode</label>
+      <select id="mode">
+        <option value="PRICE">Joki Rank</option>
+        <option value="GENDONG">Gendong</option>
+      </select>
+      <label>Rank</label>
+      <select id="rankE"></select>
+      <label>Divisi</label>
+      <select id="divE"></select>
+      <label>Bintang Sekarang</label>
+      <input type="number" id="starE" placeholder="Contoh: 2">
+      <label>Nominal (Rp)</label>
+      <input type="number" id="nominal" placeholder="Contoh: 100000">
+      <button onclick="estimasiNominal()">Estimasi</button>
+    </div>
+
+    <!-- MENU 6 -->
+    <div class="box" id="menu6">
+      <h2>Price List Joki & Gendong</h2>
+      <pre id="pricelist"></pre>
+    </div>
+
     <pre id="hasil"></pre>
   </div>
 
+  <script src="script.js"></script>
   <script>
     function openLink(){
       window.location.href="https://kaydenzolucy.github.io/18januari2026/";
-    }
-
-    function showMenu(id){
-      document.querySelectorAll('.box').forEach(b => b.style.display = 'none');
-      const box = document.getElementById('menu' + id);
-      if(box) box.style.display = 'block';
     }
   </script>
 </body>
