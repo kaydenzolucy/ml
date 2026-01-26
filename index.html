@@ -21,7 +21,7 @@
   .container{max-width:100%;padding:18px;}
 
   /* ============================= */
-  /* JUDUL GLITCH NEON */
+  /* JUDUL GLITCH NEON HALUS */
   .title-glitch {
     font-family: 'Black Ops One', cursive;
     font-size: 48px;
@@ -30,14 +30,15 @@
     color: #ff4fa7;
     text-transform: uppercase;
     letter-spacing: 2px;
-    animation: flicker 2s infinite;
+    animation: flicker 3s infinite;
     text-shadow:
       0 0 5px #ff4fa7,
       0 0 10px #ff4fa7,
-      0 0 20px #ff4fa7,
-      0 0 40px #ff69b4,
-      0 0 80px #ff69b4;
+      0 0 15px #ff69b4,
+      0 0 25px #ff69b4,
+      0 0 40px #ff00ff;
   }
+
   .title-glitch::before,
   .title-glitch::after {
     content: attr(data-text);
@@ -47,35 +48,49 @@
     overflow: hidden;
     clip: rect(0, 0, 0, 0);
   }
+
   .title-glitch::before {
     left: 2px;
-    text-shadow: -2px 0 #00fff9, 2px 2px #ff00ff;
-    animation: glitchTop 2s infinite linear;
+    text-shadow: -2px 0 #00fff9, 2px 0 #ff00ff;
+    animation: glitchTop 3s infinite linear;
   }
+
   .title-glitch::after {
     left: -2px;
-    text-shadow: -2px 0 #ff0000, 2px -2px #00ff00;
-    animation: glitchBottom 2s infinite linear;
+    text-shadow: -2px 0 #ff0000, 2px 0 #00ff00;
+    animation: glitchBottom 3s infinite linear;
   }
 
   @keyframes flicker {
-    0%,19%,21%,23%,25%,54%,56%,100% {opacity:1;}
-    20%,22%,24%,55% {opacity:0.4;}
+    0%, 20%, 40%, 60%, 80%, 100% {opacity:1;}
+    10%, 30%, 50%, 70%, 90% {opacity:0.85;}
   }
+
   @keyframes glitchTop {
     0% {clip: rect(0, 9999px, 0, 0);}
-    5% {clip: rect(0, 9999px, 15px, 0);}
-    10% {clip: rect(5px, 9999px, 20px, 0);}
-    15% {clip: rect(0, 9999px, 10px, 0);}
-    20% {clip: rect(0, 9999px, 0, 0);}
+    10% {clip: rect(2px, 9999px, 12px, 0);}
+    20% {clip: rect(5px, 9999px, 20px, 0);}
+    30% {clip: rect(3px, 9999px, 15px, 0);}
+    40% {clip: rect(0, 9999px, 0, 0);}
+    50% {clip: rect(4px, 9999px, 18px, 0);}
+    60% {clip: rect(0, 9999px, 0, 0);}
+    70% {clip: rect(2px, 9999px, 12px, 0);}
+    80% {clip: rect(0, 9999px, 0, 0);}
+    90% {clip: rect(3px, 9999px, 15px, 0);}
     100% {clip: rect(0, 9999px, 0, 0);}
   }
+
   @keyframes glitchBottom {
     0% {clip: rect(0, 9999px, 0, 0);}
-    5% {clip: rect(10px, 9999px, 25px, 0);}
-    10% {clip: rect(15px, 9999px, 30px, 0);}
-    15% {clip: rect(5px, 9999px, 20px, 0);}
-    20% {clip: rect(0, 9999px, 0, 0);}
+    10% {clip: rect(10px, 9999px, 22px, 0);}
+    20% {clip: rect(12px, 9999px, 25px, 0);}
+    30% {clip: rect(8px, 9999px, 20px, 0);}
+    40% {clip: rect(0, 9999px, 0, 0);}
+    50% {clip: rect(9px, 9999px, 23px, 0);}
+    60% {clip: rect(0, 9999px, 0, 0);}
+    70% {clip: rect(11px, 9999px, 25px, 0);}
+    80% {clip: rect(0, 9999px, 0, 0);}
+    90% {clip: rect(7px, 9999px, 19px, 0);}
     100% {clip: rect(0, 9999px, 0, 0);}
   }
 
@@ -163,7 +178,7 @@
     Joki MLBB Khusus pacar yapici❤️
   </h1>
 
-  <!-- MENU -->
+  <!-- MENU & BOXES sama seperti versi sebelumnya -->
   <div class="menu">
     <button onclick="showMenu(1)">⭐ Joki Per Bintang</button>
     <button onclick="showMenu(2)">🔁 Joki Antar Rank</button>
@@ -174,7 +189,6 @@
     <button class="link-btn" onclick="openLink()">💌 Jangan Dibuka</button>
   </div>
 
-  <!-- MENU BOXES -->
   <div class="box" id="menu1">
     <h2>Joki Per Bintang</h2>
     <label>Rank</label>
