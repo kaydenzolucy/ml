@@ -18,82 +18,125 @@
     <button onclick="showMenu(5)">💰 Estimasi Nominal</button>
   </div>
 
+  <!-- MENU 1 -->
   <div class="box" id="menu1">
     <h2>Joki Per Bintang</h2>
+
+    <label>Rank</label>
     <select id="rank1"></select>
+
+    <label>Divisi</label>
     <select id="div1"></select>
-    <input type="number" id="star1" placeholder="Bintang sekarang">
-    <input type="number" id="addStar" placeholder="Tambah bintang">
+
+    <label>Bintang Sekarang</label>
+    <input type="number" id="star1" placeholder="Contoh: 2">
+
+    <label>Tambah Bintang</label>
+    <input type="number" id="addStar" placeholder="Contoh: 10">
+
     <button onclick="hitungPerBintang()">Hitung</button>
   </div>
 
+  <!-- MENU 2 -->
   <div class="box" id="menu2">
     <h2>Joki Antar Rank</h2>
+
+    <h3>Rank Awal</h3>
+    <label>Rank</label>
     <select id="rankA"></select>
+
+    <label>Divisi</label>
     <select id="divA"></select>
-    <input type="number" id="starA">
+
+    <label>Bintang Awal</label>
+    <input type="number" id="starA" placeholder="Contoh: 3">
+
+    <h3>Rank Tujuan</h3>
+    <label>Rank</label>
     <select id="rankB"></select>
+
+    <label>Divisi</label>
     <select id="divB"></select>
-    <input type="number" id="starB">
+
+    <label>Bintang Tujuan</label>
+    <input type="number" id="starB" placeholder="Contoh: 0">
+
     <button onclick="hitungAntarRank()">Hitung</button>
   </div>
 
+  <!-- MENU 3 -->
   <div class="box" id="menu3">
     <h2>Gendong Per Bintang</h2>
+
+    <label>Rank</label>
     <select id="rankG1"></select>
+
+    <label>Divisi</label>
     <select id="divG1"></select>
-    <input type="number" id="starG1">
-    <input type="number" id="addStarG">
-    <button onclick="hitungGendongBintang()">Hitung</button>
+
+    <label>Bintang Sekarang</label>
+    <input type="number" id="starG1" placeholder="Contoh: 1">
+
+    <label>Tambah Bintang</label>
+    <input type="number" id="addStarG" placeholder="Contoh: 5">
+
+    <button class="gendong" onclick="hitungGendongBintang()">Hitung</button>
   </div>
 
+  <!-- MENU 4 -->
   <div class="box" id="menu4">
     <h2>Gendong Antar Rank</h2>
+
+    <h3>Rank Awal</h3>
+    <label>Rank</label>
     <select id="rankGA"></select>
+
+    <label>Divisi</label>
     <select id="divGA"></select>
-    <input type="number" id="starGA">
+
+    <label>Bintang Awal</label>
+    <input type="number" id="starGA" placeholder="Contoh: 4">
+
+    <h3>Rank Tujuan</h3>
+    <label>Rank</label>
     <select id="rankGB"></select>
+
+    <label>Divisi</label>
     <select id="divGB"></select>
-    <input type="number" id="starGB">
-    <button onclick="hitungGendongRank()">Hitung</button>
+
+    <label>Bintang Tujuan</label>
+    <input type="number" id="starGB" placeholder="Contoh: 0">
+
+    <button class="gendong" onclick="hitungGendongRank()">Hitung</button>
   </div>
 
   <!-- MENU 5 -->
-<div class="box" id="menu5">
-  <h2>Estimasi Berdasarkan Nominal</h2>
+  <div class="box" id="menu5">
+    <h2>Estimasi Berdasarkan Nominal</h2>
 
-  <label>Mode Joki</label>
-  <select id="mode">
-    <option value="PRICE">Joki (Solo)</option>
-    <option value="GENDONG">Gendong</option>
-  </select>
+    <label>Mode Joki</label>
+    <select id="mode">
+      <option value="PRICE">Joki Rank</option>
+      <option value="GENDONG">Gendong</option>
+    </select>
 
-  <h3>Rank Awal</h3>
+    <h3>Rank Awal</h3>
 
-  <label>Rank</label>
-  <select id="rankE"></select>
+    <label>Rank</label>
+    <select id="rankE"></select>
 
-  <label>Divisi</label>
-  <select id="divE"></select>
+    <label>Divisi</label>
+    <select id="divE"></select>
 
-  <label>Bintang Sekarang</label>
-  <input 
-    type="number" 
-    id="starE" 
-    placeholder="Contoh: 2"
-    min="0" max="5"
-  >
+    <label>Bintang Sekarang</label>
+    <input type="number" id="starE" placeholder="Contoh: 2">
 
-  <label>Masukkan Nominal (Rp)</label>
-  <input 
-    type="number" 
-    id="nominal" 
-    placeholder="Contoh: 100000"
-  >
+    <label>Masukkan Nominal (Rp)</label>
+    <input type="number" id="nominal" placeholder="Contoh: 100000">
 
-  <button onclick="estimasiNominal()">Estimasi</button>
-</div>
-  
+    <button onclick="estimasiNominal()">Estimasi</button>
+  </div>
+
   <pre id="hasil"></pre>
 </div>
 
