@@ -3,44 +3,61 @@ body{
   color:#fff;
   font-family:Arial,sans-serif;
 }
+
 .container{
-  max-width:900px;
+  max-width:850px;
   margin:auto;
-  padding:20px;
+  padding:16px;
 }
+
 h1{
   text-align:center;
   color:#00ff88;
+  font-size:22px;
 }
+
 .menu{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-  gap:12px;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
 }
+
 button{
-  padding:14px;
-  font-size:16px;
+  padding:12px;
+  font-size:14px;
   border:none;
   border-radius:8px;
   background:#00ff88;
   cursor:pointer;
 }
 button.gendong{background:#ff9800}
+
 .box{
   display:none;
   background:#1b1b1b;
-  padding:20px;
+  padding:16px;
   border-radius:10px;
-  margin-top:20px;
+  margin-top:14px;
 }
+
+label{
+  font-size:13px;
+  opacity:.85;
+}
+
 select,input{
   width:100%;
+  max-width:420px;
   padding:10px;
-  margin:6px 0;
+  margin:6px 0 12px;
+  font-size:14px;
+  border-radius:6px;
 }
+
 pre{
   background:#000;
-  padding:15px;
+  padding:14px;
   border-radius:8px;
   white-space:pre-wrap;
+  font-size:13px;
 }
