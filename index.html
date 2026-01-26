@@ -2,19 +2,20 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Joki MLBB KHUSUS PACAR YAPICI❤️</title>
+  <title>Joki MLBB Calculator Pro</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="container">
-  <h1>JOKI MLBB KHUSUS PACAR YAPICI❤️</h1>
+  <h1>JOKI MLBB CALCULATOR PRO</h1>
 
   <div class="menu">
     <button onclick="showMenu(1)">⭐ Joki Per Bintang</button>
     <button onclick="showMenu(2)">🔁 Joki Antar Rank</button>
     <button class="gendong" onclick="showMenu(3)">🔥 Gendong Per Bintang</button>
     <button class="gendong" onclick="showMenu(4)">🔥 Gendong Antar Rank</button>
+    <button onclick="showMenu(5)">💰 Estimasi Nominal</button>
   </div>
 
   <!-- MENU 1 -->
@@ -69,6 +70,23 @@
     <input type="number" id="starGB" placeholder="Bintang tujuan">
 
     <button class="gendong" onclick="hitungGendongRank()">Hitung</button>
+  </div>
+
+  <!-- MENU 5 -->
+  <div class="box" id="menu5">
+    <h2>Estimasi Berdasarkan Nominal</h2>
+
+    <select id="mode">
+      <option value="PRICE">Joki</option>
+      <option value="GENDONG">Gendong</option>
+    </select>
+
+    <select id="rankE"></select>
+    <select id="divE"></select>
+    <input type="number" id="starE" placeholder="Bintang sekarang">
+    <input type="number" id="nominal" placeholder="Nominal (Rp)">
+
+    <button onclick="estimasiNominal()">Estimasi</button>
   </div>
 
   <pre id="hasil"></pre>
