@@ -30,12 +30,10 @@ const RANK_ORDER = [
 ];
 const RANK_DIVISI = ["Master","GM","Epic","Legend"];
 const DIVISI = ["V","IV","III","II","I"];
-const STAR_PER_DIV = 5; // per divisi
-const RANK_STAR_LIMIT = {
-  Master:25,
-  GM:25,
-  Epic:25,
-  Legend:25,
+const STAR_PER_DIV = 5;
+
+// Mythic+
+const MYTHIC_BONUS = {
   Mythic:24,
   Honor:25,
   Glory:50,
@@ -78,19 +76,17 @@ function fillDiv(id){
 function showMenu(n){
   document.querySelectorAll(".box").forEach(b=>b.style.display="none");
   const target = document.getElementById("menu"+n);
-  if(target) target.style.display = "block";
+  if(target) target.style.display="block";
   if(n===6) showPriceList();
 }
 
 // ======================
-// STAR → RANK & RANK → STAR
+// RANK → STAR
 // ======================
 function rankToStar(rank, div, star){
-  // Rank di bawah Mythic
   if(RANK_DIVISI.includes(rank)){
-    return RANK_ORDER.indexOf(rank)*STAR_PER_DIV*DIVISI.length + DIVISI.indexOf(div)*STAR_PER_DIV + star;
+    return RANK_ORDER.indexOf(rank)*DIVISI.length*STAR_PER_DIV + DIVISI.indexOf(div)*STAR_PER_DIV + star;
   }
-  // Mythic+
   let offset = 0;
   switch(rank){
     case "Mythic": offset = 0; break;
@@ -101,11 +97,14 @@ function rankToStar(rank, div, star){
   return offset + star;
 }
 
+// ======================
+// STAR → RANK
+// ======================
 function starToRank(total){
   if(total <= 24) return `Mythic ⭐${total}`;
-  else if(total <= 49) return `Honor ⭐${total - 24}`;
-  else if(total <= 99) return `Glory ⭐${total - 49}`;
-  else return `Immortal ⭐${total - 99}`;
+  if(total <= 49) return `Honor ⭐${total-24}`;
+  if(total <= 99) return `Glory ⭐${total-49}`;
+  return `Immortal ⭐${total-99}`;
 }
 
 // ======================
@@ -114,13 +113,13 @@ function starToRank(total){
 function tampilInvoice(start, end, price, title){
   let detail = {};
   let total = 0;
-  RANK_ORDER.forEach(r => detail[r]=0);
+  RANK_ORDER.forEach(r=>detail[r]=0);
 
   for(let s=start; s<end; s++){
     let r;
-    if(s <= 24) r="Mythic";
-    else if(s <= 49) r="Honor";
-    else if(s <= 99) r="Glory";
+    if(s<=24) r="Mythic";
+    else if(s<=49) r="Honor";
+    else if(s<=99) r="Glory";
     else r="Immortal";
 
     detail[r]++;
@@ -179,9 +178,9 @@ function estimasiNominal(){
 
   while(true){
     let r;
-    if(cur <= 24) r="Mythic";
-    else if(cur <= 49) r="Honor";
-    else if(cur <= 99) r="Glory";
+    if(cur<=24) r="Mythic";
+    else if(cur<=49) r="Honor";
+    else if(cur<=99) r="Glory";
     else r="Immortal";
 
     if(!harga[r] || saldo<harga[r]) break;
@@ -217,25 +216,24 @@ function showPriceList(){
 }
 
 // ======================
-// HIDE/SHOW DIVISI + RESET STAR
+// HIDE DIVISI & RESET STAR
 // ======================
 function updateDivisi(rankElId, divElId, starElId){
   const rankEl = document.getElementById(rankElId);
   const divEl  = document.getElementById(divElId);
   const starEl = document.getElementById(starElId);
-  if(!rankEl || !divEl || !starEl) return;
+  if(!rankEl||!divEl||!starEl) return;
 
   rankEl.addEventListener("change", ()=>{
     const rank = rankEl.value;
-
     if(["Mythic","Honor","Glory","Immortal"].includes(rank)){
       divEl.style.maxHeight="0";
       divEl.style.overflow="hidden";
-      divEl.style.transition="all 0.3s ease";
+      divEl.style.transition="all 0.3s";
       divEl.value="";
       starEl.value=0;
-      starEl.max=RANK_STAR_LIMIT[rank];
-    }else{
+      starEl.max=MYTHIC_BONUS[rank];
+    } else {
       divEl.style.maxHeight="100px";
       divEl.style.overflow="visible";
       starEl.value=0;
@@ -245,11 +243,11 @@ function updateDivisi(rankElId, divElId, starElId){
 }
 
 // ======================
-// APPLY TO ALL MENUS
+// APPLY
 // ======================
 ["rank1","rankA","rankB","rankG1","rankGA","rankGB","rankE"].forEach(id=>{
-  const divId = id.replace(/rank/,"div");
-  const starId= id.replace(/rank/,"star");
+  const divId=id.replace(/rank/,"div");
+  const starId=id.replace(/rank/,"star");
   updateDivisi(id,divId,starId);
 });
 
