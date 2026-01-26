@@ -1,244 +1,263 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<title>Joki MLBB Khusus pacar yapici❤️</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&display=swap" rel="stylesheet">
-<style>
-/* RESET & BODY */
-*{box-sizing:border-box;}
-body{
-  background:linear-gradient(180deg,#1a0f2e,#12081f);
-  color:#fff;
-  font-family:"Segoe UI",Arial,sans-serif;
-  margin:0;
-}
-.container{max-width:100%;padding:18px;}
+  <meta charset="UTF-8">
+  <title>Joki MLBB Khusus pacar yapici❤️</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Google Font Black Ops One -->
+  <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&display=swap" rel="stylesheet">
 
-/* JUDUL SIMPLE */
-.title {
-  font-family: 'Black Ops One', cursive;
-  font-size: 28px;
-  text-align: center;
-  color: #ff4fa7;
-  letter-spacing: 1px;
-  margin-bottom: 20px;
-}
+  <style>
+  /* ============================= */
+  /* RESET & BODY */
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background: linear-gradient(180deg,#1a0f2e,#12081f);
+    color:#fff;
+    font-family:"Segoe UI",Arial,sans-serif;
+  }
+  .container{max-width:100%;padding:18px;}
 
-/* MENU & BUTTON */
-.menu{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
-  margin-bottom:18px;
-}
-.menu button{
-  padding:16px 12px;
-  font-size:16px;
-  font-weight:600;
-  border:none;
-  border-radius:16px;
-  background:#2b1b3a;
-  color:#ff4fa7;
-  cursor:pointer;
-  border-left:3px solid #ff4fa7;
-  border-right:3px solid #ff4fa7;
-  transition: all 0.2s ease;
-}
-.menu button:hover{
-  transform: translateY(-2px);
-}
-.menu button.gendong{
-  color:#ff9800;
-  border-left:3px solid #ffb347;
-  border-right:3px solid #ffb347;
-}
-.menu button.link-btn{
-  color:#0b2b1f;
-  background:#84fab0;
-  border-left:3px solid #84fab0;
-  border-right:3px solid #84fab0;
-}
+  /* ============================= */
+  /* JUDUL GLITCH HALUS */
+  .title-glitch {
+    font-family: 'Black Ops One', cursive;
+    font-size: 36px;
+    text-align: center;
+    color: #ff4fa7;
+    position: relative;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+  .title-glitch::before,
+  .title-glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 0;
+    width: 100%;
+    opacity: 0.6;
+  }
+  .title-glitch::before { 
+    top: 1px; 
+    color: #ff9ad1;
+    transform: translateX(-1px);
+  }
+  .title-glitch::after { 
+    top: -1px; 
+    color: #ff1f9f;
+    transform: translateX(1px);
+  }
 
-/* BOXES & INPUT */
-.box{
-  display:none;
-  background:#2f1f4c; /* lebih terang dari background */
-  padding:18px;
-  border-radius:20px;
-  margin-bottom:18px;
-  border-left:3px solid #ff4fa7;
-  border-right:3px solid #ff4fa7;
-  transition:all 0.3s ease;
-}
-.box.show{display:block;}
+  /* ============================= */
+  /* MENU & BOX */
+  .menu{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-bottom:18px;
+  }
+  .menu button{
+    padding:14px 12px;
+    font-size:16px;
+    font-weight:600;
+    border:none;
+    border-radius:16px;
+    background:linear-gradient(135deg,#ff4fa7,#ff7ac8);
+    color:#fff;
+    cursor:pointer;
+    box-shadow:0 4px 12px rgba(255,79,167,.35);
+    border:1px solid #ff4fa7;
+    transition:all 0.2s ease;
+  }
+  .menu button:hover{
+    box-shadow:0 0 12px #ff7ac8;
+  }
+  .menu button.gendong{
+    background:linear-gradient(135deg,#ffb347,#ff9800);
+    border:1px solid #ffb347;
+  }
+  .menu button.link-btn{
+    background:linear-gradient(135deg,#8fd3f4,#84fab0);
+    border:1px solid #84fab0;
+    color:#0b2b1f;
+  }
 
-h2{font-size:20px;margin-bottom:12px;color:#ff4fa7;}
-h3{font-size:16px;margin:10px 0 6px;color:#ff4fa7;}
-label{font-size:14px;opacity:.9;}
-
-select,input{
-  width:100%;
-  padding:14px;
-  margin:6px 0 12px;
-  font-size:16px;
-  border-radius:12px;
-  border:none;
-  background:#251535; /* lebih gelap dari box */
-  color:#fff;
-}
-
-/* BUTTON DALAM BOX */
-.box button{
-  width:100%;
-  padding:14px;
-  font-size:16px;
-  font-weight:600;
-  border:none;
-  border-radius:16px;
-  background:#2b1b3a;
-  color:#ff4fa7;
-  cursor:pointer;
-  border-left:3px solid #ff4fa7;
-  border-right:3px solid #ff4fa7;
-  transition: all 0.2s ease;
-}
-.box button.gendong{
-  color:#ff9800;
-  border-left:3px solid #ffb347;
-  border-right:3px solid #ffb347;
-}
-
-pre{
-  background:#251535;
-  padding:14px;
-  border-radius:16px;
-  white-space:pre-wrap;
-  font-size:14px;
-  line-height:1.6;
-  margin-top:14px;
-  border-left:3px solid #ff4fa7;
-  border-right:3px solid #ff4fa7;
-}
-</style>
+  .box{
+    display:none;
+    background:rgba(255,255,255,.05);
+    padding:18px;
+    border-radius:18px;
+    margin-bottom:18px;
+    box-shadow:0 6px 18px rgba(0,0,0,.35);
+    border:1px solid #ff4fa7;
+    transition:all 0.3s ease;
+  }
+  .box.show{display:block !important;}
+  h2{font-size:20px;margin-bottom:10px;color:#ffd6ec;}
+  h3{font-size:16px;margin:8px 0 6px;color:#ffc1df;}
+  label{font-size:14px;opacity:.9;}
+  select,input{
+    width:100%;
+    padding:14px;
+    margin:6px 0 12px;
+    font-size:15px;
+    border-radius:14px;
+    border:none;
+    background:#2a1a36;
+    color:#fff;
+    transition:all 0.2s ease;
+  }
+  input::placeholder{color:#cfa3bf;}
+  .box button{
+    width:100%;
+    padding:16px;
+    font-size:16px;
+    font-weight:600;
+    border:none;
+    border-radius:16px;
+    background:linear-gradient(135deg,#ff4fa7,#ff7ac8);
+    color:#fff;
+    cursor:pointer;
+    box-shadow:0 4px 14px rgba(255,79,167,.4);
+    border:1px solid #ff4fa7;
+    transition:all 0.2s ease;
+  }
+  .box button:hover{
+    box-shadow:0 0 14px #ff7ac8;
+  }
+  .box button.gendong{
+    background:linear-gradient(135deg,#ffb347,#ff9800);
+    border:1px solid #ffb347;
+  }
+  pre{
+    background:#12071f;
+    padding:14px;
+    border-radius:14px;
+    white-space:pre-wrap;
+    font-size:14px;
+    line-height:1.5;
+    margin-top:14px;
+    box-shadow:inset 0 0 8px rgba(255,255,255,.05);
+  }
+  </style>
 </head>
 <body>
+
 <div class="container">
-<h1 class="title">Joki MLBB Khusus pacar yapici❤️</h1>
+  <h1 class="title-glitch" data-text="Joki MLBB Khusus pacar yapici❤️">
+    Joki MLBB Khusus pacar yapici❤️
+  </h1>
 
-<div class="menu">
-  <button onclick="showMenu(1)">⭐ Joki Per Bintang</button>
-  <button onclick="showMenu(2)">🔁 Joki Antar Rank</button>
-  <button class="gendong" onclick="showMenu(3)">🔥 Gendong Per Bintang</button>
-  <button class="gendong" onclick="showMenu(4)">🔥 Gendong Antar Rank</button>
-  <button onclick="showMenu(5)">💰 Estimasi Nominal</button>
-  <button onclick="showMenu(6)">📋 Price List</button>
-  <button class="link-btn" onclick="openLink()">💌 Jangan Dibuka</button>
-</div>
+  <div class="menu">
+    <button onclick="showMenu(1)">⭐ Joki Per Bintang</button>
+    <button onclick="showMenu(2)">🔁 Joki Antar Rank</button>
+    <button class="gendong" onclick="showMenu(3)">🔥 Gendong Per Bintang</button>
+    <button class="gendong" onclick="showMenu(4)">🔥 Gendong Antar Rank</button>
+    <button onclick="showMenu(5)">💰 Estimasi Nominal</button>
+    <button onclick="showMenu(6)">📋 Price List</button>
+    <button class="link-btn" onclick="openLink()">💌 Jangan Dibuka</button>
+  </div>
 
-<!-- BOX MENU 1 -->
-<div class="box" id="menu1">
-  <h2>Joki Per Bintang</h2>
-  <label>Rank</label>
-  <select id="rank1"></select>
-  <label>Divisi</label>
-  <select id="div1"></select>
-  <label>Bintang Sekarang</label>
-  <input type="number" id="star1" placeholder="Contoh: 2">
-  <label>Tambah Bintang</label>
-  <input type="number" id="addStar" placeholder="Contoh: 10">
-  <button onclick="hitungPerBintang()">Hitung</button>
-</div>
+  <div class="box" id="menu1">
+    <h2>Joki Per Bintang</h2>
+    <label>Rank</label>
+    <select id="rank1"></select>
+    <label>Divisi</label>
+    <select id="div1"></select>
+    <label>Bintang Sekarang</label>
+    <input type="number" id="star1" placeholder="Contoh: 2">
+    <label>Tambah Bintang</label>
+    <input type="number" id="addStar" placeholder="Contoh: 10">
+    <button onclick="hitungPerBintang()">Hitung</button>
+  </div>
 
-<!-- BOX MENU 2 -->
-<div class="box" id="menu2">
-  <h2>Joki Antar Rank</h2>
-  <h3>Rank Awal</h3>
-  <label>Rank</label>
-  <select id="rankA"></select>
-  <label>Divisi</label>
-  <select id="divA"></select>
-  <label>Bintang</label>
-  <input type="number" id="starA" placeholder="Contoh: 1">
-  <h3>Rank Tujuan</h3>
-  <label>Rank</label>
-  <select id="rankB"></select>
-  <label>Divisi</label>
-  <select id="divB"></select>
-  <label>Bintang</label>
-  <input type="number" id="starB" placeholder="Contoh: 0">
-  <button onclick="hitungAntarRank()">Hitung</button>
-</div>
+  <div class="box" id="menu2">
+    <h2>Joki Antar Rank</h2>
+    <h3>Rank Awal</h3>
+    <label>Rank</label>
+    <select id="rankA"></select>
+    <label>Divisi</label>
+    <select id="divA"></select>
+    <label>Bintang</label>
+    <input type="number" id="starA" placeholder="Contoh: 1">
+    <h3>Rank Tujuan</h3>
+    <label>Rank</label>
+    <select id="rankB"></select>
+    <label>Divisi</label>
+    <select id="divB"></select>
+    <label>Bintang</label>
+    <input type="number" id="starB" placeholder="Contoh: 0">
+    <button onclick="hitungAntarRank()">Hitung</button>
+  </div>
 
-<!-- BOX MENU 3 -->
-<div class="box" id="menu3">
-  <h2>Gendong Per Bintang</h2>
-  <label>Rank</label>
-  <select id="rankG1"></select>
-  <label>Divisi</label>
-  <select id="divG1"></select>
-  <label>Bintang Sekarang</label>
-  <input type="number" id="starG1" placeholder="Contoh: 3">
-  <label>Tambah Bintang</label>
-  <input type="number" id="addStarG" placeholder="Contoh: 5">
-  <button class="gendong" onclick="hitungGendongBintang()">Hitung</button>
-</div>
+  <div class="box" id="menu3">
+    <h2>Gendong Per Bintang</h2>
+    <label>Rank</label>
+    <select id="rankG1"></select>
+    <label>Divisi</label>
+    <select id="divG1"></select>
+    <label>Bintang Sekarang</label>
+    <input type="number" id="starG1" placeholder="Contoh: 3">
+    <label>Tambah Bintang</label>
+    <input type="number" id="addStarG" placeholder="Contoh: 5">
+    <button class="gendong" onclick="hitungGendongBintang()">Hitung</button>
+  </div>
 
-<!-- BOX MENU 4 -->
-<div class="box" id="menu4">
-  <h2>Gendong Antar Rank</h2>
-  <h3>Rank Awal</h3>
-  <label>Rank</label>
-  <select id="rankGA"></select>
-  <label>Divisi</label>
-  <select id="divGA"></select>
-  <label>Bintang</label>
-  <input type="number" id="starGA" placeholder="Contoh: 4">
-  <h3>Rank Tujuan</h3>
-  <label>Rank</label>
-  <select id="rankGB"></select>
-  <label>Divisi</label>
-  <select id="divGB"></select>
-  <label>Bintang</label>
-  <input type="number" id="starGB" placeholder="Contoh: 0">
-  <button class="gendong" onclick="hitungGendongRank()">Hitung</button>
-</div>
+  <div class="box" id="menu4">
+    <h2>Gendong Antar Rank</h2>
+    <h3>Rank Awal</h3>
+    <label>Rank</label>
+    <select id="rankGA"></select>
+    <label>Divisi</label>
+    <select id="divGA"></select>
+    <label>Bintang</label>
+    <input type="number" id="starGA" placeholder="Contoh: 4">
+    <h3>Rank Tujuan</h3>
+    <label>Rank</label>
+    <select id="rankGB"></select>
+    <label>Divisi</label>
+    <select id="divGB"></select>
+    <label>Bintang</label>
+    <input type="number" id="starGB" placeholder="Contoh: 0">
+    <button class="gendong" onclick="hitungGendongRank()">Hitung</button>
+  </div>
 
-<!-- BOX MENU 5 -->
-<div class="box" id="menu5">
-  <h2>Estimasi Berdasarkan Nominal</h2>
-  <label>Mode</label>
-  <select id="mode">
-    <option value="PRICE">Joki Rank</option>
-    <option value="GENDONG">Gendong</option>
-  </select>
-  <label>Rank</label>
-  <select id="rankE"></select>
-  <label>Divisi</label>
-  <select id="divE"></select>
-  <label>Bintang Sekarang</label>
-  <input type="number" id="starE" placeholder="Contoh: 2">
-  <label>Nominal (Rp)</label>
-  <input type="number" id="nominal" placeholder="Contoh: 100000">
-  <button onclick="estimasiNominal()">Estimasi</button>
-</div>
+  <div class="box" id="menu5">
+    <h2>Estimasi Berdasarkan Nominal</h2>
+    <label>Mode</label>
+    <select id="mode">
+      <option value="PRICE">Joki Rank</option>
+      <option value="GENDONG">Gendong</option>
+    </select>
+    <label>Rank</label>
+    <select id="rankE"></select>
+    <label>Divisi</label>
+    <select id="divE"></select>
+    <label>Bintang Sekarang</label>
+    <input type="number" id="starE" placeholder="Contoh: 2">
+    <label>Nominal (Rp)</label>
+    <input type="number" id="nominal" placeholder="Contoh: 100000">
+    <button onclick="estimasiNominal()">Estimasi</button>
+  </div>
 
-<!-- BOX MENU 6 -->
-<div class="box" id="menu6">
-  <h2>Price List Joki & Gendong</h2>
-  <pre id="pricelist"></pre>
-</div>
+  <div class="box" id="menu6">
+    <h2>Price List Joki & Gendong</h2>
+    <pre id="pricelist"></pre>
+  </div>
 
-<pre id="hasil"></pre>
+  <pre id="hasil"></pre>
 </div>
 
 <script>
-function openLink(){ window.location.href="https://kaydenzolucy.github.io/18januari2026/"; }
-function showMenu(num){
+function openLink(){
+  window.location.href="https://kaydenzolucy.github.io/18januari2026/";
+}
+function showMenu(id){
   document.querySelectorAll('.box').forEach(b=>b.classList.remove('show'));
-  document.getElementById('menu'+num).classList.add('show');
+  document.getElementById('menu'+id).classList.add('show');
 }
 </script>
+
 </body>
 </html>
