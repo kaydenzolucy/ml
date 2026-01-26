@@ -24,21 +24,11 @@ const GENDONG = {
 // ======================
 // RANK DATA
 // ======================
-const RANK_ORDER = [
-  "Master","GM","Epic","Legend",
-  "Mythic","Honor","Glory","Immortal"
-];
-const RANK_DIVISI = ["Master","GM","Epic","Legend"];
+const RANK_ORDER = ["Master","GM","Epic","Legend","Mythic","Honor","Glory","Immortal"];
 const DIVISI = ["V","IV","III","II","I"];
 const STAR_PER_DIV = 5;
-
-// Mythic+
-const MYTHIC_BONUS = {
-  Mythic:24,
-  Honor:25,
-  Glory:50,
-  Immortal:1000 // unlimited
-};
+const STAR_PER_RANK = 25; // Master-GM-Epic-Legend
+const STAR_MYTHIC = {Mythic:24, Honor:25, Glory:50, Immortal:100};
 
 // ======================
 // INIT SELECT
@@ -76,65 +66,75 @@ function fillDiv(id){
 function showMenu(n){
   document.querySelectorAll(".box").forEach(b=>b.style.display="none");
   const target = document.getElementById("menu"+n);
-  if(target) target.style.display="block";
+  if(target) target.style.display = "block";
   if(n===6) showPriceList();
 }
 
 // ======================
-// RANK → STAR
+// RANK/DIVISI → STAR
 // ======================
 function rankToStar(rank, div, star){
-  if(RANK_DIVISI.includes(rank)){
-    return RANK_ORDER.indexOf(rank)*DIVISI.length*STAR_PER_DIV + DIVISI.indexOf(div)*STAR_PER_DIV + star;
+  if(DIVISI.includes(div)){ // Master-GM-Epic-Legend
+    return RANK_ORDER.indexOf(rank)*STAR_PER_RANK + DIVISI.indexOf(div)*STAR_PER_DIV + star;
   }
-  let offset = 0;
+  // Mythic+
   switch(rank){
-    case "Mythic": offset = 0; break;
-    case "Honor": offset = 24; break;
-    case "Glory": offset = 49; break;
-    case "Immortal": offset = 99; break;
+    case "Mythic": return star;
+    case "Honor": return STAR_MYTHIC.Mythic + star;
+    case "Glory": return STAR_MYTHIC.Mythic + STAR_MYTHIC.Honor + star;
+    case "Immortal": return STAR_MYTHIC.Mythic + STAR_MYTHIC.Honor + STAR_MYTHIC.Glory + star;
   }
-  return offset + star;
+  return 0;
 }
 
 // ======================
-// STAR → RANK
+// STAR → RANK/DIVISI
 // ======================
 function starToRank(total){
-  if(total <= 24) return `Mythic ⭐${total}`;
-  if(total <= 49) return `Honor ⭐${total-24}`;
-  if(total <= 99) return `Glory ⭐${total-49}`;
-  return `Immortal ⭐${total-99}`;
+  let t = total;
+  let rank = "", star = 0;
+  if(t < STAR_MYTHIC.Mythic){
+    rank = "Mythic"; star = t;
+  } else if(t < STAR_MYTHIC.Mythic + STAR_MYTHIC.Honor){
+    rank = "Honor"; star = t - STAR_MYTHIC.Mythic;
+  } else if(t < STAR_MYTHIC.Mythic + STAR_MYTHIC.Honor + STAR_MYTHIC.Glory){
+    rank = "Glory"; star = t - STAR_MYTHIC.Mythic - STAR_MYTHIC.Honor;
+  } else {
+    rank = "Immortal"; star = t - STAR_MYTHIC.Mythic - STAR_MYTHIC.Honor - STAR_MYTHIC.Glory;
+  }
+  return `${rank} ⭐${star}`;
 }
 
 // ======================
-// HITUNG INVOICE
+// INVOICE DETAIL
 // ======================
 function tampilInvoice(start, end, price, title){
   let detail = {};
+  RANK_ORDER.forEach(r => detail[r] = 0);
   let total = 0;
-  RANK_ORDER.forEach(r=>detail[r]=0);
+  let cur = start;
 
-  for(let s=start; s<end; s++){
+  while(cur < end){
     let r;
-    if(s<=24) r="Mythic";
-    else if(s<=49) r="Honor";
-    else if(s<=99) r="Glory";
-    else r="Immortal";
+    if(cur < STAR_MYTHIC.Mythic) r = "Mythic";
+    else if(cur < STAR_MYTHIC.Mythic + STAR_MYTHIC.Honor) r = "Honor";
+    else if(cur < STAR_MYTHIC.Mythic + STAR_MYTHIC.Honor + STAR_MYTHIC.Glory) r = "Glory";
+    else r = "Immortal";
 
     detail[r]++;
-    total += price[r]||0;
+    total += price[r] || 0;
+    cur++;
   }
 
   let out = `--- ${title} ---\n`;
   for(let r of RANK_ORDER){
-    if(detail[r]>0){
+    if(detail[r] > 0){
       out += `${r.padEnd(10)} : ${detail[r]} ⭐  Rp${(detail[r]*price[r]).toLocaleString()}\n`;
     }
   }
 
   out += `-----------------------------\n`;
-  out += `Total Bintang : ${end-start} ⭐\n`;
+  out += `Total Bintang : ${end - start} ⭐\n`;
   out += `Rank Akhir    : ${starToRank(end-1)}\n`;
   out += `TOTAL         : Rp${total.toLocaleString()}`;
 
@@ -150,9 +150,15 @@ function hitungPerBintang(){
 }
 
 function hitungAntarRank(){
-  let start = rankToStar(rankA.value, divA.value, +starA.value);
-  let end   = rankToStar(rankB.value, divB.value, +starB.value);
-  tampilInvoice(start, end, PRICE, "JOKI ANTAR RANK");
+  let sStart = rankToStar(rankA.value, divA.value, +starA.value);
+  let sEnd = rankToStar(rankB.value, divB.value, +starB.value);
+
+  if(sEnd <= sStart){
+    hasil.textContent = "--- JOKI ANTAR RANK ---\nError: Rank Tujuan harus lebih tinggi dari Rank Awal";
+    return;
+  }
+
+  tampilInvoice(sStart, sEnd, PRICE, "JOKI ANTAR RANK");
 }
 
 function hitungGendongBintang(){
@@ -161,29 +167,29 @@ function hitungGendongBintang(){
 }
 
 function hitungGendongRank(){
-  let start = rankToStar(rankGA.value, divGA.value, +starGA.value);
-  let end   = rankToStar(rankGB.value, divGB.value, +starGB.value);
-  tampilInvoice(start, end, GENDONG, "GENDONG ANTAR RANK");
+  let sStart = rankToStar(rankGA.value, divGA.value, +starGA.value);
+  let sEnd = rankToStar(rankGB.value, divGB.value, +starGB.value);
+  tampilInvoice(sStart, sEnd, GENDONG, "GENDONG ANTAR RANK");
 }
 
 // ======================
 // ESTIMASI NOMINAL
 // ======================
 function estimasiNominal(){
-  let harga = mode.value==="PRICE"?PRICE:GENDONG;
-  let cur = rankToStar(rankE.value, divE.value, +starE.value);
+  let harga = mode.value === "PRICE" ? PRICE : GENDONG;
+  let start = rankToStar(rankE.value, divE.value, +starE.value);
+  let cur = start;
   let saldo = +nominal.value;
-  let start = cur;
   let used = 0;
 
   while(true){
     let r;
-    if(cur<=24) r="Mythic";
-    else if(cur<=49) r="Honor";
-    else if(cur<=99) r="Glory";
-    else r="Immortal";
+    if(cur < STAR_MYTHIC.Mythic) r = "Mythic";
+    else if(cur < STAR_MYTHIC.Mythic + STAR_MYTHIC.Honor) r = "Honor";
+    else if(cur < STAR_MYTHIC.Mythic + STAR_MYTHIC.Honor + STAR_MYTHIC.Glory) r = "Glory";
+    else r = "Immortal";
 
-    if(!harga[r] || saldo<harga[r]) break;
+    if(!harga[r] || saldo < harga[r]) break;
     saldo -= harga[r];
     used += harga[r];
     cur++;
@@ -194,7 +200,7 @@ function estimasiNominal(){
 Rank Awal : ${rankE.value} ${divE.value} ⭐${starE.value}
 Modal     : Rp${(+nominal.value).toLocaleString()}
 -----------------------------
-Naik      : ${cur-start} ⭐
+Naik      : ${cur - start} ⭐
 Rank Akhir: ${starToRank(cur-1)}
 Terpakai  : Rp${used.toLocaleString()}
 Sisa      : Rp${saldo.toLocaleString()}`;
@@ -205,51 +211,50 @@ Sisa      : Rp${saldo.toLocaleString()}`;
 // ======================
 function showPriceList(){
   let out = "=== JOKI PER BINTANG ===\n";
-  for(let r of RANK_ORDER){
-    if(PRICE[r]) out += `${r.padEnd(10)} : Rp${PRICE[r].toLocaleString()}\n`;
-  }
+  for(let r of RANK_ORDER){if(PRICE[r]) out += `${r.padEnd(10)} : Rp${PRICE[r].toLocaleString()}\n`;}
   out += "\n=== GENDONG PER BINTANG ===\n";
-  for(let r of RANK_ORDER){
-    if(GENDONG[r]) out += `${r.padEnd(10)} : Rp${GENDONG[r].toLocaleString()}\n`;
-  }
+  for(let r of RANK_ORDER){if(GENDONG[r]) out += `${r.padEnd(10)} : Rp${GENDONG[r].toLocaleString()}\n`;}
   pricelist.textContent = out;
 }
 
 // ======================
-// HIDE DIVISI & RESET STAR
+// HIDE/SHOW DIVISI & LIMIT STAR
 // ======================
 function updateDivisi(rankElId, divElId, starElId){
   const rankEl = document.getElementById(rankElId);
-  const divEl  = document.getElementById(divElId);
+  const divEl = document.getElementById(divElId);
   const starEl = document.getElementById(starElId);
-  if(!rankEl||!divEl||!starEl) return;
+  if(!rankEl || !divEl || !starEl) return;
 
   rankEl.addEventListener("change", ()=>{
     const rank = rankEl.value;
     if(["Mythic","Honor","Glory","Immortal"].includes(rank)){
-      divEl.style.maxHeight="0";
-      divEl.style.overflow="hidden";
-      divEl.style.transition="all 0.3s";
-      divEl.value="";
-      starEl.value=0;
-      starEl.max=MYTHIC_BONUS[rank];
+      divEl.style.maxHeight = "0";
+      divEl.style.overflow = "hidden";
+      divEl.style.transition = "all 0.3s ease";
+      divEl.value = "";
+      starEl.value = 0;
+      starEl.max = 1000; // unlimited
     } else {
-      divEl.style.maxHeight="100px";
-      divEl.style.overflow="visible";
-      starEl.value=0;
-      starEl.max=STAR_PER_DIV;
+      divEl.style.maxHeight = "100px";
+      divEl.style.overflow = "visible";
+      starEl.value = 0;
+      starEl.max = 5; // per divisi
     }
   });
 }
 
 // ======================
-// APPLY
+// APPLY DIVISI LOGIC
 // ======================
 ["rank1","rankA","rankB","rankG1","rankGA","rankGB","rankE"].forEach(id=>{
-  const divId=id.replace(/rank/,"div");
-  const starId=id.replace(/rank/,"star");
-  updateDivisi(id,divId,starId);
+  const divId = id.replace(/rank/,"div");
+  const starId = id.replace(/rank/,"star");
+  updateDivisi(id, divId, starId);
 });
 
+// ======================
+// INIT
+// ======================
 showMenu(1);
 showPriceList();
