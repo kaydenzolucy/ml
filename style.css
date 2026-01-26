@@ -19,8 +19,12 @@ body{
 .menu button.gendong{background:linear-gradient(135deg,#ffb347,#ff9800)}
 .menu button.link-btn{background:linear-gradient(135deg,#8fd3f4,#84fab0);color:#0b2b1f}
 .box{
-  display:none;background:rgba(255,255,255,.08);padding:18px;border-radius:20px;margin-bottom:18px;
+  display:none;
+  background:rgba(255,255,255,.08);padding:18px;border-radius:20px;margin-bottom:18px;
   box-shadow:0 8px 22px rgba(0,0,0,.35);transition:all 0.3s ease
+}
+.box.show{
+  display:block !important;
 }
 h2{font-size:20px;margin-bottom:12px;color:#ffd6ec}
 h3{font-size:16px;margin:10px 0 6px;color:#ffc1df}
