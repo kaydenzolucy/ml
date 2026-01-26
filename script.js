@@ -36,8 +36,10 @@ const STAR_PER_RANK = 25;
 function fillRank(id){
   const el = document.getElementById(id);
   if(!el) return;
+  el.innerHTML = "";
   RANK_ORDER.forEach(r=>{
-    const opt = document.createElement("option");
+    let opt = document.createElement("option");
+    opt.value = r;
     opt.textContent = r;
     el.appendChild(opt);
   });
@@ -46,21 +48,21 @@ function fillRank(id){
 function fillDiv(id){
   const el = document.getElementById(id);
   if(!el) return;
+  el.innerHTML = "";
   DIVISI.forEach(d=>{
-    const opt = document.createElement("option");
+    let opt = document.createElement("option");
+    opt.value = d;
     opt.textContent = d;
     el.appendChild(opt);
   });
 }
 
-// semua select rank
 [
   "rank1","rankA","rankB",
   "rankG1","rankGA","rankGB",
   "rankE"
 ].forEach(fillRank);
 
-// semua select divisi
 [
   "div1","divA","divB",
   "divG1","divGA","divGB",
@@ -77,27 +79,31 @@ function showMenu(n){
 }
 
 // ======================
-// LOGIC RANK <-> STAR
+// RANK <-> STAR (FIX LOGIC)
 // ======================
 function rankToStar(rank, div, star){
   let r = RANK_ORDER.indexOf(rank);
+  if(r < 0) return 0;
+
   if(RANK_DIVISI.includes(rank)){
     let d = DIVISI.indexOf(div);
-    return r * STAR_PER_RANK + d * STAR_PER_DIV + star;
+    return (r * STAR_PER_RANK) + (d * STAR_PER_DIV) + star;
   }
-  return r * STAR_PER_RANK + star;
+
+  return (r * STAR_PER_RANK) + star;
 }
 
-function starToRank(totalStar){
-  let rIndex = Math.floor(totalStar / STAR_PER_RANK);
-  let rank = RANK_ORDER[rIndex] || RANK_ORDER[RANK_ORDER.length-1];
+function starToRank(total){
+  let rIndex = Math.floor(total / STAR_PER_RANK);
+  if(rIndex >= RANK_ORDER.length) rIndex = RANK_ORDER.length - 1;
 
-  let sisa = totalStar % STAR_PER_RANK;
+  let rank = RANK_ORDER[rIndex];
+  let sisa = total % STAR_PER_RANK;
 
   if(RANK_DIVISI.includes(rank)){
-    let divIndex = Math.floor(sisa / STAR_PER_DIV);
+    let dIndex = Math.floor(sisa / STAR_PER_DIV);
     let star = sisa % STAR_PER_DIV;
-    return `${rank} ${DIVISI[divIndex]} ⭐${star}`;
+    return `${rank} ${DIVISI[dIndex]} ⭐${star}`;
   }
 
   return `${rank} ⭐${sisa}`;
@@ -107,8 +113,9 @@ function starToRank(totalStar){
 // DETAIL INVOICE
 // ======================
 function hitungDetail(start,end){
-  let d={};
+  let d = {};
   RANK_ORDER.forEach(r=>d[r]=0);
+
   for(let s=start; s<end; s++){
     let idx = Math.floor(s / STAR_PER_RANK);
     let rank = RANK_ORDER[idx];
@@ -130,7 +137,8 @@ function tampilInvoice(start,end,price,title){
     }
   }
 
-  out += `-----------------------------\nTOTAL : Rp${total.toLocaleString()}`;
+  out += `-----------------------------\n`;
+  out += `TOTAL : Rp${total.toLocaleString()}`;
   hasil.textContent = out;
 }
 
@@ -163,18 +171,12 @@ function hitungGendongRank(){
 }
 
 // ======================
-// MENU 5 - ESTIMASI NOMINAL
+// MENU 5 - ESTIMASI NOMINAL (FIX UTAMA)
 // ======================
 function estimasiNominal(){
-  let mode = document.getElementById("mode").value;
-  let harga = mode === "PRICE" ? PRICE : GENDONG;
+  let harga = mode.value === "PRICE" ? PRICE : GENDONG;
 
-  let startStar = rankToStar(
-    rankE.value,
-    divE.value,
-    +starE.value
-  );
-
+  let startStar = rankToStar(rankE.value, divE.value, +starE.value);
   let saldo = +nominal.value;
   let currentStar = startStar;
   let used = 0;
@@ -182,8 +184,7 @@ function estimasiNominal(){
   while(true){
     let rankNow = RANK_ORDER[Math.floor(currentStar / STAR_PER_RANK)];
     let cost = harga[rankNow];
-    if(!cost) break;
-    if(saldo < cost) break;
+    if(!cost || saldo < cost) break;
 
     saldo -= cost;
     used += cost;
@@ -192,7 +193,7 @@ function estimasiNominal(){
 
   let naik = currentStar - startStar;
 
-  let out = `--- ESTIMASI ${mode === "PRICE" ? "JOKI" : "GENDONG"} ---\n`;
+  let out = `--- ESTIMASI ${mode.value} ---\n`;
   out += `Rank Awal  : ${rankE.value} ${divE.value} ⭐${starE.value}\n`;
   out += `Modal      : Rp${(+nominal.value).toLocaleString()}\n`;
   out += `-----------------------------\n`;
@@ -204,7 +205,5 @@ function estimasiNominal(){
   hasil.textContent = out;
 }
 
-// ======================
-// DEFAULT
 // ======================
 showMenu(1);
