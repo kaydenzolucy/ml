@@ -15,7 +15,9 @@ const RANK_ORDER=["Master","GM","Epic","Legend","Mythic","Honor","Glory","Immort
 const RANK_DIVISI=["Master","GM","Epic","Legend"];
 const DIVISI=["V","IV","III","II","I"];
 const STAR_PER_DIV=5;
-const STAR_PER_RANK=25;
+const STAR_PER_RANK_STANDARD=25;
+const STAR_GLORY=50;
+const STAR_IMMORTAL=Infinity;
 
 // ======================
 // INIT SELECT
@@ -75,20 +77,51 @@ function updateDivisi(rankElId, divElId){
 // LOGIC RANK ↔ STAR
 function rankToStar(rank, div, star){
   let r=RANK_ORDER.indexOf(rank);
-  if(RANK_DIVISI.includes(rank)){
-    return r*STAR_PER_RANK+(DIVISI.indexOf(div)*STAR_PER_DIV)+star;
+  if(rank==="Glory"){
+    // Glory dimulai setelah bintang sebelum Glory
+    let totalBeforeGlory=0;
+    for(let i=0;i<RANK_ORDER.indexOf("Glory");i++){
+      totalBeforeGlory += RANK_DIVISI.includes(RANK_ORDER[i])?STAR_PER_RANK_STANDARD:STAR_PER_RANK_STANDARD;
+    }
+    return totalBeforeGlory + star;
   }
-  return r*STAR_PER_RANK+star;
+  if(rank==="Immortal"){
+    let totalBeforeImmortal=0;
+    for(let i=0;i<RANK_ORDER.indexOf("Glory");i++){
+      totalBeforeImmortal += RANK_DIVISI.includes(RANK_ORDER[i])?STAR_PER_RANK_STANDARD:STAR_PER_RANK_STANDARD;
+    }
+    totalBeforeImmortal += STAR_GLORY;
+    return totalBeforeImmortal + star;
+  }
+  if(RANK_DIVISI.includes(rank)){
+    return r*STAR_PER_RANK_STANDARD+(DIVISI.indexOf(div)*STAR_PER_DIV)+star;
+  }
+  return r*STAR_PER_RANK_STANDARD+star;
 }
 
 function starToRank(total){
-  let r=Math.min(Math.floor(total/STAR_PER_RANK),RANK_ORDER.length-1);
-  let rank=RANK_ORDER[r];
-  let sisa=total%STAR_PER_RANK;
-  if(RANK_DIVISI.includes(rank)){
-    return `${rank} ${DIVISI[Math.floor(sisa/STAR_PER_DIV)]} ⭐${sisa%STAR_PER_DIV}`;
+  let cumulative=[0];
+  for(let i=0;i<RANK_ORDER.length;i++){
+    let maxStar = STAR_PER_RANK_STANDARD;
+    if(RANK_ORDER[i]==="Glory") maxStar=STAR_GLORY;
+    if(RANK_ORDER[i]==="Immortal") maxStar=Infinity;
+    cumulative.push(cumulative[i]+maxStar);
   }
-  return `${rank} ⭐${sisa}`;
+
+  let rankIndex = cumulative.findIndex((val,i)=>total < cumulative[i+1]);
+  if(rankIndex===-1) rankIndex = RANK_ORDER.length-1;
+  let rank = RANK_ORDER[rankIndex];
+  let starInRank = total - cumulative[rankIndex];
+
+  if(rank==="Glory" || rank==="Immortal"){
+    return `${rank} ⭐${starInRank}`;
+  }
+  if(RANK_DIVISI.includes(rank)){
+    let divIndex = Math.floor(starInRank/STAR_PER_DIV);
+    let starR = starInRank % STAR_PER_DIV;
+    return `${rank} ${DIVISI[divIndex]} ⭐${starR}`;
+  }
+  return `${rank} ⭐${starInRank}`;
 }
 
 // ======================
@@ -97,11 +130,14 @@ function tampilInvoice(start,end,price,title){
   let d={},total=0;
   RANK_ORDER.forEach(r=>d[r]=0);
 
-  for(let s=start;s<end;s++){
-    let r=RANK_ORDER[Math.floor(s/STAR_PER_RANK)];
-    if(price[r]){
-      d[r]++; total+=price[r];
+  let s=start;
+  while(s<end){
+    let rankName = starToRank(s).split(" ")[0];
+    if(price[rankName]){
+      d[rankName]++;
+      total+=price[rankName];
     }
+    s++;
   }
 
   let out=`--- ${title} ---\n`;
@@ -153,7 +189,7 @@ function estimasiNominal(){
   let saldo=+nominal.value,used=0,start=cur;
 
   while(true){
-    let r=RANK_ORDER[Math.floor(cur/STAR_PER_RANK)];
+    let r=RANK_ORDER[Math.floor(cur/STAR_PER_RANK_STANDARD)];
     if(!harga[r]||saldo<harga[r]) break;
     saldo-=harga[r]; used+=harga[r]; cur++;
   }
