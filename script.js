@@ -35,12 +35,6 @@ const DIVISI = ["V","IV","III","II","I"];
 const STAR_PER_DIV = 5;
 const STAR_PER_RANK = 25;
 
-// batas mythic+
-const MYTHIC_START   = 0;    // ⭐1
-const HONOR_START    = 24;   // ⭐25
-const GLORY_START    = 49;   // ⭐50
-const IMMORTAL_START = 99;   // ⭐100
-
 // ======================
 // INIT SELECT
 // ======================
@@ -91,10 +85,10 @@ function showMenu(n){
 }
 
 // ======================
-// RANK → TOTAL STAR (FIX)
+// RANK → TOTAL STAR (FIX TOTAL)
 // ======================
 function rankToStar(rank, div, star){
-  // rank bawah (pakai divisi)
+  // Rank bawah (pakai divisi)
   if (RANK_DIVISI.includes(rank)) {
     let r = RANK_ORDER.indexOf(rank);
     return r * STAR_PER_RANK +
@@ -102,44 +96,39 @@ function rankToStar(rank, div, star){
            star;
   }
 
-  // mythic+
-  if (rank === "Mythic")   return MYTHIC_START   + (star - 1);
-  if (rank === "Honor")    return HONOR_START    + (star - 25);
-  if (rank === "Glory")    return GLORY_START    + (star - 50);
-  if (rank === "Immortal") return IMMORTAL_START + (star - 100);
+  // Mythic ke atas (LANGSUNG TOTAL STAR)
+  if (rank === "Mythic")   return star - 1;
+  if (rank === "Honor")    return star - 1;
+  if (rank === "Glory")    return star - 1;
+  if (rank === "Immortal") return star - 1;
 
   return 0;
 }
 
 // ======================
-// TOTAL STAR → RANK (FIX)
+// TOTAL STAR → RANK (FIX TOTAL)
 // ======================
 function starToRank(total){
-  // rank bawah
-  let rIndex = Math.floor(total / STAR_PER_RANK);
-  let rank = RANK_ORDER[rIndex];
+  // Rank bawah
+  if (total < 100) {
+    let rIndex = Math.floor(total / STAR_PER_RANK);
+    let rank = RANK_ORDER[rIndex];
 
-  if (RANK_DIVISI.includes(rank)) {
-    let sisa = total % STAR_PER_RANK;
-    return `${rank} ${DIVISI[Math.floor(sisa / STAR_PER_DIV)]} ⭐${sisa % STAR_PER_DIV}`;
-  }
-
-  // mythic+
-  if (total < HONOR_START) {
-    return `Mythic ⭐${total + 1}`;
-  }
-  if (total < GLORY_START) {
-    return `Honor ⭐${total - HONOR_START + 25}`;
-  }
-  if (total < IMMORTAL_START) {
-    return `Glory ⭐${total - GLORY_START + 50}`;
+    if (RANK_DIVISI.includes(rank)) {
+      let sisa = total % STAR_PER_RANK;
+      return `${rank} ${DIVISI[Math.floor(sisa / STAR_PER_DIV)]} ⭐${sisa % STAR_PER_DIV}`;
+    }
   }
 
-  return `Immortal ⭐${total - IMMORTAL_START + 100}`;
+  // Mythic+
+  if (total <= 24)  return `Mythic ⭐${total + 1}`;
+  if (total <= 49)  return `Honor ⭐${total + 1}`;
+  if (total <= 99)  return `Glory ⭐${total + 1}`;
+  return `Immortal ⭐${total + 1}`;
 }
 
 // ======================
-// INVOICE RINGKAS
+// INVOICE RAPI & PENDEK
 // ======================
 function tampilInvoice(start, end, price, title){
   let detail = {};
@@ -148,24 +137,26 @@ function tampilInvoice(start, end, price, title){
   RANK_ORDER.forEach(r => detail[r] = 0);
 
   for(let s = start; s < end; s++){
-    let r = RANK_ORDER[Math.min(
-      Math.floor(s / STAR_PER_RANK),
-      RANK_ORDER.length - 1
-    )];
+    let r;
+    if (s <= 24) r = "Mythic";
+    else if (s <= 49) r = "Honor";
+    else if (s <= 99) r = "Glory";
+    else r = "Immortal";
+
     if(price[r]){
       detail[r]++;
       total += price[r];
     }
   }
 
-  let out = `--- ${title} ---\n`;
+  let out = `=== ${title} ===\n`;
   for(let r of RANK_ORDER){
     if(detail[r] > 0){
-      out += `${r.padEnd(10)} : ${detail[r]} ⭐  Rp${(detail[r] * price[r]).toLocaleString()}\n`;
+      out += `${r.padEnd(10)} : ${detail[r]} ⭐ = Rp${(detail[r] * price[r]).toLocaleString()}\n`;
     }
   }
 
-  out += `-----------------------------\n`;
+  out += `--------------------------\n`;
   out += `Total Bintang : ${end - start} ⭐\n`;
   out += `Rank Akhir    : ${starToRank(end)}\n`;
   out += `TOTAL         : Rp${total.toLocaleString()}`;
@@ -205,7 +196,7 @@ function hitungGendongRank(){
 }
 
 // ======================
-// ESTIMASI NOMINAL
+// ESTIMASI NOMINAL (AKURAT)
 // ======================
 function estimasiNominal(){
   let harga = mode.value === "PRICE" ? PRICE : GENDONG;
@@ -216,21 +207,24 @@ function estimasiNominal(){
   let used = 0;
 
   while(true){
-    let r = RANK_ORDER[Math.min(
-      Math.floor(cur / STAR_PER_RANK),
-      RANK_ORDER.length - 1
-    )];
+    let r;
+    if (cur <= 24) r = "Mythic";
+    else if (cur <= 49) r = "Honor";
+    else if (cur <= 99) r = "Glory";
+    else r = "Immortal";
+
     if(!harga[r] || saldo < harga[r]) break;
+
     saldo -= harga[r];
     used += harga[r];
     cur++;
   }
 
   hasil.textContent =
-`--- ESTIMASI ---
-Rank Awal : ${rankE.value} ${divE.value} ⭐${starE.value}
+`=== ESTIMASI ===
+Rank Awal : ${rankE.value} ⭐${starE.value}
 Modal     : Rp${(+nominal.value).toLocaleString()}
------------------------------
+--------------------------
 Naik      : ${cur - start} ⭐
 Rank Akhir: ${starToRank(cur)}
 Terpakai  : Rp${used.toLocaleString()}
