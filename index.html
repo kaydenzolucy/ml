@@ -5,7 +5,7 @@
   <title>ㅤJOKI MLBBㅤ 🐱MINRA🐱</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- FONT RETRO GAMER -->
+  <!-- FONT -->
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -37,10 +37,14 @@
   <!-- MENU 1 -->
   <div class="box" id="menu1">
     <h2>Joki Per Bintang</h2>
-    <label>Rank</label><select id="rank1"></select>
-    <label>Divisi</label><select id="div1"></select>
-    <label>Bintang Sekarang</label><input type="number" id="star1">
-    <label>Tambah Bintang</label><input type="number" id="addStar">
+    <label>Rank</label>
+    <select id="rank1"></select>
+    <label>Divisi</label>
+    <select id="div1"></select>
+    <label>Bintang Sekarang</label>
+    <input type="number" id="star1">
+    <label>Tambah Bintang</label>
+    <input type="number" id="addStar">
     <button onclick="hitungPerBintang()">Hitung</button>
   </div>
 
@@ -73,12 +77,10 @@
   <!-- MENU 4 -->
   <div class="box" id="menu4">
     <h2>Gendong Antar Rank</h2>
-    <h3>Rank Awal</h3>
     <select id="rankGA"></select>
     <select id="divGA"></select>
     <input type="number" id="starGA">
 
-    <h3>Rank Tujuan</h3>
     <select id="rankGB"></select>
     <select id="divGB"></select>
     <input type="number" id="starGB">
@@ -96,7 +98,7 @@
     <select id="rankE"></select>
     <select id="divE"></select>
     <input type="number" id="starE">
-    <input type="number" id="nominal">
+    <input type="number" id="nominal" placeholder="Rp / RM">
     <button onclick="estimasiNominal()">Estimasi</button>
   </div>
 
