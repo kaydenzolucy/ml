@@ -2,25 +2,23 @@
 // CURRENCY
 // ======================
 let CURRENCY="IDR";
-let RATE_MYR=0;
+let RATE_MYR=0.00030;
 
 async function fetchRate(){
   try{
     const r=await fetch("https://api.exchangerate.host/latest?base=IDR&symbols=MYR");
-    const d=await r.json();
-    RATE_MYR=d.rates.MYR;
+    const j=await r.json();
+    RATE_MYR=j.rates.MYR;
     rateInfo.textContent=`1 IDR ≈ ${RATE_MYR.toFixed(6)} MYR`;
   }catch{
-    rateInfo.textContent="Rate error";
+    rateInfo.textContent="Fallback rate active";
   }
 }
-
 currencySelect.onchange=()=>CURRENCY=currencySelect.value;
-
-function money(v){
+function uang(v){
   return CURRENCY==="IDR"
-    ? `Rp${v.toLocaleString("id-ID")}`
-    : `RM${(v*RATE_MYR).toFixed(2)}`;
+    ? "Rp"+v.toLocaleString("id-ID")
+    : "RM"+(v*RATE_MYR).toFixed(2);
 }
 
 // ======================
@@ -37,118 +35,94 @@ const STAR_PER_RANK_STANDARD=25;
 const STAR_GLORY=50;
 
 // ======================
-// INIT SELECT
-function fillRank(id){
-  let e=document.getElementById(id); if(!e) return;
-  RANK_ORDER.forEach(r=>e.add(new Option(r,r)));
-}
-function fillDiv(id){
-  let e=document.getElementById(id); if(!e) return;
-  DIVISI.forEach(d=>e.add(new Option(d,d)));
-}
+function fillRank(id){const e=document.getElementById(id);RANK_ORDER.forEach(r=>e.append(new Option(r,r)));}
+function fillDiv(id){const e=document.getElementById(id);DIVISI.forEach(d=>e.append(new Option(d,d)));}
 
 ["rank1","rankA","rankB","rankG1","rankGA","rankGB","rankE"].forEach(fillRank);
 ["div1","divA","divB","divG1","divGA","divGB","divE"].forEach(fillDiv);
 
 // ======================
 function showMenu(n){
-  document.querySelectorAll(".box").forEach(b=>b.style.display="none");
-  document.getElementById("menu"+n).style.display="block";
-  if(n===6) showPriceList();
+document.querySelectorAll(".box").forEach(b=>b.style.display="none");
+document.getElementById("menu"+n).style.display="block";
+if(n===6) showPriceList();
 }
 
 // ======================
 function rankToStar(rank,div,star){
-  let r=RANK_ORDER.indexOf(rank);
-  if(rank==="Glory") return r*25+star;
-  if(rank==="Immortal") return r*25+STAR_GLORY+star;
-  if(RANK_DIVISI.includes(rank))
-    return r*25+(DIVISI.indexOf(div)*5)+star;
-  return r*25+star;
+let r=RANK_ORDER.indexOf(rank);
+if(RANK_DIVISI.includes(rank))
+return r*STAR_PER_RANK_STANDARD+(DIVISI.indexOf(div)*STAR_PER_DIV)+star;
+return r*STAR_PER_RANK_STANDARD+star;
 }
-
 function starToRank(t){
-  let c=0;
-  for(let r of RANK_ORDER){
-    let max=r==="Glory"?STAR_GLORY:25;
-    if(t<c+max) return `${r} ⭐${t-c}`;
-    c+=max;
-  }
-  return `Immortal ⭐${t-c}`;
+let r=Math.floor(t/STAR_PER_RANK_STANDARD);
+let s=t%STAR_PER_RANK_STANDARD;
+return `${RANK_ORDER[r]} ⭐${s}`;
 }
 
 // ======================
-function tampilInvoice(s,e,p,title){
-  let total=0,out=`--- ${title} ---\n`;
-  for(let i=s;i<e;i++){
-    let r=starToRank(i).split(" ")[0];
-    total+=p[r]||0;
-  }
-  out+=`Total Bintang : ${e-s} ⭐\n`;
-  out+=`Rank Akhir    : ${starToRank(e)}\n`;
-  out+=`TOTAL         : ${money(total)}`;
-  hasil.textContent=out;
+function tampilInvoice(start,end,price,title){
+let total=0;
+let out=`--- ${title} ---\n`;
+for(let i=start;i<end;i++){
+let r=starToRank(i).split(" ")[0];
+total+=price[r]||0;
+}
+out+=`Total Bintang : ${end-start}\n`;
+out+=`Rank Akhir    : ${starToRank(end)}\n`;
+out+=`TOTAL         : ${uang(total)}`;
+hasil.textContent=out;
 }
 
 // ======================
 function hitungPerBintang(){
-  tampilInvoice(
-    rankToStar(rank1.value,div1.value,+star1.value),
-    rankToStar(rank1.value,div1.value,+star1.value)+ +addStar.value,
-    PRICE,"JOKI PER BINTANG");
+let s=rankToStar(rank1.value,div1.value,+star1.value);
+tampilInvoice(s,s+ +addStar.value,PRICE,"JOKI PER BINTANG");
 }
-
 function hitungAntarRank(){
-  let s=rankToStar(rankA.value,divA.value,+starA.value);
-  let e=rankToStar(rankB.value,divB.value,+starB.value);
-  if(e<=s) return hasil.textContent="Rank tujuan harus lebih tinggi";
-  tampilInvoice(s,e,PRICE,"JOKI ANTAR RANK");
+let s1=rankToStar(rankA.value,divA.value,+starA.value);
+let s2=rankToStar(rankB.value,divB.value,+starB.value);
+tampilInvoice(s1,s2,PRICE,"JOKI ANTAR RANK");
 }
-
 function hitungGendongBintang(){
-  tampilInvoice(
-    rankToStar(rankG1.value,divG1.value,+starG1.value),
-    rankToStar(rankG1.value,divG1.value,+starG1.value)+ +addStarG.value,
-    GENDONG,"GENDONG PER BINTANG");
+let s=rankToStar(rankG1.value,divG1.value,+starG1.value);
+tampilInvoice(s,s+ +addStarG.value,GENDONG,"GENDONG PER BINTANG");
 }
-
 function hitungGendongRank(){
-  let s=rankToStar(rankGA.value,divGA.value,+starGA.value);
-  let e=rankToStar(rankGB.value,divGB.value,+starGB.value);
-  if(e<=s) return hasil.textContent="Rank tujuan harus lebih tinggi";
-  tampilInvoice(s,e,GENDONG,"GENDONG ANTAR RANK");
+let s1=rankToStar(rankGA.value,divGA.value,+starGA.value);
+let s2=rankToStar(rankGB.value,divGB.value,+starGB.value);
+tampilInvoice(s1,s2,GENDONG,"GENDONG ANTAR RANK");
 }
 
 // ======================
 function estimasiNominal(){
-  let harga=mode.value==="PRICE"?PRICE:GENDONG;
-  let saldo=+nominal.value;
-  if(CURRENCY==="MYR") saldo/=RATE_MYR;
-
-  let cur=rankToStar(rankE.value,divE.value,+starE.value),used=0,start=cur;
-  while(harga[starToRank(cur).split(" ")[0]] && saldo>=harga[starToRank(cur).split(" ")[0]]){
-    let r=starToRank(cur).split(" ")[0];
-    saldo-=harga[r]; used+=harga[r]; cur++;
-  }
-
-  hasil.textContent=
+let saldo=+nominal.value;
+if(CURRENCY==="MYR") saldo/=RATE_MYR;
+let cur=rankToStar(rankE.value,divE.value,+starE.value);
+let harga=mode.value==="PRICE"?PRICE:GENDONG;
+let used=0,start=cur;
+while(harga[starToRank(cur).split(" ")[0]] && saldo>=harga[starToRank(cur).split(" ")[0]]){
+let h=harga[starToRank(cur).split(" ")[0]];
+saldo-=h;used+=h;cur++;
+}
+hasil.textContent=
 `--- ESTIMASI ---
-Naik      : ${cur-start} ⭐
-Rank Akhir: ${starToRank(cur)}
-Terpakai  : ${money(used)}
-Sisa      : ${money(saldo)}`;
+Naik : ${cur-start} ⭐
+Rank Akhir : ${starToRank(cur)}
+Terpakai : ${uang(used)}
+Sisa : ${uang(saldo)}`;
 }
 
 // ======================
 function showPriceList(){
-  let o="=== PRICE LIST ===\n";
-  for(let r of RANK_ORDER)
-    if(PRICE[r]) o+=`${r.padEnd(10)} : ${money(PRICE[r])}\n`;
-  o+="\n=== GENDONG ===\n";
-  for(let r of RANK_ORDER)
-    if(GENDONG[r]) o+=`${r.padEnd(10)} : ${money(GENDONG[r])}\n`;
-  pricelist.textContent=o;
+let out="=== PRICE LIST ===\n";
+for(let r in PRICE) out+=`${r} : ${uang(PRICE[r])}\n`;
+out+="\n=== GENDONG ===\n";
+for(let r in GENDONG) out+=`${r} : ${uang(GENDONG[r])}\n`;
+pricelist.textContent=out;
 }
 
+// INIT
 fetchRate();
 showMenu(1);
