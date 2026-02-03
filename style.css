@@ -89,12 +89,12 @@ body {
 }
 
 .menu button {
-  min-height: 64px;                 /* KUNCI TINGGI */
+  min-height: 64px;
   padding: 12px;
   border-radius: 18px;
   border: none;
 
-  display: flex;                    /* CENTER ISI */
+  display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
@@ -107,21 +107,23 @@ body {
   color: #fff;
   cursor: pointer;
 
-  transition: transform .15s ease, box-shadow .15s ease;
+  /* ✨ NEON TIPIS */
+  box-shadow:
+    0 0 6px rgba(255,122,200,0.35),
+    0 0 12px rgba(255,122,200,0.15);
+
+  transition: transform .15s ease,
+              box-shadow .25s ease;
 }
 
 .menu button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(0,0,0,.35);
-}
 
-.menu button.gendong {
-  background: linear-gradient(135deg,#ffb347,#ff9800);
-}
-
-.menu button.link-btn {
-  background: linear-gradient(135deg,#8fd3f4,#84fab0);
-  color: #083b2c;
+  /* ✨ NEON LEBIH NYALA PAS HOVER */
+  box-shadow:
+    0 0 10px rgba(255,122,200,0.7),
+    0 0 20px rgba(255,122,200,0.45),
+    0 6px 14px rgba(0,0,0,.35);
 }
 
 /* =========================
