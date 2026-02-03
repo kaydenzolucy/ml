@@ -35,7 +35,7 @@ const STAR_IMMORTAL=Infinity;
 // ======================
 async function fetchRate(){
   try{
-    let r = await fetch("https://api.exchangerate.host/latest?base=IDR&symbols=MYR",{cache:"no-store"});
+    let r = await fetch("https://api.frankfurter.app/latest?from=IDR&to=MYR",{cache:"no-store"});
     let d = await r.json();
     if(d && d.rates && d.rates.MYR){
       RATE_IDR_TO_MYR=d.rates.MYR;
