@@ -1,234 +1,232 @@
-*{
-box-sizing: border-box;
-}
-
-body {
-background: linear-gradient(180deg,#1a0f2e,#12081f);
-color: #fff;
-font-family: "Segoe UI", Arial, sans-serif;
-margin: 0;
-}
-
-.container {
-padding: 18px;
-}
-
 /* =========================
-JUDUL – RGB GLOW SMOOTH
+   RESET & GLOBAL
 ========================= */
-.title-glow {
-text-align: center;
-font-size: 26px;
-margin-bottom: 22px;
-font-family: 'Press Start 2P', cursive;
-color: #ffd6f0;
-letter-spacing: 2px;
-
-text-shadow:
-0 0 8px rgba(255, 0, 128, 0.6),
-0 0 16px rgba(0, 255, 255, 0.4),
-0 0 24px rgba(255, 255, 0, 0.3);
-
-animation: rgbGlow 6s linear infinite;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-@keyframes rgbGlow {
-0% {
-text-shadow:
-0 0 8px #ff4fa7,
-0 0 16px #ff7ac8,
-0 0 24px #ffb6e6;
-}
-33% {
-text-shadow:
-0 0 8px #6cf6ff,
-0 0 16px #4facfe,
-0 0 24px #00f2fe;
-}
-66% {
-text-shadow:
-0 0 8px #ffe259,
-0 0 16px #ffa751,
-0 0 24px #ffb347;
-}
-100% {
-text-shadow:
-0 0 8px #ff4fa7,
-0 0 16px #ff7ac8,
-0 0 24px #ffb6e6;
-}
+html, body {
+  width: 100%;
+  min-height: 100%;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  background: radial-gradient(circle at top, #2a1648, #12081f 70%);
+  color: #fff;
+  overflow-x: hidden;
 }
 
 /* =========================
-MENU BUTTON
+   CONTAINER UTAMA
+========================= */
+.container {
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 24px 16px 60px;
+}
+
+/* =========================
+   HEADER / JUDUL
+========================= */
+.header {
+  margin-top: 10px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.header h1 {
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #ffe6ff;
+  text-shadow:
+    0 0 10px rgba(255,105,180,.9),
+    0 0 20px rgba(255,105,180,.7),
+    0 0 30px rgba(180,100,255,.6);
+}
+
+.header span {
+  display: block;
+  margin-top: 6px;
+  font-size: 14px;
+  color: #ffbde9;
+  opacity: .9;
+}
+
+/* =========================
+   DROPDOWN KURS
+========================= */
+.currency-box {
+  margin: 0 auto 26px;
+  max-width: 320px;
+}
+
+.currency-select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  background: linear-gradient(135deg,#7fffd4,#8fd3f4);
+  color: #222;
+  box-shadow: 0 8px 18px rgba(0,0,0,.35);
+  outline: none;
+}
+
+/* =========================
+   BUTTON MENU
 ========================= */
 .menu {
-display: grid;
-grid-template-columns: 1fr 1fr;
-gap: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
 .menu button {
-padding: 16px;
-border-radius: 18px;
-border: none;
-font-size: 15px;
-font-weight: 600;
-background: linear-gradient(135deg,#ff7ac8,#ff4fa7);
-color: #fff;
-cursor: pointer;
-transition: transform .15s ease, box-shadow .15s ease;
+  width: 100%;
+  border: none;
+  padding: 18px;
+  font-size: 18px;
+  font-weight: 700;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all .25s ease;
+  box-shadow: 0 10px 22px rgba(0,0,0,.35);
 }
 
-.menu button:hover{
-transform: translateY(-2px);
-box-shadow: 0 6px 18px rgba(255,122,200,.35);
+/* warna tombol */
+.btn-pink {
+  background: linear-gradient(135deg,#ff6fd8,#ff9de2);
+  color: #fff;
 }
 
-.menu button.gendong {
-background: linear-gradient(135deg,#ffb347,#ff9800);
+.btn-orange {
+  background: linear-gradient(135deg,#ff9f43,#ffb347);
+  color: #fff;
 }
 
-.menu button.link-btn {
-background: linear-gradient(135deg,#8fd3f4,#84fab0);
-color: #083b2c;
+.btn-green {
+  background: linear-gradient(135deg,#6ee7b7,#34d399);
+  color: #063;
 }
 
-/* =========================
-BOX / CARD
-========================= */
-.box {
-display: none;
-margin-top: 18px;
-padding: 18px;
-border-radius: 20px;
-background: rgba(255,255,255,.08);
-box-shadow: 0 0 20px rgba(0,0,0,.25);
-}
-
-.box.show {
-display: block;
+/* efek hover */
+.menu button:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 14px 26px rgba(0,0,0,.45);
 }
 
 /* =========================
-INPUT & SELECT
+   SECTION CONTENT
 ========================= */
-select,
+.section {
+  margin-top: 40px;
+  background: linear-gradient(160deg,#24113a,#1a0d2d);
+  border-radius: 22px;
+  padding: 24px 20px;
+  box-shadow: 0 15px 30px rgba(0,0,0,.45);
+}
+
+.section h2 {
+  font-size: 26px;
+  margin-bottom: 18px;
+  color: #ffd9ff;
+  text-shadow: 0 0 10px rgba(255,105,180,.6);
+}
+
+/* =========================
+   FORM / SELECT
+========================= */
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  opacity: .9;
+}
+
+select, input {
+  width: 100%;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  border-radius: 12px;
+  border: none;
+  font-size: 15px;
+  outline: none;
+}
+
+select {
+  background: #2f1b4f;
+  color: #fff;
+}
+
 input {
-width: 100%;
-padding: 14px;
-margin: 6px 0 14px;
-border-radius: 14px;
-border: 1px solid rgba(255,182,230,0.35);
-
-background: linear-gradient(180deg,#3a2452,#2b1b3a);
-color: #fff;
-font-size: 14px;
-
-box-shadow:
-inset 0 0 8px rgba(255,182,230,0.15),
-0 0 6px rgba(255,122,200,0.15);
-}
-
-select:focus,
-input:focus {
-outline: none;
-border-color: #ff7ac8;
-box-shadow:
-0 0 10px rgba(255,122,200,0.6),
-inset 0 0 6px rgba(255,255,255,0.15);
-}
-
-input::placeholder {
-color: rgba(255,255,255,0.5);
+  background: #1e1235;
+  color: #fff;
 }
 
 /* =========================
-BUTTON DALAM BOX
+   RESULT BOX
 ========================= */
-.box button {
-width: 100%;
-padding: 16px;
-border-radius: 18px;
-border: none;
-background: linear-gradient(135deg,#ff7ac8,#ff4fa7);
-color: #fff;
-font-weight: 600;
-cursor: pointer;
-}
-
-.box button.gendong {
-background: linear-gradient(135deg,#ffb347,#ff9800);
+.result {
+  margin-top: 20px;
+  padding: 16px;
+  border-radius: 16px;
+  background: linear-gradient(135deg,#ff9de2,#b983ff);
+  color: #1a082a;
+  font-size: 18px;
+  font-weight: 800;
+  text-align: center;
+  box-shadow: 0 12px 25px rgba(0,0,0,.4);
 }
 
 /* =========================
-OUTPUT / INVOICE
+   PRICE LIST
 ========================= */
-pre {
-background: #12071f;
-padding: 16px;
-border-radius: 18px;
-white-space: pre-wrap;
-box-shadow: inset 0 0 12px rgba(255,122,200,.12);
+.price-list {
+  margin-top: 14px;
+}
+
+.price-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  background: rgba(255,255,255,.08);
+  font-size: 15px;
+}
+
+.price-item span:last-child {
+  font-weight: 700;
+  color: #ffd6ff;
 }
 
 /* =========================
-CURRENCY SWITCH (KANAN ATAS)
+   FOOTER NOTE
 ========================= */
-.currency-switch{
-position: fixed;
-top: 12px;
-right: 12px;
-z-index: 999;
-text-align: right;
-}
-
-.currency-switch select{
-padding: 10px 14px;
-border-radius: 14px;
-border: none;
-font-weight: 600;
-font-size: 13px;
-
-background: linear-gradient(135deg,#84fab0,#8fd3f4);
-color: #083b2c;
-cursor: pointer;
-
-box-shadow:
-0 4px 12px rgba(0,0,0,.35),
-inset 0 0 6px rgba(255,255,255,.25);
-}
-
-.currency-switch select:focus{
-outline: none;
-box-shadow:
-0 0 0 2px rgba(132,250,176,.6),
-0 4px 14px rgba(0,0,0,.4);
+.note {
+  margin-top: 28px;
+  text-align: center;
+  font-size: 13px;
+  opacity: .75;
 }
 
 /* =========================
-RATE INFO / FEE INFO
+   RESPONSIVE
 ========================= */
-#rateInfo{
-margin-top: 6px;
-font-size: 11px;
-color: #ffd6f0;
-opacity: .85;
-text-shadow: 0 0 6px rgba(255,122,200,.35);
-}
+@media (max-width: 420px) {
+  .header h1 {
+    font-size: 28px;
+  }
 
-/* =========================
-RESPONSIVE
-========================= */
-@media(max-width:480px){
-.title-glow{
-font-size: 20px;
-}
-.menu{
-grid-template-columns: 1fr;
-}
-.currency-switch{
-top: 8px;
-right: 8px;
-}
+  .menu button {
+    font-size: 16px;
+    padding: 16px;
+  }
+
+  .section h2 {
+    font-size: 22px;
+  }
 }
