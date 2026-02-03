@@ -12,7 +12,20 @@
 </head>
 
 <body>
+
+<!-- =========================
+CURRENCY SWITCH (KANAN ATAS)
+========================= -->
+<div class="currency-switch">
+  <select id="currency" onchange="changeCurrency()">
+    <option value="IDR">🇮🇩 Rupiah (IDR)</option>
+    <option value="MYR">🇲🇾 Ringgit Malaysia (MYR)</option>
+  </select>
+  <div id="rateInfo"></div>
+</div>
+
 <div class="container">
+
   <h1 class="title-glow">ㅤJOKI MLBBㅤ 🐱MINRA🐱</h1>
 
   <div class="menu">
@@ -25,111 +38,156 @@
     <button class="link-btn" onclick="openLink()">💌 Jangan Dibuka</button>
   </div>
 
-  <!-- MENU 1: Joki Per Bintang -->
+  <!-- =========================
+  MENU 1: JOKI PER BINTANG
+  ========================= -->
   <div class="box" id="menu1">
     <h2>Joki Per Bintang</h2>
+
     <label>Rank</label>
     <select id="rank1"></select>
+
     <label>Divisi</label>
     <select id="div1"></select>
+
     <label>Bintang Sekarang</label>
     <input type="number" id="star1" placeholder="Contoh: 2">
+
     <label>Tambah Bintang</label>
     <input type="number" id="addStar" placeholder="Contoh: 10">
+
     <button onclick="hitungPerBintang()">Hitung</button>
   </div>
 
-  <!-- MENU 2: Joki Antar Rank -->
+  <!-- =========================
+  MENU 2: JOKI ANTAR RANK
+  ========================= -->
   <div class="box" id="menu2">
     <h2>Joki Antar Rank</h2>
+
     <h3>Rank Awal</h3>
+
     <label>Rank</label>
     <select id="rankA"></select>
+
     <label>Divisi</label>
     <select id="divA"></select>
+
     <label>Bintang</label>
     <input type="number" id="starA" placeholder="Contoh: 1">
 
     <h3>Rank Tujuan</h3>
+
     <label>Rank</label>
     <select id="rankB"></select>
+
     <label>Divisi</label>
     <select id="divB"></select>
+
     <label>Bintang</label>
     <input type="number" id="starB" placeholder="Contoh: 0">
 
     <button onclick="hitungAntarRank()">Hitung</button>
   </div>
 
-  <!-- MENU 3: Gendong Per Bintang -->
+  <!-- =========================
+  MENU 3: GENDONG PER BINTANG
+  ========================= -->
   <div class="box" id="menu3">
     <h2>Gendong Per Bintang</h2>
+
     <label>Rank</label>
     <select id="rankG1"></select>
+
     <label>Divisi</label>
     <select id="divG1"></select>
+
     <label>Bintang Sekarang</label>
     <input type="number" id="starG1" placeholder="Contoh: 3">
+
     <label>Tambah Bintang</label>
     <input type="number" id="addStarG" placeholder="Contoh: 5">
+
     <button class="gendong" onclick="hitungGendongBintang()">Hitung</button>
   </div>
 
-  <!-- MENU 4: Gendong Antar Rank -->
+  <!-- =========================
+  MENU 4: GENDONG ANTAR RANK
+  ========================= -->
   <div class="box" id="menu4">
     <h2>Gendong Antar Rank</h2>
+
     <h3>Rank Awal</h3>
+
     <label>Rank</label>
     <select id="rankGA"></select>
+
     <label>Divisi</label>
     <select id="divGA"></select>
+
     <label>Bintang</label>
     <input type="number" id="starGA" placeholder="Contoh: 4">
 
     <h3>Rank Tujuan</h3>
+
     <label>Rank</label>
     <select id="rankGB"></select>
+
     <label>Divisi</label>
     <select id="divGB"></select>
+
     <label>Bintang</label>
     <input type="number" id="starGB" placeholder="Contoh: 0">
 
     <button class="gendong" onclick="hitungGendongRank()">Hitung</button>
   </div>
 
-  <!-- MENU 5: Estimasi Nominal -->
+  <!-- =========================
+  MENU 5: ESTIMASI NOMINAL
+  ========================= -->
   <div class="box" id="menu5">
     <h2>Estimasi Berdasarkan Nominal</h2>
+
     <label>Mode</label>
     <select id="mode">
       <option value="PRICE">Joki Rank</option>
       <option value="GENDONG">Gendong</option>
     </select>
+
     <label>Rank</label>
     <select id="rankE"></select>
+
     <label>Divisi</label>
     <select id="divE"></select>
+
     <label>Bintang Sekarang</label>
     <input type="number" id="starE" placeholder="Contoh: 2">
-    <label>Nominal (Rp)</label>
+
+    <label>Nominal</label>
     <input type="number" id="nominal" placeholder="Contoh: 100000">
+
     <button onclick="estimasiNominal()">Estimasi</button>
   </div>
 
-  <!-- MENU 6: Price List -->
+  <!-- =========================
+  MENU 6: PRICE LIST
+  ========================= -->
   <div class="box" id="menu6">
     <h2>Price List Joki & Gendong</h2>
     <pre id="pricelist"></pre>
   </div>
 
   <pre id="hasil"></pre>
+
 </div>
 
 <script src="script.js"></script>
+
 <script>
 function openLink(){
   window.location.href="https://kaydenzolucy.github.io/18januari2026/";
 }
 </script>
+
 </body>
 </html>
