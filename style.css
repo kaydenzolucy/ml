@@ -84,30 +84,49 @@ HEADER + MINI CURRENCY
 }
 
 /* =========================
-TITLE
+TITLE (2 BARIS)
 ========================= */
 .title-glow {
   text-align: center;
   font-family: 'Press Start 2P', cursive;
-  font-size: 28px;
   margin: 0;
   letter-spacing: 2px;
   color: #ffd6f0;
-
-  text-shadow:
-    0 0 8px #ff4fa7,
-    0 0 16px #ff7ac8,
-    0 0 24px #ffb6e6;
-
   animation: rgbGlow 8s linear infinite;
   will-change: text-shadow;
 }
 
+/* baris utama */
+.title-glow .main-title {
+  display: block;
+  font-size: 32px;
+  line-height: 1.2;
+}
+
+/* baris sub */
+.title-glow .sub-title {
+  display: block;
+  font-size: 20px;
+  margin-top: 6px;
+  color: #ffb6e6;
+  text-shadow: 0 0 4px #ff4fa7, 0 0 8px #ff7ac8;
+  animation: rgbGlowSub 8s linear infinite;
+}
+
+/* animasi glow utama */
 @keyframes rgbGlow {
   0%   { text-shadow:0 0 8px #ff4fa7,0 0 16px #ff7ac8,0 0 24px #ffb6e6; }
   33%  { text-shadow:0 0 8px #6cf6ff,0 0 16px #4facfe,0 0 24px #00f2fe; }
   66%  { text-shadow:0 0 8px #ffe259,0 0 16px #ffa751,0 0 24px #ffb347; }
   100% { text-shadow:0 0 8px #ff4fa7,0 0 16px #ff7ac8,0 0 24px #ffb6e6; }
+}
+
+/* animasi glow sub-title */
+@keyframes rgbGlowSub {
+  0%   { text-shadow:0 0 4px #ff4fa7,0 0 8px #ff7ac8; }
+  33%  { text-shadow:0 0 4px #6cf6ff,0 0 8px #4facfe; }
+  66%  { text-shadow:0 0 4px #ffe259,0 0 8px #ffa751; }
+  100% { text-shadow:0 0 4px #ff4fa7,0 0 8px #ff7ac8; }
 }
 
 /* =========================
@@ -233,8 +252,12 @@ pre {
 RESPONSIVE
 ========================= */
 @media(max-width:420px){
-  .title-glow {
-    font-size: 20px;
+  .title-glow .main-title {
+    font-size: 24px;
+  }
+
+  .title-glow .sub-title {
+    font-size: 16px;
   }
 
   .menu button {
