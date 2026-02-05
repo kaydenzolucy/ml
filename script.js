@@ -1,34 +1,42 @@
 // ======================
 // PRICE & GENDONG
 // ======================
-const PRICE={
-  Master:3000,GM:4000,Epic:5000,Legend:6000,
-  Mythic:13000,Honor:14000,Glory:20000,Immortal:24000
+const PRICE = {
+  Master:3000, GM:4000, Epic:5000, Legend:6000,
+  Mythic:13000, Honor:14000, Glory:20000, Immortal:24000
 };
 
-const GENDONG={
-  Epic:9000,Legend:10000,Mythic:15000,
-  Honor:16000,Glory:25000,Immortal:35000
+const GENDONG = {
+  Epic:9000, Legend:10000, Mythic:15000,
+  Honor:16000, Glory:25000, Immortal:35000
 };
 
 // ======================
 // CURRENCY CONFIG
 // ======================
-let CURRENT_CURRENCY="IDR";
-let RATE_IDR_TO_MYR=0.00030; // fallback default
-const FALLBACK_RATE=0.00030; // ~ 1 IDR = 0.00030 MYR
-const FEE_MYR=10000; // Rp 10.000
+let CURRENT_CURRENCY = "IDR";
+let RATE_IDR_TO_MYR = 0.00030;
+const FALLBACK_RATE = 0.00030;
+const FEE_MYR = 10000;
+
+// ======================
+// ELEMENTS
+// ======================
+const currency   = document.getElementById("currency");
+const rateInfo   = document.getElementById("rateInfo");
+const hasil      = document.getElementById("hasil");
+const pricelist  = document.getElementById("pricelist");
 
 // ======================
 // RANK CONFIG
 // ======================
-const RANK_ORDER=["Master","GM","Epic","Legend","Mythic","Honor","Glory","Immortal"];
-const RANK_DIVISI=["Master","GM","Epic","Legend"];
-const DIVISI=["V","IV","III","II","I"];
-const STAR_PER_DIV=5;
-const STAR_PER_RANK_STANDARD=25;
-const STAR_GLORY=50;
-const STAR_IMMORTAL=Infinity;
+const RANK_ORDER = ["Master","GM","Epic","Legend","Mythic","Honor","Glory","Immortal"];
+const RANK_DIVISI = ["Master","GM","Epic","Legend"];
+const DIVISI = ["V","IV","III","II","I"];
+const STAR_PER_DIV = 5;
+const STAR_PER_RANK_STANDARD = 25;
+const STAR_GLORY = 50;
+const STAR_IMMORTAL = Infinity;
 
 // ======================
 // FETCH RATE + FALLBACK
@@ -37,15 +45,16 @@ async function fetchRate(){
   try{
     let r = await fetch("https://api.frankfurter.app/latest?from=IDR&to=MYR",{cache:"no-store"});
     let d = await r.json();
-    if(d && d.rates && d.rates.MYR){
-      RATE_IDR_TO_MYR=d.rates.MYR;
-      rateInfo.textContent=`Kurs Live · 1 MYR ≈ Rp${Math.round(1/RATE_IDR_TO_MYR).toLocaleString()}`;
+    if(d?.rates?.MYR){
+      RATE_IDR_TO_MYR = d.rates.MYR;
+      rateInfo.textContent =
+        `Kurs Live · 1 MYR ≈ Rp${Math.round(1/RATE_IDR_TO_MYR).toLocaleString()}`;
       return;
     }
     throw "Invalid API";
   }catch{
-    RATE_IDR_TO_MYR=FALLBACK_RATE;
-    rateInfo.textContent="Kurs Fallback (offline)";
+    RATE_IDR_TO_MYR = FALLBACK_RATE;
+    rateInfo.textContent = "Kurs Fallback (offline)";
   }
 }
 
@@ -53,7 +62,7 @@ async function fetchRate(){
 // FORMAT HARGA
 // ======================
 function formatHarga(rp){
-  if(CURRENT_CURRENCY==="IDR"){
+  if(CURRENT_CURRENCY === "IDR"){
     return `Rp${rp.toLocaleString()}`;
   }
   let rm = rp * RATE_IDR_TO_MYR;
@@ -64,7 +73,7 @@ function formatHarga(rp){
 // CHANGE CURRENCY
 // ======================
 function changeCurrency(){
-  CURRENT_CURRENCY=currency.value;
+  CURRENT_CURRENCY = currency.value;
   showPriceList();
 }
 
@@ -72,25 +81,25 @@ function changeCurrency(){
 // INIT SELECT
 // ======================
 function fillRank(id){
-  const el=document.getElementById(id);
+  const el = document.getElementById(id);
   if(!el) return;
-  el.innerHTML="";
+  el.innerHTML = "";
   RANK_ORDER.forEach(r=>{
-    let o=document.createElement("option");
-    o.value=r;
-    o.textContent=r;
+    let o = document.createElement("option");
+    o.value = r;
+    o.textContent = r;
     el.appendChild(o);
   });
 }
 
 function fillDiv(id){
-  const el=document.getElementById(id);
+  const el = document.getElementById(id);
   if(!el) return;
-  el.innerHTML="";
+  el.innerHTML = "";
   DIVISI.forEach(d=>{
-    let o=document.createElement("option");
-    o.value=d;
-    o.textContent=d;
+    let o = document.createElement("option");
+    o.value = d;
+    o.textContent = d;
     el.appendChild(o);
   });
 }
@@ -103,7 +112,7 @@ function fillDiv(id){
 // ======================
 function showMenu(n){
   document.querySelectorAll(".box").forEach(b=>b.style.display="none");
-  const target=document.getElementById("menu"+n);
+  const target = document.getElementById("menu"+n);
   if(target) target.style.display="block";
   if(n===6) showPriceList();
 }
@@ -112,16 +121,16 @@ function showMenu(n){
 // HIDE DIVISI UNTUK MYTHIC+
 // ======================
 function updateDivisi(rankElId,divElId){
-  const rankEl=document.getElementById(rankElId);
-  const divEl=document.getElementById(divElId);
-  if(!rankEl||!divEl) return;
+  const rankEl = document.getElementById(rankElId);
+  const divEl  = document.getElementById(divElId);
+  if(!rankEl || !divEl) return;
 
   rankEl.addEventListener("change",()=>{
     if(!RANK_DIVISI.includes(rankEl.value)){
-      divEl.style.display="none";
-      divEl.value="";
+      divEl.style.display = "none";
+      divEl.value = "";
     }else{
-      divEl.style.display="block";
+      divEl.style.display = "block";
     }
   });
 }
@@ -133,7 +142,7 @@ function updateDivisi(rankElId,divElId){
 // RANK <-> STAR
 // ======================
 function rankToStar(rank,div,star){
-  let r=RANK_ORDER.indexOf(rank);
+  let r = RANK_ORDER.indexOf(rank);
 
   if(rank==="Glory"){
     let t=0;
@@ -224,7 +233,7 @@ function tampilInvoice(start,end,price,title){
 // ======================
 function hitungPerBintang(){
   let s=rankToStar(rank1.value,div1.value,+star1.value);
-  tampilInvoice(s,s+ +addStar.value,PRICE,"JOKI PER BINTANG");
+  tampilInvoice(s,s + +addStar.value,PRICE,"JOKI PER BINTANG");
 }
 
 function hitungAntarRank(){
@@ -239,7 +248,7 @@ function hitungAntarRank(){
 
 function hitungGendongBintang(){
   let s=rankToStar(rankG1.value,divG1.value,+starG1.value);
-  tampilInvoice(s,s+ +addStarG.value,GENDONG,"GENDONG PER BINTANG");
+  tampilInvoice(s,s + +addStarG.value,GENDONG,"GENDONG PER BINTANG");
 }
 
 function hitungGendongRank(){
@@ -256,9 +265,9 @@ function hitungGendongRank(){
 // ESTIMASI NOMINAL
 // ======================
 function estimasiNominal(){
-  let harga=mode.value==="PRICE"?PRICE:GENDONG;
-  let cur=rankToStar(rankE.value,divE.value,+starE.value);
-  let saldo=+nominal.value,used=0,start=cur;
+  let harga = mode.value==="PRICE"?PRICE:GENDONG;
+  let cur = rankToStar(rankE.value,divE.value,+starE.value);
+  let saldo = +nominal.value, used=0, start=cur;
 
   while(true){
     let r=starToRank(cur).split(" ")[0];
