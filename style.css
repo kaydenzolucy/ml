@@ -30,6 +30,9 @@ body {
 .header-top{
   position: relative;
   margin-bottom: 26px;
+
+  /* ruang khusus untuk currency */
+  padding-top: 48px;
 }
 
 /* currency kecil kanan atas */
@@ -78,7 +81,7 @@ body {
   text-align: center;
   font-family: 'Press Start 2P', cursive;
   font-size: 24px;
-  margin: 10px 0 0;
+  margin: 0;
   letter-spacing: 2px;
   color: #ffd6f0;
   text-shadow:
