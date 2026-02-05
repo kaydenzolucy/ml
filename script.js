@@ -279,14 +279,22 @@ fetchRate();
 showMenu(1);
 showPriceList();
 // ======================
-// MINRA GALLERY TOGGLE
+// RANDOMIZE RAIN IMAGES
 // ======================
-const minraGallery = document.querySelector(".minra-gallery");
-const subTitle = document.querySelector(".title-glow .sub-title");
+const rainImgs = document.querySelectorAll(".rain-img");
 
-if(subTitle && minraGallery){
-  subTitle.style.cursor = "pointer"; // biar ada tanda bisa diklik
-  subTitle.addEventListener("click", () => {
-    minraGallery.classList.toggle("active");
-  });
-}
+rainImgs.forEach(img => {
+  // random posisi vertikal (0% - 100%)
+  img.style.top = Math.random() * 100 + "vh";
+  // random posisi horizontal (0% - 100%)
+  img.style.left = Math.random() * 100 + "vw";
+  // random ukuran (40px - 100px)
+  const size = 40 + Math.random() * 60;
+  img.style.width = size + "px";
+  // random opacity 0.3 - 0.7
+  img.style.opacity = 0.3 + Math.random() * 0.4;
+  // random durasi animasi floatX 8s - 15s
+  img.style.animationDuration = 8 + Math.random() * 7 + "s";
+  // random delay agar tidak seragam
+  img.style.animationDelay = Math.random() * 5 + "s";
+});
