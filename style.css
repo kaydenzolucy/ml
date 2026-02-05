@@ -1,9 +1,13 @@
 /* =========================
 RESET
 ========================= */
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+}
 
 body {
   margin: 0;
@@ -11,6 +15,7 @@ body {
   background: linear-gradient(180deg,#1a0f2e,#12081f);
   color: #fff;
   font-family: "Segoe UI", Arial, sans-serif;
+
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overscroll-behavior: none;
@@ -24,7 +29,7 @@ CONTAINER
   max-width: 520px;
   margin: 0 auto;
   padding: 24px 18px 36px;
-  z-index: 10;
+  z-index: 1;
 }
 
 /* =========================
@@ -32,9 +37,8 @@ HEADER + MINI CURRENCY
 ========================= */
 .header-top {
   position: relative;
-  padding-top: 200px; /* turun sedikit, judul terlihat */
   margin-bottom: 26px;
-  z-index: 10;
+  padding-top: 80px;
 }
 
 /* currency kecil kanan atas */
@@ -42,7 +46,7 @@ HEADER + MINI CURRENCY
   position: absolute;
   top: 0;
   right: 0;
-  z-index: 12;
+  z-index: 10;
 
   display: flex;
   flex-direction: column;
@@ -56,8 +60,11 @@ HEADER + MINI CURRENCY
 
   box-shadow: 0 0 10px rgba(255,105,180,.25);
   font-size: 11px;
+
+  will-change: transform;
 }
 
+/* select kecil */
 .currency-mini select {
   background: linear-gradient(135deg,#ff7ac8,#ff4fa7);
   border: none;
@@ -69,6 +76,7 @@ HEADER + MINI CURRENCY
   cursor: pointer;
 }
 
+/* kurs text */
 .currency-mini #rateInfo {
   margin-top: 3px;
   font-size: 10px;
@@ -76,35 +84,41 @@ HEADER + MINI CURRENCY
 }
 
 /* =========================
-TITLE
+TITLE (2 BARIS)
 ========================= */
 .title-glow {
   text-align: center;
   font-family: 'Press Start 2P', cursive;
-  font-size: 64px;
   margin: 0;
-  line-height: 1;
   letter-spacing: 2px;
   color: #ffd6f0;
-  text-shadow:
-    0 0 16px #ff4fa7,
-    0 0 32px #ff7ac8,
-    0 0 48px #ffb6e6;
   animation: rgbGlow 8s linear infinite;
   will-change: text-shadow;
-  position: relative;
-  z-index: 11;
 }
 
-.title-glow .main-title { display: block; margin-bottom: 0; }
-.title-glow .sub-title { display: block; margin-top: 2px; font-size: 32px; animation: rgbGlowSub 8s linear infinite; }
+/* baris utama */
+.title-glow .main-title {
+  display: block;
+  font-size: 32px;
+  line-height: 1.2;
+}
+
+/* baris sub */
+.title-glow .sub-title {
+  display: block;
+  font-size: 20px;
+  margin-top: 6px;
+  color: #ffb6e6;
+  text-shadow: 0 0 4px #ff4fa7, 0 0 8px #ff7ac8;
+  animation: rgbGlowSub 8s linear infinite;
+}
 
 /* animasi glow utama */
 @keyframes rgbGlow {
-  0%   { text-shadow:0 0 16px #ff4fa7,0 0 32px #ff7ac8,0 0 48px #ffb6e6; }
-  33%  { text-shadow:0 0 16px #6cf6ff,0 0 32px #4facfe,0 0 48px #00f2fe; }
-  66%  { text-shadow:0 0 16px #ffe259,0 0 32px #ffa751,0 0 48px #ffb347; }
-  100% { text-shadow:0 0 16px #ff4fa7,0 0 32px #ff7ac8,0 0 48px #ffb6e6; }
+  0%   { text-shadow:0 0 8px #ff4fa7,0 0 16px #ff7ac8,0 0 24px #ffb6e6; }
+  33%  { text-shadow:0 0 8px #6cf6ff,0 0 16px #4facfe,0 0 24px #00f2fe; }
+  66%  { text-shadow:0 0 8px #ffe259,0 0 16px #ffa751,0 0 24px #ffb347; }
+  100% { text-shadow:0 0 8px #ff4fa7,0 0 16px #ff7ac8,0 0 24px #ffb6e6; }
 }
 
 /* animasi glow sub-title */
@@ -125,52 +139,75 @@ MENU GRID
   margin-bottom: 10px;
 }
 
+/* =========================
+MENU BUTTON
+========================= */
 .menu button {
   min-height: 64px;
   padding: 12px;
   border-radius: 18px;
   border: none;
+
   font-size: 15px;
   font-weight: 600;
   color: #fff;
   cursor: pointer;
+
   background: linear-gradient(135deg,#ff7ac8,#ff4fa7);
-  box-shadow:0 0 6px rgba(255,255,255,.2),0 0 12px rgba(255,122,200,.4);
+  box-shadow:
+    0 0 6px rgba(255,255,255,.2),
+    0 0 12px rgba(255,122,200,.4);
+
   transition: transform .25s ease, box-shadow .25s ease;
+  will-change: transform;
 }
 
-.menu button:hover { transform: translateY(-2px) scale(1.02); }
-.menu button.gendong { background: linear-gradient(135deg,#ffb347,#ff9800); }
-.menu button.link-btn { background: linear-gradient(135deg,#8fd3f4,#84fab0); color:#083b2c; }
+.menu button:hover {
+  transform: translateY(-2px) scale(1.02);
+}
+
+/* GENDONG */
+.menu button.gendong {
+  background: linear-gradient(135deg,#ffb347,#ff9800);
+}
+
+/* LINK */
+.menu button.link-btn {
+  background: linear-gradient(135deg,#8fd3f4,#84fab0);
+  color: #083b2c;
+}
 
 /* =========================
-BOX / INVOICE / OUTPUT
+BOX
 ========================= */
-.box, pre {
-  display: block; /* sebelumnya none, sekarang terlihat */
+.box {
+  display: none;
   margin-top: 22px;
   padding: 18px;
   border-radius: 20px;
+
   background: rgba(255,255,255,.08);
   backdrop-filter: blur(4px);
+
   box-shadow: 0 0 12px rgba(255,122,200,.2);
-  position: relative;
-  z-index: 11;
-  white-space: pre-wrap; /* wrap teks panjang */
 }
 
-/* hide all boxes by default, JS akan toggle via showMenu */
-.box:not(.show) { display: none; }
+.box.show {
+  display: block;
+}
 
 /* =========================
 FORM
 ========================= */
-select, input {
+select,
+input {
   width: 100%;
   padding: 14px;
   margin: 6px 0 14px;
+
   border-radius: 14px;
   border: 1px solid rgba(255,182,230,.3);
+
   background: linear-gradient(180deg,#3a2452,#2b1b3a);
   color: #fff;
   font-size: 14px;
@@ -181,52 +218,54 @@ select, input {
   padding: 16px;
   border-radius: 18px;
   border: none;
+
   background: linear-gradient(135deg,#ff7ac8,#ff4fa7);
   color: #fff;
   font-weight: 600;
   cursor: pointer;
+
   box-shadow: 0 0 8px rgba(255,122,200,.35);
   transition: transform .2s ease;
 }
 
-.box button:hover { transform: scale(1.02); }
+.box button:hover {
+  transform: scale(1.02);
+}
+
+/* =========================
+OUTPUT
+========================= */
+pre {
+  margin-top: 18px;
+  background: #12071f;
+  padding: 16px;
+  border-radius: 18px;
+
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 13px;
+
+  box-shadow: inset 0 0 8px rgba(255,122,200,.12);
+}
 
 /* =========================
 RESPONSIVE
 ========================= */
 @media(max-width:420px){
-  .header-top { padding-top:60px; }
-  .title-glow { font-size:36px; }
-  .title-glow .sub-title { font-size:18px; }
-  .title-glow .main-title { font-size:24px; }
-  .menu button { font-size:14px; }
-  .currency-mini { top:-6px; right:-2px; }
-}
+  .title-glow .main-title {
+    font-size: 24px;
+  }
 
-/* =========================
-MINRA RAIN BACKGROUND
-========================= */
-.minra-rain {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  overflow: hidden;
-  z-index: 0;
-}
+  .title-glow .sub-title {
+    font-size: 16px;
+  }
 
-.rain-img {
-  position: absolute;
-  opacity: 0.5;
-  animation: floatX 10s ease-in-out infinite alternate;
-  z-index: 0;
-  transform-origin: center;
-}
+  .menu button {
+    font-size: 14px;
+  }
 
-@keyframes floatX {
-  0%   { transform: translateX(0) translateY(0) rotate(0deg); }
-  50%  { transform: translateX(30px) translateY(0) rotate(5deg); }
-  100% { transform: translateX(-30px) translateY(0) rotate(-5deg); }
+  .currency-mini {
+    top: -6px;
+    right: -2px;
+  }
 }
