@@ -64,7 +64,6 @@ HEADER + MINI CURRENCY
   will-change: transform;
 }
 
-/* select kecil */
 .currency-mini select {
   background: linear-gradient(135deg,#ff7ac8,#ff4fa7);
   border: none;
@@ -76,7 +75,6 @@ HEADER + MINI CURRENCY
   cursor: pointer;
 }
 
-/* kurs text */
 .currency-mini #rateInfo {
   margin-top: 3px;
   font-size: 10px;
@@ -96,14 +94,12 @@ TITLE (2 BARIS)
   will-change: text-shadow;
 }
 
-/* baris utama */
 .title-glow .main-title {
   display: block;
   font-size: 32px;
   line-height: 1.2;
 }
 
-/* baris sub */
 .title-glow .sub-title {
   display: block;
   font-size: 20px;
@@ -113,7 +109,6 @@ TITLE (2 BARIS)
   animation: rgbGlowSub 8s linear infinite;
 }
 
-/* animasi glow utama */
 @keyframes rgbGlow {
   0%   { text-shadow:0 0 8px #ff4fa7,0 0 16px #ff7ac8,0 0 24px #ffb6e6; }
   33%  { text-shadow:0 0 8px #6cf6ff,0 0 16px #4facfe,0 0 24px #00f2fe; }
@@ -121,7 +116,6 @@ TITLE (2 BARIS)
   100% { text-shadow:0 0 8px #ff4fa7,0 0 16px #ff7ac8,0 0 24px #ffb6e6; }
 }
 
-/* animasi glow sub-title */
 @keyframes rgbGlowSub {
   0%   { text-shadow:0 0 4px #ff4fa7,0 0 8px #ff7ac8; }
   33%  { text-shadow:0 0 4px #6cf6ff,0 0 8px #4facfe; }
@@ -166,12 +160,10 @@ MENU BUTTON
   transform: translateY(-2px) scale(1.02);
 }
 
-/* GENDONG */
 .menu button.gendong {
   background: linear-gradient(135deg,#ffb347,#ff9800);
 }
 
-/* LINK */
 .menu button.link-btn {
   background: linear-gradient(135deg,#8fd3f4,#84fab0);
   color: #083b2c;
@@ -270,38 +262,37 @@ RESPONSIVE
   }
 }
 
+/* =========================
+MINRA GALLERY
+========================= */
 .minra-gallery {
-position: fixed;
-top: 50%;
-right: -220px;      /* mulai di luar layar */
-transform: translateY(-50%);
-display: flex;
-flex-direction: column;
-gap: 10px;
-pointer-events: none;
-z-index: 5;
+  position: fixed;
+  top: 50%;
+  right: -220px;      /* mulai di luar layar */
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+  z-index: 5;
 }
 
-/* gambar animasi /
 .minra-img {
-width: 80px;
-transform: rotate(-25deg) scale(0.8); / awal miring & kecil /
-opacity: 0;                             / tersembunyi */
-transition: transform 0.4s ease, opacity 0.4s ease;
+  width: 80px;
+  transform: rotate(-25deg) scale(0.8);
+  opacity: 0;
+  transition: transform 0.4s ease, opacity 0.4s ease;
 }
 
-/* gallery aktif */
 .minra-gallery.active {
-right: 10px;
+  right: 10px;
 }
 
-/* saat aktif, gambar muncul & mulai animasi menari */
 .minra-gallery.active .minra-img {
-opacity: 1;
-animation: sway 2s ease-in-out infinite alternate;
+  opacity: 1;
+  animation: sway 2s ease-in-out infinite alternate;
 }
 
-/* variasi rotasi tiap gambar */
 .minra-img:nth-child(1){ animation-delay: 0s; }
 .minra-img:nth-child(2){ animation-delay: 0.1s; }
 .minra-img:nth-child(3){ animation-delay: 0.2s; }
@@ -313,9 +304,8 @@ animation: sway 2s ease-in-out infinite alternate;
 .minra-img:nth-child(9){ animation-delay: 0.8s; }
 .minra-img:nth-child(10){animation-delay: 0.9s; }
 
-/* animasi menari: miring kiri-kanan sedikit */
 @keyframes sway {
-0% { transform: rotate(-20deg) scale(1); }
-50% { transform: rotate(15deg) scale(1.05); }
-100% { transform: rotate(-20deg) scale(1); }
+  0% { transform: rotate(-20deg) scale(1); }
+  50% { transform: rotate(15deg) scale(1.05); }
+  100% { transform: rotate(-20deg) scale(1); }
 }
