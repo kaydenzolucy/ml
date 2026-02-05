@@ -105,7 +105,7 @@ TITLE
 /* judul utama */
 .title-glow .main-title {
   display: block;
-  margin-bottom: 0.5px;       /* jarak ke sub-title */
+  margin-bottom: 0px;       /* jarak ke sub-title */
 }
 
 /* sub-judul */
