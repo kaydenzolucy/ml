@@ -36,22 +36,25 @@ const DIVISI = ["V","IV","III","II","I"];
 const STAR_PER_DIV = 5;
 const STAR_PER_RANK_STANDARD = 25;
 const STAR_GLORY = 50;
-const STAR_IMMORTAL = Infinity;
 
 // ======================
-// FETCH RATE + FALLBACK
+// FETCH RATE
 // ======================
 async function fetchRate(){
   try{
-    let r = await fetch("https://api.frankfurter.app/latest?from=IDR&to=MYR",{cache:"no-store"});
-    let d = await r.json();
+    const r = await fetch(
+      "https://api.frankfurter.app/latest?from=IDR&to=MYR",
+      { cache:"no-store" }
+    );
+    const d = await r.json();
+
     if(d?.rates?.MYR){
       RATE_IDR_TO_MYR = d.rates.MYR;
       rateInfo.textContent =
         `Kurs Live · 1 MYR ≈ Rp${Math.round(1/RATE_IDR_TO_MYR).toLocaleString()}`;
       return;
     }
-    throw "Invalid API";
+    throw "invalid";
   }catch{
     RATE_IDR_TO_MYR = FALLBACK_RATE;
     rateInfo.textContent = "Kurs Fallback (offline)";
@@ -62,11 +65,10 @@ async function fetchRate(){
 // FORMAT HARGA
 // ======================
 function formatHarga(rp){
-  if(CURRENT_CURRENCY === "IDR"){
+  if(CURRENT_CURRENCY==="IDR"){
     return `Rp${rp.toLocaleString()}`;
   }
-  let rm = rp * RATE_IDR_TO_MYR;
-  return `RM ${rm.toFixed(2)}`;
+  return `RM ${(rp * RATE_IDR_TO_MYR).toFixed(2)}`;
 }
 
 // ======================
@@ -81,25 +83,25 @@ function changeCurrency(){
 // INIT SELECT
 // ======================
 function fillRank(id){
-  const el = document.getElementById(id);
+  const el=document.getElementById(id);
   if(!el) return;
-  el.innerHTML = "";
+  el.innerHTML="";
   RANK_ORDER.forEach(r=>{
-    let o = document.createElement("option");
-    o.value = r;
-    o.textContent = r;
+    const o=document.createElement("option");
+    o.value=r;
+    o.textContent=r;
     el.appendChild(o);
   });
 }
 
 function fillDiv(id){
-  const el = document.getElementById(id);
+  const el=document.getElementById(id);
   if(!el) return;
-  el.innerHTML = "";
+  el.innerHTML="";
   DIVISI.forEach(d=>{
-    let o = document.createElement("option");
-    o.value = d;
-    o.textContent = d;
+    const o=document.createElement("option");
+    o.value=d;
+    o.textContent=d;
     el.appendChild(o);
   });
 }
@@ -112,25 +114,25 @@ function fillDiv(id){
 // ======================
 function showMenu(n){
   document.querySelectorAll(".box").forEach(b=>b.style.display="none");
-  const target = document.getElementById("menu"+n);
+  const target=document.getElementById("menu"+n);
   if(target) target.style.display="block";
   if(n===6) showPriceList();
 }
 
 // ======================
-// HIDE DIVISI UNTUK MYTHIC+
+// DIVISI TOGGLE
 // ======================
-function updateDivisi(rankElId,divElId){
-  const rankEl = document.getElementById(rankElId);
-  const divEl  = document.getElementById(divElId);
-  if(!rankEl || !divEl) return;
+function updateDivisi(rankId,divId){
+  const r=document.getElementById(rankId);
+  const d=document.getElementById(divId);
+  if(!r||!d) return;
 
-  rankEl.addEventListener("change",()=>{
-    if(!RANK_DIVISI.includes(rankEl.value)){
-      divEl.style.display = "none";
-      divEl.value = "";
+  r.addEventListener("change",()=>{
+    if(RANK_DIVISI.includes(r.value)){
+      d.style.display="block";
     }else{
-      divEl.style.display = "block";
+      d.style.display="none";
+      d.value="";
     }
   });
 }
@@ -142,19 +144,14 @@ function updateDivisi(rankElId,divElId){
 // RANK <-> STAR
 // ======================
 function rankToStar(rank,div,star){
-  let r = RANK_ORDER.indexOf(rank);
+  let r=RANK_ORDER.indexOf(rank);
 
   if(rank==="Glory"){
-    let t=0;
-    for(let i=0;i<RANK_ORDER.indexOf("Glory");i++) t+=STAR_PER_RANK_STANDARD;
-    return t+star;
+    return RANK_ORDER.indexOf("Glory")*STAR_PER_RANK_STANDARD + star;
   }
 
   if(rank==="Immortal"){
-    let t=0;
-    for(let i=0;i<RANK_ORDER.indexOf("Glory");i++) t+=STAR_PER_RANK_STANDARD;
-    t+=STAR_GLORY;
-    return t+star;
+    return RANK_ORDER.indexOf("Glory")*STAR_PER_RANK_STANDARD + STAR_GLORY + star;
   }
 
   if(RANK_DIVISI.includes(rank)){
@@ -165,66 +162,48 @@ function rankToStar(rank,div,star){
 }
 
 function starToRank(total){
-  let cumulative=[0];
-  for(let i=0;i<RANK_ORDER.length;i++){
+  let acc=0;
+  for(let r of RANK_ORDER){
     let max=STAR_PER_RANK_STANDARD;
-    if(RANK_ORDER[i]==="Glory") max=STAR_GLORY;
-    if(RANK_ORDER[i]==="Immortal") max=Infinity;
-    cumulative.push(cumulative[i]+max);
+    if(r==="Glory") max=STAR_GLORY;
+    if(total<acc+max){
+      let s=total-acc;
+      if(RANK_DIVISI.includes(r)){
+        return `${r} ${DIVISI[Math.floor(s/STAR_PER_DIV)]} ⭐${s%STAR_PER_DIV}`;
+      }
+      return `${r} ⭐${s}`;
+    }
+    acc+=max;
   }
-
-  let idx=cumulative.findIndex((v,i)=>total<cumulative[i+1]);
-  if(idx===-1) idx=RANK_ORDER.length-1;
-
-  let rank=RANK_ORDER[idx];
-  let s=total-cumulative[idx];
-
-  if(rank==="Glory"||rank==="Immortal"){
-    return `${rank} ⭐${s}`;
-  }
-
-  if(RANK_DIVISI.includes(rank)){
-    let d=Math.floor(s/STAR_PER_DIV);
-    let st=s%STAR_PER_DIV;
-    return `${rank} ${DIVISI[d]} ⭐${st}`;
-  }
-
-  return `${rank} ⭐${s}`;
+  return `Immortal ⭐${total-acc}`;
 }
 
 // ======================
 // INVOICE
 // ======================
 function tampilInvoice(start,end,price,title){
-  let d={},total=0;
-  RANK_ORDER.forEach(r=>d[r]=0);
+  let map={},total=0;
+  RANK_ORDER.forEach(r=>map[r]=0);
 
-  let s=start;
-  while(s<end){
-    let r=starToRank(s).split(" ")[0];
-    d[r]++;
+  for(let i=start;i<end;i++){
+    let r=starToRank(i).split(" ")[0];
+    map[r]++;
     total+=price[r]||0;
-    s++;
   }
 
   let out=`--- ${title} ---\n`;
-
   for(let r of RANK_ORDER){
-    if(d[r]>0){
-      out+=`${r.padEnd(10)} : ${d[r]} ⭐ x ${formatHarga(price[r])}\n`;
+    if(map[r]>0){
+      out+=`${r.padEnd(10)} : ${map[r]} ⭐ x ${formatHarga(price[r])}\n`;
     }
   }
 
-  out+=`-----------------------------\n`;
-  out+=`Total Bintang : ${end-start} ⭐\n`;
-  out+=`Rank Akhir    : ${starToRank(end)}\n`;
-
   if(CURRENT_CURRENCY==="MYR"){
-    out+=`Fee Transaksi : ${formatHarga(FEE_MYR)} (Rp10.000)\n`;
     total+=FEE_MYR;
+    out+=`Fee MYR     : ${formatHarga(FEE_MYR)}\n`;
   }
 
-  out+=`TOTAL         : ${formatHarga(total)}`;
+  out+=`TOTAL        : ${formatHarga(total)}`;
   hasil.textContent=out;
 }
 
@@ -232,65 +211,53 @@ function tampilInvoice(start,end,price,title){
 // HITUNG
 // ======================
 function hitungPerBintang(){
-  let s=rankToStar(rank1.value,div1.value,+star1.value);
-  tampilInvoice(s,s + +addStar.value,PRICE,"JOKI PER BINTANG");
+  tampilInvoice(
+    rankToStar(rank1.value,div1.value,+star1.value),
+    rankToStar(rank1.value,div1.value,+star1.value)+ +addStar.value,
+    PRICE,"JOKI PER BINTANG"
+  );
 }
 
 function hitungAntarRank(){
   let s1=rankToStar(rankA.value,divA.value,+starA.value);
   let s2=rankToStar(rankB.value,divB.value,+starB.value);
-  if(s2<=s1){
-    hasil.textContent="Error: Rank Tujuan harus lebih tinggi dari Rank Awal";
-    return;
-  }
+  if(s2<=s1) return hasil.textContent="Rank tujuan harus lebih tinggi";
   tampilInvoice(s1,s2,PRICE,"JOKI ANTAR RANK");
 }
 
 function hitungGendongBintang(){
-  let s=rankToStar(rankG1.value,divG1.value,+starG1.value);
-  tampilInvoice(s,s + +addStarG.value,GENDONG,"GENDONG PER BINTANG");
+  tampilInvoice(
+    rankToStar(rankG1.value,divG1.value,+starG1.value),
+    rankToStar(rankG1.value,divG1.value,+starG1.value)+ +addStarG.value,
+    GENDONG,"GENDONG PER BINTANG"
+  );
 }
 
 function hitungGendongRank(){
   let s1=rankToStar(rankGA.value,divGA.value,+starGA.value);
   let s2=rankToStar(rankGB.value,divGB.value,+starGB.value);
-  if(s2<=s1){
-    hasil.textContent="Error: Rank Tujuan harus lebih tinggi dari Rank Awal";
-    return;
-  }
+  if(s2<=s1) return hasil.textContent="Rank tujuan harus lebih tinggi";
   tampilInvoice(s1,s2,GENDONG,"GENDONG ANTAR RANK");
 }
 
 // ======================
-// ESTIMASI NOMINAL
+// ESTIMASI
 // ======================
 function estimasiNominal(){
   let harga = mode.value==="PRICE"?PRICE:GENDONG;
-  let cur = rankToStar(rankE.value,divE.value,+starE.value);
-  let saldo = +nominal.value, used=0, start=cur;
+  let cur=rankToStar(rankE.value,divE.value,+starE.value);
+  let saldo=+nominal.value,start=cur,used=0;
 
-  while(true){
-    let r=starToRank(cur).split(" ")[0];
-    if(!harga[r]||saldo<harga[r]) break;
-    saldo-=harga[r];
-    used+=harga[r];
+  while(harga[starToRank(cur).split(" ")[0]]<=saldo){
+    saldo-=harga[starToRank(cur).split(" ")[0]];
+    used+=harga[starToRank(cur).split(" ")[0]];
     cur++;
-  }
-
-  let totalUsed=used;
-  if(CURRENT_CURRENCY==="MYR"){
-    totalUsed+=FEE_MYR;
-    saldo-=FEE_MYR;
   }
 
   hasil.textContent=
 `--- ESTIMASI ---
-Rank Awal : ${rankE.value} ${divE.value} ⭐${starE.value}
-Modal     : ${formatHarga(+nominal.value)}
-
 Naik      : ${cur-start} ⭐
-Rank Akhir: ${starToRank(cur)}
-Terpakai  : ${formatHarga(totalUsed)}
+Terpakai  : ${formatHarga(used)}
 Sisa      : ${formatHarga(saldo)}`;
 }
 
@@ -298,18 +265,10 @@ Sisa      : ${formatHarga(saldo)}`;
 // PRICE LIST
 // ======================
 function showPriceList(){
-  let out="=== JOKI PER BINTANG ===\n";
-  for(let r of RANK_ORDER) if(PRICE[r])
-    out+=`${r.padEnd(10)} : ${formatHarga(PRICE[r])}\n`;
-
-  out+="\n=== GENDONG PER BINTANG ===\n";
-  for(let r of RANK_ORDER) if(GENDONG[r])
-    out+=`${r.padEnd(10)} : ${formatHarga(GENDONG[r])}\n`;
-
-  if(CURRENT_CURRENCY==="MYR"){
-    out+="\n⚠ Fee Ringgit Malaysia\nRp10.000 / transaksi (otomatis)\n";
-  }
-
+  let out="=== JOKI ===\n";
+  for(let r in PRICE) out+=`${r.padEnd(10)} : ${formatHarga(PRICE[r])}\n`;
+  out+="\n=== GENDONG ===\n";
+  for(let r in GENDONG) out+=`${r.padEnd(10)} : ${formatHarga(GENDONG[r])}\n`;
   pricelist.textContent=out;
 }
 
