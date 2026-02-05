@@ -38,7 +38,7 @@ HEADER + MINI CURRENCY
 .header-top {
   position: relative;
   margin-bottom: 30px;  /* jarak antar header dan menu */
-  padding-top: 100pxpx;    /* lebih rapat ke atas */
+  padding-top: 100px;    /* lebih rapat ke atas */
   text-align: center;
   z-index: 2;
 }
