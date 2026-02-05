@@ -89,10 +89,10 @@ TITLE
 .title-glow {
   text-align: center;
   font-family: 'Press Start 2P', cursive;
-  font-size: 28px;          /* ukuran judul utama */
+  font-size: 32px;          /* ukuran judul utama */
   margin: 0;
-  line-height: 1.1;         /* jarak antar baris lebih rapat */
-  letter-spacing: 2px;
+  line-height: 1;         /* jarak antar baris lebih rapat */
+  letter-spacing: 1px;
   color: #ffd6f0;
   text-shadow:
     0 0 8px #ff4fa7,
@@ -105,14 +105,14 @@ TITLE
 /* judul utama */
 .title-glow .main-title {
   display: block;
-  margin-bottom: 2px;       /* jarak ke sub-title */
+  margin-bottom: 0.5px;       /* jarak ke sub-title */
 }
 
 /* sub-judul */
 .title-glow .sub-title {
   display: block;
   margin-top: 0;             /* hapus jarak ekstra */
-  font-size: 20px;           /* ukuran sub-judul */
+  font-size: 26px;           /* ukuran sub-judul */
 }
 
 /* animasi glow utama */
