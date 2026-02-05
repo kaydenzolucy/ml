@@ -278,3 +278,15 @@ function showPriceList(){
 fetchRate();
 showMenu(1);
 showPriceList();
+// ======================
+// MINRA GALLERY TOGGLE
+// ======================
+const minraGallery = document.querySelector(".minra-gallery");
+const subTitle = document.querySelector(".title-glow .sub-title");
+
+if(subTitle && minraGallery){
+  subTitle.style.cursor = "pointer"; // biar ada tanda bisa diklik
+  subTitle.addEventListener("click", () => {
+    minraGallery.classList.toggle("active");
+  });
+}
