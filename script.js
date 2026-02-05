@@ -279,22 +279,37 @@ fetchRate();
 showMenu(1);
 showPriceList();
 // ======================
-// RANDOMIZE RAIN IMAGES
+// RANDOMIZE RAIN IMAGES (tidak saling timpa)
 // ======================
 const rainImgs = document.querySelectorAll(".rain-img");
+const usedPositions = []; // menyimpan posisi yang sudah dipakai
+const minDistance = 80;   // jarak minimal antar gambar (px)
 
 rainImgs.forEach(img => {
-  // random posisi vertikal (0% - 100%)
-  img.style.top = Math.random() * 100 + "vh";
-  // random posisi horizontal (0% - 100%)
-  img.style.left = Math.random() * 100 + "vw";
-  // random ukuran (40px - 100px)
+  let x, y;
+  let tries = 0;
+
+  do {
+    x = Math.random() * (window.innerWidth - 100); // width margin
+    y = Math.random() * (window.innerHeight - 100);
+    tries++;
+    
+    // cek jarak dengan semua posisi yang sudah dipakai
+    var tooClose = usedPositions.some(pos => {
+      const dx = pos.x - x;
+      const dy = pos.y - y;
+      return Math.sqrt(dx*dx + dy*dy) < minDistance;
+    });
+  } while (tooClose && tries < 100); // ulang jika terlalu dekat
+
+  usedPositions.push({x, y});
+
+  // set posisi & ukuran
+  img.style.left = x + "px";
+  img.style.top = y + "px";
   const size = 40 + Math.random() * 60;
   img.style.width = size + "px";
-  // random opacity 0.3 - 0.7
   img.style.opacity = 0.3 + Math.random() * 0.4;
-  // random durasi animasi floatX 8s - 15s
   img.style.animationDuration = 8 + Math.random() * 7 + "s";
-  // random delay agar tidak seragam
   img.style.animationDelay = Math.random() * 5 + "s";
 });
