@@ -32,7 +32,7 @@ HEADER + MINI CURRENCY
 ========================= */
 .header-top {
   position: relative;
-  padding-top: 60px; /* turun sedikit, judul terlihat */
+  padding-top: 200px; /* turun sedikit, judul terlihat */
   margin-bottom: 26px;
   z-index: 10;
 }
