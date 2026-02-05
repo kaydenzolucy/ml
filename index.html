@@ -8,76 +8,28 @@
   <!-- FONT RETRO -->
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
+  <!-- MAIN CSS -->
   <link rel="stylesheet" href="style.css">
-
-  <!-- FIX OVERLAP -->
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-    }
-
-    /* ===== CURRENCY SWITCH FIX ===== */
-    .currency-switch {
-      position: relative;
-      z-index: 10;
-      padding: 14px 12px;
-      background: #0f0f0f;
-      border-bottom: 2px dashed #ff7ac8;
-      text-align: center;
-    }
-
-    .currency-switch select {
-      width: 100%;
-      max-width: 280px;
-      padding: 10px;
-      font-family: inherit;
-      font-size: 12px;
-    }
-
-    .kurs-info {
-      margin-top: 6px;
-      font-size: 10px;
-      opacity: 0.8;
-    }
-
-    /* ===== CONTAINER SPACING ===== */
-    .container {
-      margin-top: 20px;
-      padding: 0 12px 40px;
-      position: relative;
-      z-index: 1;
-    }
-
-    /* PREVENT MENU NUTUP */
-    .menu {
-      margin-top: 12px;
-    }
-
-    pre {
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
-  </style>
 </head>
 
 <body>
 
-<!-- =========================
-CURRENCY SWITCH (AMAN DIKLIK)
-========================= -->
-<div class="currency-switch">
-  <select id="currency" onchange="changeCurrency()">
-    <option value="IDR">🇮🇩 Rupiah (IDR)</option>
-    <option value="MYR">🇲🇾 Ringgit (MYR)</option>
-  </select>
-  <div id="rateInfo" class="kurs-info">Memuat kurs…</div>
-</div>
-
 <div class="container">
 
-  <h1 class="title-glow">JOKI MLBB 🐱MINRA🐱</h1>
+  <!-- HEADER + MINI CURRENCY -->
+  <div class="header-top">
+    <h1 class="title-glow">JOKI MLBB 🐱MINRA🐱</h1>
 
+    <div class="currency-mini">
+      <select id="currency" onchange="changeCurrency()">
+        <option value="IDR">🇮🇩 IDR</option>
+        <option value="MYR">🇲🇾 MYR</option>
+      </select>
+      <div id="rateInfo">Memuat kurs…</div>
+    </div>
+  </div>
+
+  <!-- MENU -->
   <div class="menu">
     <button onclick="showMenu(1)">⭐ Joki Per Bintang</button>
     <button onclick="showMenu(2)">🔁 Joki Antar Rank</button>
@@ -167,7 +119,7 @@ CURRENCY SWITCH (AMAN DIKLIK)
 <script src="script.js"></script>
 <script>
 function openLink(){
-  window.location.href="https://kaydenzolucy.github.io/18januari2026/";
+  window.location.href = "https://kaydenzolucy.github.io/18januari2026/";
 }
 </script>
 
