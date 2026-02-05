@@ -53,7 +53,7 @@ HEADER + MINI CURRENCY
   flex-direction: column;
   align-items: flex-end;
 
-  padding: 6px 10px;
+  padding: 2px 10px;
   border-radius: 12px;
 
   background: rgba(255,255,255,0.08);
@@ -106,7 +106,7 @@ TITLE (2 BARIS)
 .title-glow .sub-title {
   display: block;
   font-size: 28px;
-  margin-top: 10px; /* jarak ke main-title */
+  margin-top: 2px; /* jarak ke main-title */
   margin-bottom: 20px; /* jarak ke menu */
   color: #ffb6e6;
   text-shadow: 0 0 4px #ff4fa7, 0 0 8px #ff7ac8;
