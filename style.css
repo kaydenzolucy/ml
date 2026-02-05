@@ -282,19 +282,31 @@ MINRA RAIN BACKGROUND
   height: 100%;
   pointer-events: none;
   overflow: hidden;
-  z-index: 0; /* biar di belakang semua */
+  z-index: 0; /* di belakang semua */
 }
 
 .rain-img {
   position: absolute;
-  width: 60px;
   opacity: 0.5;
   animation: floatX 10s ease-in-out infinite alternate;
+  z-index: 0; /* pastikan di belakang judul */
+  transform-origin: center;
 }
 
 /* animasi bergerak horizontal slow */
 @keyframes floatX {
-  0% { transform: translateX(0) translateY(0) rotate(0deg); }
-  50% { transform: translateX(30px) translateY(0) rotate(5deg); }
+  0%   { transform: translateX(0) translateY(0) rotate(0deg); }
+  50%  { transform: translateX(30px) translateY(0) rotate(5deg); }
   100% { transform: translateX(-30px) translateY(0) rotate(-5deg); }
+}
+
+/* container dan judul agar selalu di atas */
+.container {
+  position: relative;
+  z-index: 10;
+}
+
+.title-glow {
+  position: relative;
+  z-index: 11;
 }
