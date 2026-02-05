@@ -263,20 +263,37 @@ RESPONSIVE
   }
 }
 
+/* =========================
+MINRA GALLERY
+========================= */
 .minra-gallery {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+  pointer-events: none;  /* supaya klik tidak ganggu konten */
+  z-index: 0;            /* pastikan di belakang semua konten */
+  overflow: hidden;      /* agar gambar tidak keluar layar */
+}
+
+.minra-gallery .minra-title {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #ffd6f0;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 18px;
+  letter-spacing: 2px;
+  text-shadow: 0 0 6px #ff4fa7, 0 0 12px #ff7ac8;
+  z-index: 1;
   pointer-events: none;
-  z-index: 0;       /* pastikan di belakang semua konten */
-  overflow: hidden; /* agar gambar tidak keluar layar */
 }
 
 .minra-img {
-  position: absolute;    /* bebas di layar */
-  opacity: 0.3;          /* tetap terlihat */
+  position: absolute;      /* bebas bergerak */
+  opacity: 0.3;            /* terlihat samar */
   transition: transform 0.4s ease, opacity 0.4s ease;
   user-select: none;
   pointer-events: none;
