@@ -15,7 +15,6 @@ body {
   background: linear-gradient(180deg,#1a0f2e,#12081f);
   color: #fff;
   font-family: "Segoe UI", Arial, sans-serif;
-
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overscroll-behavior: none;
@@ -29,7 +28,8 @@ CONTAINER
   max-width: 520px;
   margin: 0 auto;
   padding: 24px 18px 36px;
-  z-index: 2; /* pastikan di atas background */
+  z-index: 2;
+  text-align: left; /* semua teks default rata kiri */
 }
 
 /* =========================
@@ -37,17 +37,17 @@ HEADER + MINI CURRENCY
 ========================= */
 .header-top {
   position: relative;
-  margin-bottom: 30px;  /* jarak antar header dan menu */
-  padding-top: 100px;    /* lebih rapat ke atas */
+  margin-bottom: 40px;  /* jarak subjudul ke menu */
+  padding-top: 100px;    
   text-align: center;
-  z-index: 2;
+  z-index: 3; /* di atas gallery */
 }
 
 .currency-mini {
   position: absolute;
-  top: 2px; /* pas di pojok atas */
+  top: 2px;
   right: 10px;
-  z-index: 3; /* di atas header & background */
+  z-index: 4;
 
   display: flex;
   flex-direction: column;
@@ -61,7 +61,6 @@ HEADER + MINI CURRENCY
 
   box-shadow: 0 0 10px rgba(255,105,180,.25);
   font-size: 12px;
-
   will-change: transform;
 }
 
@@ -92,9 +91,11 @@ TITLE (2 BARIS)
   color: #ffd6f0;
   animation: rgbGlow 8s linear infinite;
   will-change: text-shadow;
-  line-height: 1; /* rapat antar baris */
+  line-height: 1;
   text-align: center;
-  z-index: 2;   /* di atas background */
+  z-index: 3;
+  position: relative;
+  margin-bottom: 30px; /* jarak ke menu */
 }
 
 .title-glow .main-title {
@@ -105,7 +106,8 @@ TITLE (2 BARIS)
 .title-glow .sub-title {
   display: block;
   font-size: 28px;
-  margin-top: -20px; /* rapat dengan main-title */
+  margin-top: 10px; /* jarak ke main-title */
+  margin-bottom: 20px; /* jarak ke menu */
   color: #ffb6e6;
   text-shadow: 0 0 4px #ff4fa7, 0 0 8px #ff7ac8;
   animation: rgbGlowSub 8s linear infinite;
@@ -157,6 +159,7 @@ MENU BUTTON
 
   transition: transform .25s ease, box-shadow .25s ease;
   will-change: transform;
+  text-align: center;
 }
 
 .menu button:hover {
@@ -186,6 +189,7 @@ BOX
 
   box-shadow: 0 0 12px rgba(255,122,200,.2);
   z-index: 2;
+  text-align: left; /* teks di box rata kiri */
 }
 
 .box.show {
@@ -207,6 +211,7 @@ input {
   background: linear-gradient(180deg,#3a2452,#2b1b3a);
   color: #fff;
   font-size: 14px;
+  text-align: left;
 }
 
 .box button {
@@ -222,6 +227,7 @@ input {
 
   box-shadow: 0 0 8px rgba(255,122,200,.35);
   transition: transform .2s ease;
+  text-align: center;
 }
 
 .box button:hover {
@@ -229,7 +235,7 @@ input {
 }
 
 /* =========================
-OUTPUT
+OUTPUT / PRE
 ========================= */
 pre {
   margin-top: 18px;
@@ -242,6 +248,31 @@ pre {
   font-size: 13px;
 
   box-shadow: inset 0 0 8px rgba(255,122,200,.12);
+  text-align: left; /* teks output rata kiri */
+}
+
+/* =========================
+MINRA GALLERY
+========================= */
+.minra-gallery {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.minra-img {
+  position: absolute;
+  opacity: 0.8;
+  width: 60px;
+  transition: transform 1s ease, opacity 1s ease;
+  user-select: none;
+  pointer-events: none;
+  z-index: 0;
 }
 
 /* =========================
@@ -254,6 +285,7 @@ RESPONSIVE
 
   .title-glow .sub-title {
     font-size: 20px;
+    margin-bottom: 18px;
   }
 
   .menu button {
@@ -264,28 +296,4 @@ RESPONSIVE
     top: 5px;
     right: 5px;
   }
-}
-
-/* =========================
-MINRA GALLERY
-========================= */
-.minra-gallery {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none; /* klik tidak terganggu */
-  z-index: 0;           /* di belakang semua konten */
-  overflow: hidden;
-}
-
-.minra-img {
-  position: absolute;
-  opacity: 0.8;
-  width: 60px; /*ukurann default, bisa acak di JS */
-  transition: transform 1s ease, opacity 1s ease;
-  user-select: none;
-  pointer-events: none;
-  z-index: 0;
 }
