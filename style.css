@@ -37,8 +37,8 @@ HEADER + MINI CURRENCY
 ========================= */
 .header-top {
   position: relative;
-  margin-bottom: 16px;  /* jarak antar header dan menu */
-  padding-top: 40px;    /* lebih rapat ke atas */
+  margin-bottom: 30px;  /* jarak antar header dan menu */
+  padding-top: 100pxpx;    /* lebih rapat ke atas */
   text-align: center;
   z-index: 2;
 }
@@ -282,8 +282,8 @@ MINRA GALLERY
 
 .minra-img {
   position: absolute;
-  opacity: 0.3;
-  width: 60px; /* ukuran default, bisa acak di JS */
+  opacity: 0.8;
+  width: 60px; /*ukurann default, bisa acak di JS */
   transition: transform 1s ease, opacity 1s ease;
   user-select: none;
   pointer-events: none;
