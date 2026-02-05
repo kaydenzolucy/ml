@@ -89,38 +89,41 @@ TITLE
 .title-glow {
   text-align: center;
   font-family: 'Press Start 2P', cursive;
-  font-size: 48px;          /* ukuran judul utama */
+  font-size: 64px;          /* ukuran judul utama lebih besar */
   margin: 0;
-  line-height: 0.9;         /* jarak antar baris lebih rapat */
+  line-height: 1;            /* jarak antar baris sangat rapat */
   letter-spacing: 2px;
   color: #ffd6f0;
   text-shadow:
-    0 0 8px #ff4fa7,
-    0 0 16px #ff7ac8,
-    0 0 24px #ffb6e6;
+    0 0 12px #ff4fa7,
+    0 0 24px #ff7ac8,
+    0 0 36px #ffb6e6;
   animation: rgbGlow 8s linear infinite;
   will-change: text-shadow;
+  position: relative;       /* pastikan tetap di atas rain */
+  z-index: 11;
 }
 
 /* judul utama */
 .title-glow .main-title {
   display: block;
-  margin-bottom: -4px;       /* jarak ke sub-title */
+  margin-bottom: 0;          /* jarak ke sub-title minimal */
 }
 
-/* sub-judul */
+/* sub-judul tepat di bawah main-title */
 .title-glow .sub-title {
   display: block;
-  margin-top: 0;             /* hapus jarak ekstra */
-  font-size: 28px;           /* ukuran sub-judul */
+  margin-top: 2px;           /* jarak sangat tipis */
+  font-size: 32px;           /* ukuran sub-judul lebih jelas */
+  animation: rgbGlowSub 8s linear infinite;
 }
 
 /* animasi glow utama */
 @keyframes rgbGlow {
-  0%   { text-shadow:0 0 8px #ff4fa7,0 0 16px #ff7ac8,0 0 24px #ffb6e6; }
-  33%  { text-shadow:0 0 8px #6cf6ff,0 0 16px #4facfe,0 0 24px #00f2fe; }
-  66%  { text-shadow:0 0 8px #ffe259,0 0 16px #ffa751,0 0 24px #ffb347; }
-  100% { text-shadow:0 0 8px #ff4fa7,0 0 16px #ff7ac8,0 0 24px #ffb6e6; }
+  0%   { text-shadow:0 0 12px #ff4fa7,0 0 24px #ff7ac8,0 0 36px #ffb6e6; }
+  33%  { text-shadow:0 0 12px #6cf6ff,0 0 24px #4facfe,0 0 36px #00f2fe; }
+  66%  { text-shadow:0 0 12px #ffe259,0 0 24px #ffa751,0 0 36px #ffb347; }
+  100% { text-shadow:0 0 12px #ff4fa7,0 0 24px #ff7ac8,0 0 36px #ffb6e6; }
 }
 
 /* animasi glow sub-title */
@@ -129,6 +132,19 @@ TITLE
   33%  { text-shadow:0 0 4px #6cf6ff,0 0 8px #4facfe; }
   66%  { text-shadow:0 0 4px #ffe259,0 0 8px #ffa751; }
   100% { text-shadow:0 0 4px #ff4fa7,0 0 8px #ff7ac8; }
+}
+
+/* =========================
+RESPONSIVE TITLE
+========================= */
+@media(max-width:420px){
+  .title-glow {
+    font-size: 36px;           /* judul tetap besar tapi responsive */
+  }
+
+  .title-glow .sub-title {
+    font-size: 18px;           /* sub-judul pas di bawah */
+  }
 }
 
 /* =========================
