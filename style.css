@@ -88,7 +88,7 @@ HEADER TOP
 ========================= */
 .header-top {
   position: relative;
-  padding-top: 120px; /* turun semua judul dan subjudul ke bawah */
+  padding-top: 140px; /* turun semua judul dan subjudul ke bawah */
   margin-bottom: 26px;
   z-index: 10; /* tetap di atas background rain */
 }
