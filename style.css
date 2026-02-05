@@ -84,33 +84,35 @@ HEADER + MINI CURRENCY
 }
 
 /* =========================
-TITLE (2 BARIS)
+TITLE
 ========================= */
 .title-glow {
   text-align: center;
   font-family: 'Press Start 2P', cursive;
+  font-size: 28px;          /* ukuran judul utama */
   margin: 0;
+  line-height: 1.1;         /* jarak antar baris lebih rapat */
   letter-spacing: 2px;
   color: #ffd6f0;
+  text-shadow:
+    0 0 8px #ff4fa7,
+    0 0 16px #ff7ac8,
+    0 0 24px #ffb6e6;
   animation: rgbGlow 8s linear infinite;
   will-change: text-shadow;
 }
 
-/* baris utama */
+/* judul utama */
 .title-glow .main-title {
   display: block;
-  font-size: 32px;
-  line-height: 1.2;
+  margin-bottom: 2px;       /* jarak ke sub-title */
 }
 
-/* baris sub */
+/* sub-judul */
 .title-glow .sub-title {
   display: block;
-  font-size: 20px;
-  margin-top: 6px;
-  color: #ffb6e6;
-  text-shadow: 0 0 4px #ff4fa7, 0 0 8px #ff7ac8;
-  animation: rgbGlowSub 8s linear infinite;
+  margin-top: 0;             /* hapus jarak ekstra */
+  font-size: 20px;           /* ukuran sub-judul */
 }
 
 /* animasi glow utama */
