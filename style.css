@@ -45,7 +45,7 @@ HEADER + MINI CURRENCY
 
 .currency-mini {
   position: absolute;
-  top: 10px; /* pas di pojok atas */
+  top: 2px; /* pas di pojok atas */
   right: 10px;
   z-index: 3; /* di atas header & background */
 
@@ -105,7 +105,7 @@ TITLE (2 BARIS)
 .title-glow .sub-title {
   display: block;
   font-size: 28px;
-  margin-top: 0px; /* rapat dengan main-title */
+  margin-top: -20px; /* rapat dengan main-title */
   color: #ffb6e6;
   text-shadow: 0 0 4px #ff4fa7, 0 0 8px #ff7ac8;
   animation: rgbGlowSub 8s linear infinite;
