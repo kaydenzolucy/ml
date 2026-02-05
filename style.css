@@ -38,7 +38,7 @@ HEADER + MINI CURRENCY
 .header-top {
   position: relative;
   margin-bottom: 26px;
-  padding-top: 120px; /* diturunkan supaya tidak tertimpa menu */
+  padding-top: 100px; /* diturunkan supaya tidak tertimpa menu */
   text-align: center;
 }
 
@@ -92,7 +92,7 @@ TITLE (2 BARIS)
   color: #ffd6f0;
   animation: rgbGlow 8s linear infinite;
   will-change: text-shadow;
-  line-height: 1.1; /* jarak antar baris diperpendek */
+  line-height: 0.9; /* jarak antar baris diperpendek */
   text-align: center;
 }
 
@@ -104,7 +104,7 @@ TITLE (2 BARIS)
 .title-glow .sub-title {
   display: block;
   font-size: 28px; /* diperbesar dari 20px */
-  margin-top: 4px; /* jarak antar judul lebih dekat */
+  margin-top: 0px; /* jarak antar judul lebih dekat */
   color: #ffb6e6;
   text-shadow: 0 0 4px #ff4fa7, 0 0 8px #ff7ac8;
   animation: rgbGlowSub 8s linear infinite;
@@ -272,9 +272,9 @@ MINRA GALLERY
   left: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none;  /* supaya klik tidak ganggu konten */
-  z-index: 0;            /* pastikan di belakang semua konten */
-  overflow: hidden;      /* agar gambar tidak keluar layar */
+  pointer-events: none;  /* klik tidak terganggu */
+  z-index: 0;            /* di belakang semua konten */
+  overflow: hidden;
 }
 
 .minra-gallery .minra-title {
@@ -284,17 +284,18 @@ MINRA GALLERY
   transform: translateX(-50%);
   color: #ffd6f0;
   font-family: 'Press Start 2P', cursive;
-  font-size: 18px;
+  font-size: 20px;
   letter-spacing: 2px;
   text-shadow: 0 0 6px #ff4fa7, 0 0 12px #ff7ac8;
-  z-index: 1;
+  z-index: 1;             /* tetap di atas gambar */
   pointer-events: none;
 }
 
 .minra-img {
-  position: absolute;      /* bebas bergerak */
-  opacity: 0.3;            /* terlihat samar */
-  transition: transform 0.4s ease, opacity 0.4s ease;
+  position: absolute;
+  opacity: 0.4;
+  width: 60px;  /* ukuran default */
+  transition: transform 0.5s ease, opacity 0.5s ease;
   user-select: none;
   pointer-events: none;
   z-index: 0;
