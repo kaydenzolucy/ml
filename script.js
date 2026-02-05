@@ -280,34 +280,21 @@ showMenu(1);
 showPriceList();
 
 // ======================
-// RANDOMIZE MINRA GALLERY IMAGES (tidak saling timpa)
-// ======================
+// RANDOMIZE MINRA IMAGES (tidak saling timpa, bergerak)
 const minraImgs = document.querySelectorAll(".minra-img");
-const usedPositions = []; // menyimpan posisi yang sudah dipakai
-const minDistance = 80;   // jarak minimal antar gambar (px)
+const usedPositions = [];
+const minDistance = 80;
 
-// pastikan gallery berada di belakang konten lain
-const gallery = document.querySelector(".minra-gallery");
-if(gallery){
-  gallery.style.position = "fixed";
-  gallery.style.top = 0;
-  gallery.style.left = 0;
-  gallery.style.width = "100%";
-  gallery.style.height = "100%";
-  gallery.style.zIndex = "0";   // supaya di belakang konten
-  gallery.style.pointerEvents = "none"; // agar klik tidak tertangkap gallery
-}
-
+// fungsi random posisi awal
 minraImgs.forEach(img => {
   let x, y;
   let tries = 0;
 
   do {
     x = Math.random() * (window.innerWidth - 100);
-    y = 150 + Math.random() * (window.innerHeight - 200); // agak turun biar judul aman
+    y = 120 + Math.random() * (window.innerHeight - 200); // bawah judul
     tries++;
 
-    // cek jarak dengan semua posisi yang sudah dipakai
     var tooClose = usedPositions.some(pos => {
       const dx = pos.x - x;
       const dy = pos.y - y;
@@ -318,13 +305,39 @@ minraImgs.forEach(img => {
 
   usedPositions.push({x, y});
 
-  // set posisi, ukuran, opacity, animasi random
-  img.style.position = "absolute";   // wajib absolute
   img.style.left = x + "px";
   img.style.top = y + "px";
-  const size = 40 + Math.random() * 60;      // ukuran random 40-100px
+
+  const size = 40 + Math.random() * 60;
   img.style.width = size + "px";
-  img.style.opacity = 0.3 + Math.random() * 0.5; // opacity 0.3-0.8
-  img.style.animationDuration = 8 + Math.random() * 7 + "s"; // durasi animasi 8-15s
-  img.style.animationDelay = Math.random() * 5 + "s";         // delay acak 0-5s
+  img.style.opacity = 0.3 + Math.random() * 0.5;
+
+  // animasi gerak acak
+  animateImage(img);
 });
+
+// fungsi animasi acak bergerak
+function animateImage(img) {
+  let speedX = (Math.random() - 0.5) * 0.5; // -0.25 ~ 0.25 px/frame
+  let speedY = (Math.random() - 0.5) * 0.5;
+  let angle = (Math.random() - 0.5) * 2; // rotasi acak
+
+  function move() {
+    let x = parseFloat(img.style.left);
+    let y = parseFloat(img.style.top);
+    let newX = x + speedX;
+    let newY = y + speedY;
+
+    // jika keluar layar, balik ke posisi lain
+    if (newX < 0 || newX > window.innerWidth - img.offsetWidth) speedX *= -1;
+    if (newY < 120 || newY > window.innerHeight - img.offsetHeight) speedY *= -1;
+
+    img.style.left = newX + "px";
+    img.style.top = newY + "px";
+    img.style.transform = `rotate(${angle}deg) scale(1)`;
+
+    angle += (Math.random() - 0.5) * 2; // rotasi perlahan
+    requestAnimationFrame(move);
+  }
+  move();
+}
