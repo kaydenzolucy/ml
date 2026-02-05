@@ -280,19 +280,31 @@ showMenu(1);
 showPriceList();
 
 // ======================
-// RANDOMIZE RAIN IMAGES (tidak saling timpa)
+// RANDOMIZE MINRA GALLERY IMAGES (tidak saling timpa)
 // ======================
-const rainImgs = document.querySelectorAll(".rain-img");
+const minraImgs = document.querySelectorAll(".minra-img");
 const usedPositions = []; // menyimpan posisi yang sudah dipakai
 const minDistance = 80;   // jarak minimal antar gambar (px)
 
-rainImgs.forEach(img => {
+// pastikan gallery berada di belakang konten lain
+const gallery = document.querySelector(".minra-gallery");
+if(gallery){
+  gallery.style.position = "fixed";
+  gallery.style.top = 0;
+  gallery.style.left = 0;
+  gallery.style.width = "100%";
+  gallery.style.height = "100%";
+  gallery.style.zIndex = "0";   // supaya di belakang konten
+  gallery.style.pointerEvents = "none"; // agar klik tidak tertangkap gallery
+}
+
+minraImgs.forEach(img => {
   let x, y;
   let tries = 0;
 
   do {
-    x = Math.random() * (window.innerWidth - 100); // margin kanan/kiri
-    y = 100 + Math.random() * (window.innerHeight - 200); // mulai 100px dari atas agar tidak menutupi judul
+    x = Math.random() * (window.innerWidth - 100);
+    y = 150 + Math.random() * (window.innerHeight - 200); // agak turun biar judul aman
     tries++;
 
     // cek jarak dengan semua posisi yang sudah dipakai
@@ -307,6 +319,7 @@ rainImgs.forEach(img => {
   usedPositions.push({x, y});
 
   // set posisi, ukuran, opacity, animasi random
+  img.style.position = "absolute";   // wajib absolute
   img.style.left = x + "px";
   img.style.top = y + "px";
   const size = 40 + Math.random() * 60;      // ukuran random 40-100px
