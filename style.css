@@ -84,6 +84,16 @@ HEADER + MINI CURRENCY
 }
 
 /* =========================
+HEADER TOP
+========================= */
+.header-top {
+  position: relative;
+  padding-top: 120px; /* turun semua judul dan subjudul ke bawah */
+  margin-bottom: 26px;
+  z-index: 10; /* tetap di atas background rain */
+}
+
+/* =========================
 TITLE
 ========================= */
 .title-glow {
@@ -132,6 +142,23 @@ TITLE
   33%  { text-shadow:0 0 4px #6cf6ff,0 0 8px #4facfe; }
   66%  { text-shadow:0 0 4px #ffe259,0 0 8px #ffa751; }
   100% { text-shadow:0 0 4px #ff4fa7,0 0 8px #ff7ac8; }
+}
+
+/* =========================
+RESPONSIVE TITLE
+========================= */
+@media(max-width:420px){
+  .header-top {
+    padding-top: 60px; /* responsive turun lebih sedikit */
+  }
+
+  .title-glow {
+    font-size: 36px;           /* judul tetap besar tapi responsive */
+  }
+
+  .title-glow .sub-title {
+    font-size: 18px;           /* sub-judul pas di bawah */
+  }
 }
 
 /* =========================
