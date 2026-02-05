@@ -29,7 +29,7 @@ CONTAINER
   max-width: 520px;
   margin: 0 auto;
   padding: 24px 18px 36px;
-  z-index: 1;
+  z-index: 2; /* pastikan di atas background */
 }
 
 /* =========================
@@ -37,17 +37,17 @@ HEADER + MINI CURRENCY
 ========================= */
 .header-top {
   position: relative;
-  margin-bottom: 26px;
-  padding-top: 100px; /* diturunkan supaya tidak tertimpa menu */
+  margin-bottom: 16px;  /* jarak antar header dan menu */
+  padding-top: 40px;    /* lebih rapat ke atas */
   text-align: center;
+  z-index: 2;
 }
 
-/* currency kecil kanan atas */
 .currency-mini {
   position: absolute;
-  top: 10px; /* diturunkan sedikit */
+  top: 10px; /* pas di pojok atas */
   right: 10px;
-  z-index: 10;
+  z-index: 3; /* di atas header & background */
 
   display: flex;
   flex-direction: column;
@@ -92,19 +92,20 @@ TITLE (2 BARIS)
   color: #ffd6f0;
   animation: rgbGlow 8s linear infinite;
   will-change: text-shadow;
-  line-height: 0.9; /* jarak antar baris diperpendek */
+  line-height: 1; /* rapat antar baris */
   text-align: center;
+  z-index: 2;   /* di atas background */
 }
 
 .title-glow .main-title {
   display: block;
-  font-size: 40px; /* diperbesar dari 32px */
+  font-size: 40px;
 }
 
 .title-glow .sub-title {
   display: block;
-  font-size: 28px; /* diperbesar dari 20px */
-  margin-top: 0px; /* jarak antar judul lebih dekat */
+  font-size: 28px;
+  margin-top: 0px; /* rapat dengan main-title */
   color: #ffb6e6;
   text-shadow: 0 0 4px #ff4fa7, 0 0 8px #ff7ac8;
   animation: rgbGlowSub 8s linear infinite;
@@ -132,6 +133,7 @@ MENU GRID
   grid-template-columns: 1fr 1fr;
   gap: 14px;
   margin-bottom: 10px;
+  z-index: 2;
 }
 
 /* =========================
@@ -183,6 +185,7 @@ BOX
   backdrop-filter: blur(4px);
 
   box-shadow: 0 0 12px rgba(255,122,200,.2);
+  z-index: 2;
 }
 
 .box.show {
@@ -263,6 +266,9 @@ RESPONSIVE
   }
 }
 
+/* =========================
+MINRA GALLERY
+========================= */
 .minra-gallery {
   position: fixed;
   top: 0;
@@ -276,9 +282,9 @@ RESPONSIVE
 
 .minra-img {
   position: absolute;
-  opacity: 0.4;
+  opacity: 0.3;
   width: 60px; /* ukuran default, bisa acak di JS */
-  transition: transform 0.5s ease, opacity 0.5s ease;
+  transition: transform 1s ease, opacity 1s ease;
   user-select: none;
   pointer-events: none;
   z-index: 0;
