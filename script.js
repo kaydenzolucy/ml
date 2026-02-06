@@ -323,19 +323,17 @@ minraImgs.forEach(img => {
 });
 
 // ===========================
-// RANDOMIZE MINRA IMAGES (tidak saling timpa, gerak halus)
+// RANDOMIZE MINRA IMAGES (tidak saling timpa, bergerak halus)
 // ===========================
 const minraImgs = document.querySelectorAll(".minra-img");
 const usedPositions = [];
-const margin = 20;
+const minDistance = 80;
+const margin = 50; // margin dari atas dan sisi layar
 
-// buat grid sederhana untuk distribusi gambar
+// distribusi posisi awal dengan grid sederhana agar tidak menumpuk
 const cols = Math.ceil(Math.sqrt(minraImgs.length));
 const rows = Math.ceil(minraImgs.length / cols);
 
-// ===========================
-// Inisialisasi posisi awal
-// ===========================
 minraImgs.forEach((img, idx) => {
   const col = idx % cols;
   const row = Math.floor(idx / cols);
@@ -356,7 +354,7 @@ minraImgs.forEach((img, idx) => {
   img.style.width = size + "px";
   img.style.opacity = 0.4 + Math.random() * 0.5;
 
-  // simpan origin di dataset
+  // simpan origin untuk animasi
   img.dataset.originX = x;
   img.dataset.originY = y;
 
@@ -364,11 +362,11 @@ minraImgs.forEach((img, idx) => {
 });
 
 // ===========================
-// Fungsi animasi wayang halus
+// animasi halus
 // ===========================
 function animateWayang(img) {
-  const amplitudeX = 10; // ±10px
-  const amplitudeY = 8;  // ±8px
+  const amplitudeX = 10; // ±10px horizontal
+  const amplitudeY = 8;  // ±8px vertical
   const speedX = 0.002 + Math.random() * 0.001; // lambat tapi terlihat
   const speedY = 0.002 + Math.random() * 0.001;
   let angle = 0;
@@ -396,7 +394,7 @@ function animateWayang(img) {
 }
 
 // ===========================
-// Responsif: update posisi saat resize
+// responsif saat resize
 // ===========================
 window.addEventListener("resize", () => {
   minraImgs.forEach((img, idx) => {
