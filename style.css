@@ -106,7 +106,7 @@ TITLE (2 BARIS)
 .title-glow .sub-title {
   display: block;
   font-size: 32px;
-  margin-top: 0px; /* jarak ke main-title */
+  margin-top: -10px; /* jarak ke main-title */
   margin-bottom: 15px; /* jarak ke menu */
   color: #ffb6e6;
   text-shadow: 0 0 4px #ff4fa7, 0 0 8px #ff7ac8;
