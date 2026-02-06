@@ -323,64 +323,70 @@ minraImgs.forEach(img => {
 });
 
 // ===========================
-// RANDOMIZE MINRA IMAGES
-// Super smooth "wayang" movement
+// RANDOMIZE MINRA IMAGES (tidak saling timpa, gerak halus)
 // ===========================
-
 const minraImgs = document.querySelectorAll(".minra-img");
-const margin = 20; // jarak dari tepi layar
-const cols = Math.ceil(Math.sqrt(minraImgs.length)); // jumlah kolom grid
-const rows = Math.ceil(minraImgs.length / cols);      // jumlah baris grid
+const usedPositions = [];
+const minDistance = 80; // jarak minimum antar gambar
+const marginTop = 10;    // margin dari atas
 
-// ===========================
-// Distribusi posisi awal
-// ===========================
-minraImgs.forEach((img, idx) => {
-  const col = idx % cols;
-  const row = Math.floor(idx / cols);
+// fungsi random posisi awal
+minraImgs.forEach(img => {
+  let x, y;
+  let tries = 0;
 
-  const cellWidth = (window.innerWidth - margin * 2) / cols;
-  const cellHeight = (window.innerHeight - margin * 2) / rows;
+  do {
+    x = Math.random() * (window.innerWidth - 100);
+    y = marginTop + Math.random() * (window.innerHeight - marginTop - 100);
+    tries++;
 
-  // random di dalam cell agar tidak terlalu berjejer rapi
-  const x = margin + col * cellWidth + Math.random() * (cellWidth - 60);
-  const y = margin + row * cellHeight + Math.random() * (cellHeight - 60);
+    var tooClose = usedPositions.some(pos => {  
+      const dx = pos.x - x;  
+      const dy = pos.y - y;  
+      return Math.sqrt(dx*dx + dy*dy) < minDistance;  
+    });
+
+  } while (tooClose && tries < 100);
+
+  usedPositions.push({x, y});
 
   img.style.position = "absolute";
   img.style.left = x + "px";
   img.style.top = y + "px";
 
-  // ukuran & opacity random
   const size = 40 + Math.random() * 60;
   img.style.width = size + "px";
-  img.style.opacity = 0.4 + Math.random() * 0.5;
+  img.style.opacity = 0.3 + Math.random() * 0.5;
 
-  // animasi halus
-  animateWayangSmooth(img, x, y);
+  // animasi gerak halus
+  animateImageWayang(img, x, y);
 });
 
 // ===========================
-// Fungsi animasi halus
+// Animasi halus seperti wayang
 // ===========================
-function animateWayangSmooth(img, originX, originY) {
-  const amplitudeX = 5 + Math.random() * 5; // gerakan horizontal kecil
-  const amplitudeY = 3 + Math.random() * 3; // gerakan vertikal kecil
-  const speed = 0.0001 + Math.random() * 0.0002; // sangat lambat
-
-  let angle = (Math.random() - 0.5) * 10;
+function animateImageWayang(img, originX, originY) {
+  const amplitudeX = 5 + Math.random() * 5; // gerak horizontal ±5-10px
+  const amplitudeY = 3 + Math.random() * 3; // gerak vertical ±3-6px
+  const speed = 0.0002 + Math.random() * 0.0002; // sangat lambat
+  let angle = (Math.random() - 0.5) * 10; // rotasi awal
   const rotateSpeed = 0.001 + Math.random() * 0.002;
+
+  // fase random untuk tiap gambar
   const phaseX = Math.random() * 2 * Math.PI;
   const phaseY = Math.random() * 2 * Math.PI;
 
   function move() {
     const time = Date.now();
 
+    // gerakan halus di sekitar posisi awal
     const offsetX = Math.sin(time * speed + phaseX) * amplitudeX;
     const offsetY = Math.cos(time * speed + phaseY) * amplitudeY;
 
     img.style.left = originX + offsetX + "px";
     img.style.top = originY + offsetY + "px";
 
+    // rotasi perlahan ±5 derajat
     angle += rotateSpeed;
     img.style.transform = `rotate(${Math.sin(angle)*5}deg) scale(1)`;
 
@@ -391,23 +397,14 @@ function animateWayangSmooth(img, originX, originY) {
 }
 
 // ===========================
-// Responsif saat resize
+// Responsif: posisi tetap aman saat resize
 // ===========================
 window.addEventListener("resize", () => {
-  const newCols = Math.ceil(Math.sqrt(minraImgs.length));
-  const newRows = Math.ceil(minraImgs.length / newCols);
-
   minraImgs.forEach((img, idx) => {
-    const col = idx % newCols;
-    const row = Math.floor(idx / newCols);
-
-    const cellWidth = (window.innerWidth - margin * 2) / newCols;
-    const cellHeight = (window.innerHeight - margin * 2) / newRows;
-
-    const originX = margin + col * cellWidth + Math.random() * (cellWidth - 60);
-    const originY = margin + row * cellHeight + Math.random() * (cellHeight - 60);
-
-    img.dataset.originX = originX;
-    img.dataset.originY = originY;
+    let pos = usedPositions[idx];
+    const maxX = window.innerWidth - img.offsetWidth;
+    const maxY = window.innerHeight - img.offsetHeight;
+    pos.x = Math.min(pos.x, maxX);
+    pos.y = Math.min(pos.y, maxY);
   });
 });
