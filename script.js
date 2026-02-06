@@ -333,7 +333,7 @@ function animateImage(img, baseX, baseY) {
 
     img.style.left = baseX + offsetX + "px";
     img.style.top = baseY + offsetY + "px";
-    img.style.transform = `rotate(${angle}deg) scale(1)`;
+    img.style.transform = `scale(1)`;
 
     angle += 0.05;
     requestAnimationFrame(move);
