@@ -279,65 +279,68 @@ fetchRate();
 showMenu(1);
 showPriceList();
 
-// RANDOMIZE MINRA IMAGES (tidak saling timpa, bergerak)
+// ======================
+// MINRA GALLERY SMOOTH WAYANG
+// ======================
 const minraImgs = document.querySelectorAll(".minra-img");
-const usedPositions = [];
-const minDistance = 80;
+const minDistance = 80; // jarak minimal antar gambar
+const marginTop = 120; // batas atas (bawah judul)
+const marginBottom = 50; // batas bawah
 
-// fungsi random posisi awal
-minraImgs.forEach(img => {
-let x, y;
-let tries = 0;
-
-do {
-x = Math.random() * (window.innerWidth - 100);
-y = 120 + Math.random() * (window.innerHeight - 200); // bawah judul
-tries++;
-
-var tooClose = usedPositions.some(pos => {
-const dx = pos.x - x;
-const dy = pos.y - y;
-return Math.sqrt(dxdx + dydy) < minDistance;
-});
-
-} while (tooClose && tries < 100);
-
-usedPositions.push({x, y});
-
-img.style.left = x + "px";
-img.style.top = y + "px";
-
-const size = 40 + Math.random() * 60;
-img.style.width = size + "px";
-img.style.opacity = 0.3 + Math.random() * 0.5;
-
-// animasi gerak acak
-animateImage(img);
-});
-
-// fungsi animasi acak bergerak
-function animateImage(img) {
-let speedX = (Math.random() - 0.5) * 0.5; // -0.25 ~ 0.25 px/frame
-let speedY = (Math.random() - 0.5) * 0.5;
-let angle = (Math.random() - 0.5) * 2; // rotasi acak
-
-function move() {
-let x = parseFloat(img.style.left);
-let y = parseFloat(img.style.top);
-let newX = x + speedX;
-let newY = y + speedY;
-
-// jika keluar layar, balik ke posisi lain
-if (newX < 0 || newX > window.innerWidth - img.offsetWidth) speedX *= -1;
-if (newY < 120 || newY > window.innerHeight - img.offsetHeight) speedY *= -1;
-
-img.style.left = newX + "px";
-img.style.top = newY + "px";
-img.style.transform = rotate(${angle}deg) scale(1);
-
-angle += (Math.random() - 0.5) * 2; // rotasi perlahan
-requestAnimationFrame(move);
-
-}
-move();
+// generate grid posisi agar seluruh layar tertutup
+function getGridPositions() {
+  const cols = Math.floor(window.innerWidth / minDistance);
+  const rows = Math.floor((window.innerHeight - marginTop - marginBottom) / minDistance);
+  const grid = [];
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      grid.push({ x: c * minDistance + 20, y: marginTop + r * minDistance + 20 });
+    }
   }
+  return grid;
+}
+
+let positions = getGridPositions();
+
+// tempatkan gambar
+minraImgs.forEach((img, i) => {
+  const pos = positions[i % positions.length];
+  img.style.left = pos.x + "px";
+  img.style.top = pos.y + "px";
+
+  const size = 40 + Math.random() * 60;
+  img.style.width = size + "px";
+  img.style.opacity = 0.4 + Math.random() * 0.5;
+
+  // animasi halus
+  animateImage(img, pos.x, pos.y);
+});
+
+// fungsi animasi halus seperti wayang
+function animateImage(img, baseX, baseY) {
+  const maxOffset = 10; // gerakan maksimal dari posisi awal
+  let angle = (Math.random() - 0.5) * 5;
+
+  function move() {
+    const offsetX = Math.sin(Date.now() / 1000 + baseX) * maxOffset;
+    const offsetY = Math.cos(Date.now() / 1000 + baseY) * maxOffset;
+
+    img.style.left = baseX + offsetX + "px";
+    img.style.top = baseY + offsetY + "px";
+    img.style.transform = `rotate(${angle}deg) scale(1)`;
+
+    angle += 0.05; // rotasi perlahan
+    requestAnimationFrame(move);
+  }
+  move();
+}
+
+// handle resize supaya tetap tersebar
+window.addEventListener("resize", () => {
+  positions = getGridPositions();
+  minraImgs.forEach((img, i) => {
+    const pos = positions[i % positions.length];
+    img.style.left = pos.x + "px";
+    img.style.top = pos.y + "px";
+  });
+});
