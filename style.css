@@ -297,3 +297,16 @@ RESPONSIVE
     right: 5px;
   }
 }
+
+.minra-gallery {
+  z-index: 0 !important;
+}
+
+.container,
+.header-top,
+.menu,
+.box,
+pre {
+  position: relative;
+  z-index: 10 !important;
+}
