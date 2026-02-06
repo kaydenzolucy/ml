@@ -323,38 +323,74 @@ minraImgs.forEach(img => {
 });
 
 // ===========================
-// Fungsi animasi wayang
+// RANDOMIZE MINRA IMAGES
+// Smooth "wayang" movement versi lambat
 // ===========================
-function animateWayang(img, originX, originY) {
-  // amplitude gerakan (maks gerak dari posisi awal)
-  const amplitudeX = 15 + Math.random() * 20;
-  const amplitudeY = 10 + Math.random() * 20;
-  
-  // kecepatan gerakan
-  const speedX = 0.001 + Math.random() * 0.0015;
-  const speedY = 0.001 + Math.random() * 0.0015;
 
-  // rotasi awal
-  let angle = (Math.random() - 0.5) * 30; // rotasi ringan
-  const rotateSpeed = 0.02 + Math.random() * 0.03; // putaran perlahan
+const minraImgs = document.querySelectorAll(".minra-img");
+const usedPositions = [];
+const minDistance = 100; // jarak minimum antar gambar
 
-  // phase untuk variasi gerakan
+// ===========================
+// Inisialisasi posisi awal
+// ===========================
+minraImgs.forEach(img => {
+  let x, y;
+  let tries = 0;
+
+  do {
+    x = Math.random() * (window.innerWidth - 100);
+    y = 10 + Math.random() * (window.innerHeight - 110); // mulai dari atas
+    tries++;
+
+    var tooClose = usedPositions.some(pos => {
+      const dx = pos.x - x;
+      const dy = pos.y - y;
+      return Math.sqrt(dx*dx + dy*dy) < minDistance;
+    });
+
+  } while (tooClose && tries < 100);
+
+  usedPositions.push({x, y});
+
+  img.style.position = "absolute";
+  img.style.left = x + "px";
+  img.style.top = y + "px";
+
+  const size = 40 + Math.random() * 60;
+  img.style.width = size + "px";
+  img.style.opacity = 0.4 + Math.random() * 0.5;
+
+  // animasi halus
+  animateWayangSlow(img, x, y);
+});
+
+// ===========================
+// Fungsi animasi wayang lambat
+// ===========================
+function animateWayangSlow(img, originX, originY) {
+  const amplitudeX = 5 + Math.random() * 5;  // gerakan horizontal kecil
+  const amplitudeY = 3 + Math.random() * 3;  // gerakan vertikal kecil
+  const speed = 0.0003 + Math.random() * 0.0003; // sangat lambat
+
+  let angle = (Math.random() - 0.5) * 10; // rotasi ringan
+  const rotateSpeed = 0.002 + Math.random() * 0.003; // rotasi super lambat
   const phaseX = Math.random() * 2 * Math.PI;
   const phaseY = Math.random() * 2 * Math.PI;
 
   function move() {
     const time = Date.now();
 
-    // osilasi halus
-    const offsetX = Math.sin(time * speedX + phaseX) * amplitudeX;
-    const offsetY = Math.cos(time * speedY + phaseY) * amplitudeY;
+    // offset halus untuk gerakan ringan
+    const offsetX = Math.sin(time * speed + phaseX) * amplitudeX;
+    const offsetY = Math.cos(time * speed + phaseY) * amplitudeY;
 
     img.style.left = originX + offsetX + "px";
     img.style.top = originY + offsetY + "px";
 
     // rotasi perlahan
     angle += rotateSpeed;
-    img.style.transform = `rotate(${Math.sin(angle)*15}deg) scale(1)`;
+    img.style.transform = `rotate(${Math.sin(angle)*5}deg) scale(1)`; // rotasi ringan ±5deg
 
     requestAnimationFrame(move);
   }
