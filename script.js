@@ -279,49 +279,6 @@ fetchRate();
 showMenu(1);
 showPriceList();
 
-// ===========================
-// RANDOMIZE MINRA IMAGES
-// Smooth "wayang" movement
-// ===========================
-
-const minraImgs = document.querySelectorAll(".minra-img");
-const usedPositions = [];
-const minDistance = 100; // jarak minimum antar gambar
-
-// ===========================
-// Inisialisasi posisi awal
-// ===========================
-minraImgs.forEach(img => {
-  let x, y;
-  let tries = 0;
-
-  do {
-    x = Math.random() * (window.innerWidth - 100);
-    y = 120 + Math.random() * (window.innerHeight - 200);
-    tries++;
-
-    var tooClose = usedPositions.some(pos => {
-      const dx = pos.x - x;
-      const dy = pos.y - y;
-      return Math.sqrt(dx*dx + dy*dy) < minDistance;
-    });
-
-  } while (tooClose && tries < 100);
-
-  usedPositions.push({x, y});
-
-  img.style.position = "absolute";
-  img.style.left = x + "px";
-  img.style.top = y + "px";
-
-  const size = 40 + Math.random() * 60;
-  img.style.width = size + "px";
-  img.style.opacity = 0.4 + Math.random() * 0.5;
-
-  // animasi smooth
-  animateWayang(img, x, y);
-});
-
 // ======================
 // RANDOMIZE MINRA IMAGES (tidak saling timpa, gerak halus seperti wayang)
 // ======================
@@ -399,4 +356,4 @@ window.addEventListener("resize", () => {
     baseX = pos.x;
     baseY = pos.y;
   });
-});
+});?
