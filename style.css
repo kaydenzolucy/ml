@@ -38,7 +38,7 @@ HEADER + MINI CURRENCY
 .header-top {
   position: relative;
   margin-bottom: 40px;  /* jarak subjudul ke menu */
-  padding-top: 100px;    
+  padding-top: 80px;    
   text-align: center;
   z-index: 3; /* di atas gallery */
 }
@@ -106,8 +106,8 @@ TITLE (2 BARIS)
 .title-glow .sub-title {
   display: block;
   font-size: 32px;
-  margin-top: 2px; /* jarak ke main-title */
-  margin-bottom: 20px; /* jarak ke menu */
+  margin-top: 0px; /* jarak ke main-title */
+  margin-bottom: 15px; /* jarak ke menu */
   color: #ffb6e6;
   text-shadow: 0 0 4px #ff4fa7, 0 0 8px #ff7ac8;
   animation: rgbGlowSub 8s linear infinite;
