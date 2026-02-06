@@ -283,11 +283,10 @@ showPriceList();
 // MINRA GALLERY SMOOTH WAYANG
 // ======================
 const minraImgs = document.querySelectorAll(".minra-img");
-const minDistance = 80; // jarak minimal antar gambar
-const marginTop = 120; // batas atas (bawah judul)
-const marginBottom = 50; // batas bawah
+const minDistance = 80;
+const marginTop = 120;
+const marginBottom = 50;
 
-// generate grid posisi agar seluruh layar tertutup
 function getGridPositions() {
   const cols = Math.floor(window.innerWidth / minDistance);
   const rows = Math.floor((window.innerHeight - marginTop - marginBottom) / minDistance);
@@ -300,25 +299,32 @@ function getGridPositions() {
   return grid;
 }
 
-let positions = getGridPositions();
+// fungsi untuk shuffle array
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+let positions = shuffle(getGridPositions());
 
 // tempatkan gambar
 minraImgs.forEach((img, i) => {
-  const pos = positions[i % positions.length];
-  img.style.left = pos.x + "px";
-  img.style.top = pos.y + "px";
+  const pos = positions[i % positions.length]; // posisi unik
+  img.dataset.baseX = pos.x; // simpan posisi awal
+  img.dataset.baseY = pos.y;
 
   const size = 40 + Math.random() * 60;
   img.style.width = size + "px";
   img.style.opacity = 0.4 + Math.random() * 0.5;
 
-  // animasi halus
   animateImage(img, pos.x, pos.y);
 });
 
-// fungsi animasi halus seperti wayang
 function animateImage(img, baseX, baseY) {
-  const maxOffset = 10; // gerakan maksimal dari posisi awal
+  const maxOffset = 10;
   let angle = (Math.random() - 0.5) * 5;
 
   function move() {
@@ -329,18 +335,18 @@ function animateImage(img, baseX, baseY) {
     img.style.top = baseY + offsetY + "px";
     img.style.transform = `rotate(${angle}deg) scale(1)`;
 
-    angle += 0.05; // rotasi perlahan
+    angle += 0.05;
     requestAnimationFrame(move);
   }
   move();
 }
 
-// handle resize supaya tetap tersebar
+// handle resize
 window.addEventListener("resize", () => {
-  positions = getGridPositions();
+  positions = shuffle(getGridPositions());
   minraImgs.forEach((img, i) => {
     const pos = positions[i % positions.length];
-    img.style.left = pos.x + "px";
-    img.style.top = pos.y + "px";
+    img.dataset.baseX = pos.x;
+    img.dataset.baseY = pos.y;
   });
 });
