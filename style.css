@@ -255,28 +255,24 @@ pre {
 MINRA GALLERY
 ========================= */
 .minra-gallery {
-  position: fixed;   /* tetap di belakang konten */
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none; /* biar klik tetap ke konten */
+  pointer-events: none;
   z-index: 0;
   overflow: hidden;
-  display: block;
-  background: transparent;
 }
 
 .minra-img {
-  position: absolute;  /* posisi bebas di dalam gallery */
-  opacity: 0.4;        /* bisa berubah via JS */
-  width: 60px;         /* ukuran default, JS akan random */
-  user-select: none;   /* tidak bisa diseleksi */
-  pointer-events: none; 
+  position: absolute;
+  opacity: 0.7;
+  width: 60px;
+  transition: transform 2s ease, opacity 2s ease, left 2s ease, top 2s ease;
+  user-select: none;
+  pointer-events: none;
   z-index: 0;
-  transform-origin: center center; /* rotasi halus dari tengah */
-  /* Hapus transition karena JS animasi pakai requestAnimationFrame */
-  /* transition: transform 1s ease, opacity 1s ease; */
 }
 
 /* =========================
