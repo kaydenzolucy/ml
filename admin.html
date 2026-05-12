@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>🐱 MINRA - Admin Harga</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --pink: #ff6b9d;
+      --pink-light: #ffb8d0;
+      --bg: #0f0c1a;
+      --bg-card: rgba(255,255,255,0.05);
+      --border: rgba(255,255,255,0.1);
+      --text: #fff0f5;
+      --text-dim: rgba(255,240,245,0.6);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(180deg, #0f0c1a, #1a0f2e, #12081f);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    h1 {
+      text-align: center;
+      font-size: 24px;
+      margin-bottom: 8px;
+      color: var(--pink-light);
+    }
+    .subtitle {
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-dim);
+      margin-bottom: 24px;
+    }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .card h2 {
+      font-size: 16px;
+      margin-bottom: 16px;
+      color: var(--pink-light);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .price-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .price-row:last-child { border-bottom: none; }
+    .price-label {
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .price-input {
+      width: 120px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(15,10,30,0.6);
+      color: var(--text);
+      font-family: 'Quicksand', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      text-align: right;
+    }
+    .price-input:focus {
+      outline: none;
+      border-color: var(--pink);
+      box-shadow: 0 0 0 3px rgba(255,107,157,0.1);
+    }
+    .btn {
+      width: 100%;
+      padding: 16px;
+      border-radius: 16px;
+      border: none;
+      background: linear-gradient(135deg, #ff6b9d, #ff8fab);
+      color: #fff;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: transform 0.2s;
+    }
+    .btn:hover { transform: scale(1.02); }
+    .output {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 14px;
+      background: rgba(10,7,20,0.7);
+      border: 1px solid rgba(255,107,157,0.1);
+      font-size: 12px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .instructions {
+      background: rgba(255,107,157,0.1);
+      border: 1px solid rgba(255,107,157,0.2);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .instructions strong {
+      color: var(--pink-light);
+    }
+    .instructions ol {
+      margin-left: 16px;
+      margin-top: 8px;
+    }
+    .instructions li {
+      margin-bottom: 4px;
+    }
+  </style>
+<base target="_blank">
+</head>
+<body>
+  <div class="container">
+    <h1>🐱 MINRA Admin</h1>
+    <div class="subtitle">Edit Harga Joki & Gendong</div>
+
+    <div class="instructions">
+      <strong>📖 Cara pakai:</strong>
+      <ol>
+        <li>Edit harga di bawah ini</li>
+        <li>Klik "Generate Config"</li>
+        <li>Copy hasil JSON</li>
+        <li>Buka file <strong>config.json</strong> di GitHub</li>
+        <li>Paste & Save</li>
+        <li>Website otomatis update! ✨</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h2>💎 Joki Rank (per ⭐)</h2>
+      <div class="price-row"><span class="price-label">Master</span><input class="price-input" type="number" id="p_Master" value="3000"></div>
+      <div class="price-row"><span class="price-label">GM</span><input class="price-input" type="number" id="p_GM" value="4000"></div>
+      <div class="price-row"><span class="price-label">Epic</span><input class="price-input" type="number" id="p_Epic" value="5000"></div>
+      <div class="price-row"><span class="price-label">Legend</span><input class="price-input" type="number" id="p_Legend" value="6000"></div>
+      <div class="price-row"><span class="price-label">Mythic</span><input class="price-input" type="number" id="p_Mythic" value="13000"></div>
+      <div class="price-row"><span class="price-label">Honor</span><input class="price-input" type="number" id="p_Honor" value="14000"></div>
+      <div class="price-row"><span class="price-label">Glory</span><input class="price-input" type="number" id="p_Glory" value="20000"></div>
+      <div class="price-row"><span class="price-label">Immortal</span><input class="price-input" type="number" id="p_Immortal" value="24000"></div>
+    </div>
+
+    <div class="card">
+      <h2>🔥 Gendong (per ⭐)</h2>
+      <div class="price-row"><span class="price-label">Epic</span><input class="price-input" type="number" id="g_Epic" value="9000"></div>
+      <div class="price-row"><span class="price-label">Legend</span><input class="price-input" type="number" id="g_Legend" value="10000"></div>
+      <div class="price-row"><span class="price-label">Mythic</span><input class="price-input" type="number" id="g_Mythic" value="15000"></div>
+      <div class="price-row"><span class="price-label">Honor</span><input class="price-input" type="number" id="g_Honor" value="16000"></div>
+      <div class="price-row"><span class="price-label">Glory</span><input class="price-input" type="number" id="g_Glory" value="25000"></div>
+      <div class="price-row"><span class="price-label">Immortal</span><input class="price-input" type="number" id="g_Immortal" value="35000"></div>
+    </div>
+
+    <div class="card">
+      <h2>💱 Lainnya</h2>
+      <div class="price-row"><span class="price-label">Fee MYR</span><input class="price-input" type="number" id="fee" value="10000"></div>
+    </div>
+
+    <button class="btn" onclick="generateConfig()">✨ Generate Config JSON</button>
+
+    <div class="output" id="output"></div>
+  </div>
+
+  <script>
+    function generateConfig(){
+      const config = {
+        updated: new Date().toISOString().split('T')[0],
+        note: "Edit harga di bawah ini, lalu save. Website akan otomatis update!",
+        PRICE: {
+          Master: +document.getElementById('p_Master').value,
+          GM: +document.getElementById('p_GM').value,
+          Epic: +document.getElementById('p_Epic').value,
+          Legend: +document.getElementById('p_Legend').value,
+          Mythic: +document.getElementById('p_Mythic').value,
+          Honor: +document.getElementById('p_Honor').value,
+          Glory: +document.getElementById('p_Glory').value,
+          Immortal: +document.getElementById('p_Immortal').value
+        },
+        GENDONG: {
+          Epic: +document.getElementById('g_Epic').value,
+          Legend: +document.getElementById('g_Legend').value,
+          Mythic: +document.getElementById('g_Mythic').value,
+          Honor: +document.getElementById('g_Honor').value,
+          Glory: +document.getElementById('g_Glory').value,
+          Immortal: +document.getElementById('g_Immortal').value
+        },
+        FEE_MYR: +document.getElementById('fee').value,
+        FALLBACK_RATE: 0.00030
+      };
+
+      const json = JSON.stringify(config, null, 2);
+      document.getElementById('output').textContent = json;
+
+      // Auto copy to clipboard
+      navigator.clipboard.writeText(json).then(() => {
+        alert("✅ JSON sudah di-copy! Paste ke file config.json di GitHub ya~");
+      }).catch(() => {
+        // Fallback: show manual copy
+      });
+    }
+  </script>
+</body>
+</html>
