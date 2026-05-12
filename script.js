@@ -48,8 +48,13 @@ async function loadConfig(){
 // ======================
 const currency   = document.getElementById("currency");
 const rateInfo   = document.getElementById("rateInfo");
-const hasil      = document.getElementById("hasil");
 const pricelist  = document.getElementById("pricelist");
+const invoiceCard = document.getElementById("invoiceCard");
+const invoiceTitle = document.getElementById("invoiceTitle");
+const invoiceBadge = document.getElementById("invoiceBadge");
+const invoiceBody = document.getElementById("invoiceBody");
+const btnCopy = document.getElementById("btnCopy");
+const btnWA = document.getElementById("btnWA");
 
 // ======================
 // RANK CONFIG
@@ -62,9 +67,36 @@ const STAR_PER_RANK_STANDARD = 25;
 
 // Mythic+ thresholds (continuous star system)
 const MYTHIC_MAX = 24;
-const HONOR_THRESHOLD = 25;
-const GLORY_THRESHOLD = 50;
-const IMMORTAL_THRESHOLD = 100;
+const HONOR_MIN = 25;
+const HONOR_MAX = 49;
+const GLORY_MIN = 50;
+const GLORY_MAX = 99;
+const IMMORTAL_MIN = 100;
+const IMMORTAL_MAX = 1000; // Practical max
+
+// Rank max stars mapping
+const RANK_MAX_STARS = {
+  "Master": 24,   // V to I, 5 stars each = 25, but 0-24 index
+  "GM": 24,
+  "Epic": 24,
+  "Legend": 24,
+  "Mythic": 24,   // Mythic 0-24
+  "Honor": 49,    // Honor 25-49
+  "Glory": 99,    // Glory 50-99
+  "Immortal": 1000 // Immortal 100+
+};
+
+// Rank min stars mapping
+const RANK_MIN_STARS = {
+  "Master": 0,
+  "GM": 0,
+  "Epic": 0,
+  "Legend": 0,
+  "Mythic": 0,
+  "Honor": 25,
+  "Glory": 50,
+  "Immortal": 100
+};
 
 // ======================
 // FETCH RATE (Multiple APIs)
@@ -164,6 +196,11 @@ function showMenu(n){
   document.querySelectorAll(".box").forEach(b=>b.classList.remove("show"));
   const target=document.getElementById("menu"+n);
   if(target) target.classList.add("show");
+
+  // Hide invoice and errors when switching menu
+  hideInvoice();
+  hideAllErrors();
+
   if(n===6) showPriceList();
 }
 
@@ -194,31 +231,90 @@ function updateDivisi(rankId,divId){
 .forEach(id=>updateDivisi(id,id.replace("rank","div")));
 
 // ======================
+// ERROR HANDLING
+// ======================
+function showError(menuNum, title, details){
+  const el = document.getElementById("error" + menuNum);
+  if(!el) return;
+
+  let html = `<div class="error-title">⚠️ ${title}</div>`;
+  if(details && details.length > 0){
+    html += `<div class="error-detail">`;
+    details.forEach(d => {
+      html += `• ${d}<br>`;
+    });
+    html += `</div>`;
+  }
+
+  el.innerHTML = html;
+  el.classList.add("show");
+}
+
+function hideError(menuNum){
+  const el = document.getElementById("error" + menuNum);
+  if(el){
+    el.classList.remove("show");
+    el.innerHTML = "";
+  }
+}
+
+function hideAllErrors(){
+  for(let i = 1; i <= 5; i++){
+    hideError(i);
+  }
+}
+
+// ======================
 // VALIDASI INPUT
 // ======================
-function validateInput(rank, div, star){
+function validateInput(rank, div, star, context){
+  const errors = [];
   const starNum = +star;
-  if(isNaN(starNum) || starNum < 0){
-    return { valid: false, msg: "⚠️ Bintang tidak valid!" };
+
+  // Check if star is a valid number
+  if(star === "" || star === null || star === undefined){
+    errors.push("Bintang tidak boleh kosong!");
+    return { valid: false, msg: "Bintang tidak boleh kosong!", errors: errors };
   }
 
+  if(isNaN(starNum)){
+    errors.push(`Bintang "${star}" bukan angka yang valid!`);
+    return { valid: false, msg: "Bintang tidak valid!", errors: errors };
+  }
+
+  if(starNum < 0){
+    errors.push(`Bintang tidak boleh negatif (dapat: ${starNum})!`);
+    return { valid: false, msg: "Bintang tidak boleh negatif!", errors: errors };
+  }
+
+  // Ranks with divisions
   if(RANK_DIVISI.includes(rank)){
-    // Ranks with divisions
     const divIndex = DIVISI.indexOf(div);
     if(divIndex === -1){
-      return { valid: false, msg: `⚠️ Divisi tidak valid untuk ${rank}!` };
+      errors.push(`Divisi "${div}" tidak valid untuk rank ${rank}!`);
+      return { valid: false, msg: `Divisi tidak valid untuk ${rank}!`, errors: errors };
     }
     if(starNum > STAR_PER_DIV){
-      return { valid: false, msg: `⚠️ ${rank} ${div} maksimal ⭐${STAR_PER_DIV}!` };
+      errors.push(`${rank} ${div} maksimal ⭐${STAR_PER_DIV} (dapat: ${starNum})!`);
+      return { valid: false, msg: `${rank} ${div} maksimal ⭐${STAR_PER_DIV}!`, errors: errors };
     }
   }else{
-    // Mythic+ ranks
-    if(rank === "Mythic" && starNum > MYTHIC_MAX){
-      return { valid: false, msg: `⚠️ Mythic maksimal ⭐${MYTHIC_MAX}!` };
+    // Mythic+ ranks - check max stars per tier
+    const maxStar = RANK_MAX_STARS[rank];
+    const minStar = RANK_MIN_STARS[rank];
+
+    if(starNum > maxStar){
+      errors.push(`${rank} maksimal ⭐${maxStar} (dapat: ${starNum})!`);
+      return { valid: false, msg: `${rank} maksimal ⭐${maxStar}!`, errors: errors };
+    }
+
+    if(starNum < minStar && rank !== "Mythic"){
+      errors.push(`${rank} minimal ⭐${minStar} (dapat: ${starNum})!`);
+      return { valid: false, msg: `${rank} minimal ⭐${minStar}!`, errors: errors };
     }
   }
 
-  return { valid: true, msg: "" };
+  return { valid: true, msg: "", errors: [] };
 }
 
 // ======================
@@ -234,7 +330,6 @@ function rankToStar(rank, div, star){
   }
 
   // Mythic+ ranks: return relative star count
-  // Mythic 3 = 3, Honor 33 = 33, Glory 60 = 60
   return +star;
 }
 
@@ -242,9 +337,9 @@ function rankToStar(rank, div, star){
 // GET PRICE TIER FOR MYTHIC+ STAR
 // ======================
 function getMythicPlusTier(starNum){
-  if(starNum >= IMMORTAL_THRESHOLD) return "Immortal";
-  if(starNum >= GLORY_THRESHOLD) return "Glory";
-  if(starNum >= HONOR_THRESHOLD) return "Honor";
+  if(starNum >= IMMORTAL_MIN) return "Immortal";
+  if(starNum >= GLORY_MIN) return "Glory";
+  if(starNum >= HONOR_MIN) return "Honor";
   return "Mythic";
 }
 
@@ -259,15 +354,148 @@ function getRankDisplay(rank, div, star){
 }
 
 // ======================
-// INVOICE
+// INVOICE - Styled Display
 // ======================
-function tampilInvoice(startRank, startDiv, startStar, endRank, endDiv, endStar, price, title){
-  // Validate inputs
-  const v1 = validateInput(startRank, startDiv, startStar);
-  if(!v1.valid){ hasil.textContent = v1.msg; return; }
+let currentInvoiceText = "";
 
-  const v2 = validateInput(endRank, endDiv, endStar);
-  if(!v2.valid){ hasil.textContent = v2.msg; return; }
+function hideInvoice(){
+  invoiceCard.classList.remove("show");
+  currentInvoiceText = "";
+}
+
+function showInvoice(title, badge, fromRank, fromDiv, fromStar, toRank, toDiv, toStar, totalStars, breakdown, total, feeMYR){
+  invoiceTitle.textContent = title;
+  invoiceBadge.textContent = badge;
+
+  let html = '';
+
+  // From/To section
+  html += `
+    <div class="invoice-row">
+      <span class="label">📍 Dari</span>
+      <span class="value rank">${getRankDisplay(fromRank, fromDiv, fromStar)}</span>
+    </div>
+    <div class="invoice-row">
+      <span class="label">🎯 Ke</span>
+      <span class="value rank">${getRankDisplay(toRank, toDiv, toStar)}</span>
+    </div>
+    <div class="invoice-row">
+      <span class="label">⭐ Total Bintang</span>
+      <span class="value">${totalStars} ⭐</span>
+    </div>
+  `;
+
+  html += '<div class="invoice-divider"></div>';
+
+  // Breakdown
+  if(breakdown && breakdown.length > 0){
+    html += '<div class="breakdown-title">Rincian Harga</div>';
+    html += '<div class="invoice-breakdown">';
+    breakdown.forEach(item => {
+      html += `
+        <div class="breakdown-item">
+          <span class="tier-name">${item.tier}</span>
+          <span class="tier-calc">${item.count}⭐ × ${formatHarga(item.price)}</span>
+          <span class="tier-price">${formatHarga(item.subtotal)}</span>
+        </div>
+      `;
+    });
+    html += '</div>';
+  }
+
+  // Fee MYR
+  if(feeMYR > 0){
+    html += `
+      <div class="breakdown-item" style="background:rgba(251,191,36,0.08); border:1px solid rgba(251,191,36,0.15);">
+        <span class="tier-name" style="color:var(--yellow);">💱 Fee MYR</span>
+        <span></span>
+        <span class="tier-price" style="color:var(--yellow);">${formatHarga(feeMYR)}</span>
+      </div>
+    `;
+  }
+
+  // Total
+  html += `
+    <div class="invoice-total">
+      <span class="total-label">💰 TOTAL</span>
+      <span class="total-value">${formatHarga(total)}</span>
+    </div>
+  `;
+
+  invoiceBody.innerHTML = html;
+  invoiceCard.classList.add("show");
+
+  // Build text version for copy
+  buildInvoiceText(title, fromRank, fromDiv, fromStar, toRank, toDiv, toStar, totalStars, breakdown, total, feeMYR);
+
+  // Update WA link
+  const waText = encodeURIComponent(currentInvoiceText);
+  btnWA.href = `https://wa.me/?text=${waText}`;
+}
+
+function buildInvoiceText(title, fromRank, fromDiv, fromStar, toRank, toDiv, toStar, totalStars, breakdown, total, feeMYR){
+  let text = `🐱 *MINRA JOKI MLBB* 🐱\n`;
+  text += `═════════════════════\n`;
+  text += `*${title}*\n\n`;
+  text += `📍 *Dari:* ${getRankDisplay(fromRank, fromDiv, fromStar)}\n`;
+  text += `🎯 *Ke:* ${getRankDisplay(toRank, toDiv, toStar)}\n`;
+  text += `⭐ *Total:* ${totalStars} bintang\n`;
+  text += `═════════════════════\n`;
+
+  if(breakdown && breakdown.length > 0){
+    breakdown.forEach(item => {
+      text += `${item.tier}: ${item.count}⭐ × ${formatHarga(item.price)} = ${formatHarga(item.subtotal)}\n`;
+    });
+  }
+
+  if(feeMYR > 0){
+    text += `💱 Fee MYR: ${formatHarga(feeMYR)}\n`;
+  }
+
+  text += `═════════════════════\n`;
+  text += `💰 *TOTAL: ${formatHarga(total)}*\n`;
+  text += `═════════════════════\n`;
+  text += `Order via MINRA 🐱`;
+
+  currentInvoiceText = text;
+}
+
+function copyInvoice(){
+  if(!currentInvoiceText) return;
+
+  navigator.clipboard.writeText(currentInvoiceText.replace(/\n/g, "\n")).then(() => {
+    btnCopy.innerHTML = '<span>✅</span> Tersalin!';
+    btnCopy.classList.add("copied");
+    setTimeout(() => {
+      btnCopy.innerHTML = '<span>📋</span> Copy Invoice';
+      btnCopy.classList.remove("copied");
+    }, 2000);
+  }).catch(() => {
+    btnCopy.innerHTML = '<span>❌</span> Gagal';
+    setTimeout(() => {
+      btnCopy.innerHTML = '<span>📋</span> Copy Invoice';
+    }, 2000);
+  });
+}
+
+// ======================
+// CORE CALCULATION
+// ======================
+function calculateInvoice(startRank, startDiv, startStar, endRank, endDiv, endStar, price, title, menuNum){
+  // Validate inputs
+  const v1 = validateInput(startRank, startDiv, startStar, "rank awal");
+  if(!v1.valid){ 
+    hideInvoice();
+    showError(menuNum, v1.msg, v1.errors);
+    return null; 
+  }
+
+  const v2 = validateInput(endRank, endDiv, endStar, "rank tujuan");
+  if(!v2.valid){ 
+    hideInvoice();
+    showError(menuNum, v2.msg, v2.errors);
+    return null; 
+  }
 
   // Calculate absolute positions
   const start = rankToStar(startRank, startDiv, startStar);
@@ -276,36 +504,45 @@ function tampilInvoice(startRank, startDiv, startStar, endRank, endDiv, endStar,
   // Check if crossing from lower rank to Mythic+
   const isStartLower = RANK_DIVISI.includes(startRank);
   const isEndLower = RANK_DIVISI.includes(endRank);
-  const isStartMythicPlus = !isStartLower;
-  const isEndMythicPlus = !isEndLower;
 
   let totalStars = 0;
+  let breakdown = [];
   let map = {};
   RANK_ORDER.forEach(r => map[r] = { count: 0, price: price[r] || 0 });
 
   if(isStartLower && isEndLower){
     // Both in lower ranks: simple subtraction
     if(end <= start){
-      hasil.textContent = "⚠️ Rank tujuan harus lebih tinggi!";
-      return;
+      hideInvoice();
+      showError(menuNum, "Rank tujuan harus lebih tinggi!", [
+        `Rank awal: ${getRankDisplay(startRank, startDiv, startStar)}`,
+        `Rank tujuan: ${getRankDisplay(endRank, endDiv, endStar)}`,
+        `Posisi awal (${start}) >= posisi tujuan (${end})`
+      ]);
+      return null;
     }
     totalStars = end - start;
     for(let i = start; i < end; i++){
       let r = starToRankLower(i);
-      map[r]++;
+      map[r].count++;
     }
-  }else if(isStartMythicPlus && isEndMythicPlus){
+  }else if(!isStartLower && !isEndLower){
     // Both in Mythic+: simple subtraction
     if(end <= start){
-      hasil.textContent = "⚠️ Rank tujuan harus lebih tinggi!";
-      return;
+      hideInvoice();
+      showError(menuNum, "Rank tujuan harus lebih tinggi!", [
+        `Rank awal: ${getRankDisplay(startRank, startDiv, startStar)}`,
+        `Rank tujuan: ${getRankDisplay(endRank, endDiv, endStar)}`,
+        `Bintang awal (${start}) >= bintang tujuan (${end})`
+      ]);
+      return null;
     }
     totalStars = end - start;
     for(let i = start; i < end; i++){
       let tier = getMythicPlusTier(i);
-      map[tier]++;
+      map[tier].count++;
     }
-  }else if(isStartLower && isEndMythicPlus){
+  }else if(isStartLower && !isEndLower){
     // Crossing from lower to Mythic+
     // 1. Stars to finish current lower rank
     let lowerRemaining = 0;
@@ -332,21 +569,26 @@ function tampilInvoice(startRank, startDiv, startStar, endRank, endDiv, endStar,
     // Calculate pricing
     // Lower rank stars
     let lowerStarStart = start;
-    let lowerStarEnd = (currentRankIndex + 1) * STAR_PER_RANK_STANDARD;
+    let lowerStarEnd = 4 * STAR_PER_RANK_STANDARD; // End of Legend
     for(let i = lowerStarStart; i < lowerStarEnd; i++){
       let r = starToRankLower(i);
-      map[r]++;
+      map[r].count++;
     }
 
     // Mythic+ stars
     for(let i = 0; i < end; i++){
       let tier = getMythicPlusTier(i);
-      map[tier]++;
+      map[tier].count++;
     }
   }else{
     // Invalid: can't go from Mythic+ to lower rank
-    hasil.textContent = "⚠️ Tidak bisa turun dari Mythic+ ke rank bawah!";
-    return;
+    hideInvoice();
+    showError(menuNum, "Tidak bisa turun dari Mythic+ ke rank bawah!", [
+      `Rank awal: ${getRankDisplay(startRank, startDiv, startStar)} (Mythic+)`,
+      `Rank tujuan: ${getRankDisplay(endRank, endDiv, endStar)} (Lower)`,
+      `Sistem tidak mendukung penurunan rank dari Mythic+`
+    ]);
+    return null;
   }
 
   // Calculate total price
@@ -355,28 +597,32 @@ function tampilInvoice(startRank, startDiv, startStar, endRank, endDiv, endStar,
     total += map[r].count * (price[r] || 0);
   }
 
-  // Build output
-  let out = `--- ${title} ---\n`;
-  out += `Dari: ${getRankDisplay(startRank, startDiv, startStar)}\n`;
-  out += `Ke:   ${getRankDisplay(endRank, endDiv, endStar)}\n`;
-  out += `Total: ${totalStars} ⭐\n`;
-  out += `---------------------\n`;
-
+  // Build breakdown array
+  let bd = [];
   for(let r of RANK_ORDER){
     if(map[r].count > 0){
-      out += `${r.padEnd(10)} : ${map[r].count}⭐ x ${formatHarga(price[r])} = ${formatHarga(map[r].count * price[r])}\n`;
+      bd.push({
+        tier: r,
+        count: map[r].count,
+        price: price[r] || 0,
+        subtotal: map[r].count * (price[r] || 0)
+      });
     }
   }
 
+  // MYR fee
+  let feeMYR = 0;
   if(CURRENT_CURRENCY === "MYR"){
-    total += FEE_MYR;
-    out += `---------------------\n`;
-    out += `Fee MYR     : ${formatHarga(FEE_MYR)}\n`;
+    feeMYR = FEE_MYR;
+    total += feeMYR;
   }
 
-  out += `=====================\n`;
-  out += `TOTAL        : ${formatHarga(total)}`;
-  hasil.textContent = out;
+  return {
+    totalStars,
+    breakdown: bd,
+    total,
+    feeMYR
+  };
 }
 
 // ======================
@@ -389,81 +635,251 @@ function starToRankLower(total){
     let max = STAR_PER_RANK_STANDARD;
     if(total < acc + max){
       let s = total - acc;
-      return `${r} ${DIVISI[Math.floor(s / STAR_PER_DIV)]} ⭐${s % STAR_PER_DIV}`;
+      return r;
     }
     acc += max;
   }
-  return `Mythic ⭐${total - acc}`;
+  return "Mythic";
 }
 
 // ======================
 // HITUNG FUNCTIONS
 // ======================
 function hitungPerBintang(){
+  hideError(1);
   const s1 = rankToStar(rank1.value, div1.value, +star1.value);
-  const s2 = s1 + (+addStar.value);
-  if(+addStar.value <= 0){
-    hasil.textContent = "⚠️ Tambah bintang harus lebih dari 0!";
+  const add = +addStar.value;
+
+  if(isNaN(add) || add <= 0){
+    hideInvoice();
+    showError(1, "Tambah bintang harus lebih dari 0!", [
+      `Input: "${addStar.value}"`,
+      `Harus berupa angka positif`
+    ]);
     return;
   }
-  tampilInvoice(rank1.value, div1.value, +star1.value, rank1.value, div1.value, s2, PRICE, "JOKI PER BINTANG");
+
+  const s2 = s1 + add;
+  const result = calculateInvoice(rank1.value, div1.value, +star1.value, rank1.value, div1.value, s2, PRICE, "JOKI PER BINTANG", 1);
+
+  if(result){
+    showInvoice(
+      "JOKI PER BINTANG",
+      "JOKI",
+      rank1.value, div1.value, +star1.value,
+      rank1.value, div1.value, s2,
+      result.totalStars,
+      result.breakdown,
+      result.total,
+      result.feeMYR
+    );
+  }
 }
 
 function hitungAntarRank(){
-  tampilInvoice(rankA.value, divA.value, +starA.value, rankB.value, divB.value, +starB.value, PRICE, "JOKI ANTAR RANK");
+  hideError(2);
+  const result = calculateInvoice(rankA.value, divA.value, +starA.value, rankB.value, divB.value, +starB.value, PRICE, "JOKI ANTAR RANK", 2);
+
+  if(result){
+    showInvoice(
+      "JOKI ANTAR RANK",
+      "JOKI",
+      rankA.value, divA.value, +starA.value,
+      rankB.value, divB.value, +starB.value,
+      result.totalStars,
+      result.breakdown,
+      result.total,
+      result.feeMYR
+    );
+  }
 }
 
 function hitungGendongBintang(){
+  hideError(3);
   const s1 = rankToStar(rankG1.value, divG1.value, +starG1.value);
-  const s2 = s1 + (+addStarG.value);
-  if(+addStarG.value <= 0){
-    hasil.textContent = "⚠️ Tambah bintang harus lebih dari 0!";
+  const add = +addStarG.value;
+
+  if(isNaN(add) || add <= 0){
+    hideInvoice();
+    showError(3, "Tambah bintang harus lebih dari 0!", [
+      `Input: "${addStarG.value}"`,
+      `Harus berupa angka positif`
+    ]);
     return;
   }
-  tampilInvoice(rankG1.value, divG1.value, +starG1.value, rankG1.value, divG1.value, s2, GENDONG, "GENDONG PER BINTANG");
+
+  const s2 = s1 + add;
+  const result = calculateInvoice(rankG1.value, divG1.value, +starG1.value, rankG1.value, divG1.value, s2, GENDONG, "GENDONG PER BINTANG", 3);
+
+  if(result){
+    showInvoice(
+      "GENDONG PER BINTANG",
+      "GENDONG",
+      rankG1.value, divG1.value, +starG1.value,
+      rankG1.value, divG1.value, s2,
+      result.totalStars,
+      result.breakdown,
+      result.total,
+      result.feeMYR
+    );
+  }
 }
 
 function hitungGendongRank(){
-  tampilInvoice(rankGA.value, divGA.value, +starGA.value, rankGB.value, divGB.value, +starGB.value, GENDONG, "GENDONG ANTAR RANK");
+  hideError(4);
+  const result = calculateInvoice(rankGA.value, divGA.value, +starGA.value, rankGB.value, divGB.value, +starGB.value, GENDONG, "GENDONG ANTAR RANK", 4);
+
+  if(result){
+    showInvoice(
+      "GENDONG ANTAR RANK",
+      "GENDONG",
+      rankGA.value, divGA.value, +starGA.value,
+      rankGB.value, divGB.value, +starGB.value,
+      result.totalStars,
+      result.breakdown,
+      result.total,
+      result.feeMYR
+    );
+  }
 }
 
 // ======================
 // ESTIMASI
 // ======================
 function estimasiNominal(){
+  hideError(5);
+
   let harga = mode.value === "PRICE" ? PRICE : GENDONG;
   let curRank = rankE.value;
   let curDiv = divE.value;
   let curStar = +starE.value;
   let saldo = +nominal.value;
 
-  if(saldo <= 0){
-    hasil.textContent = "⚠️ Nominal harus lebih dari 0!";
+  // Validate inputs
+  const v = validateInput(curRank, curDiv, curStar, "rank saat ini");
+  if(!v.valid){
+    hideInvoice();
+    showError(5, v.msg, v.errors);
+    return;
+  }
+
+  if(isNaN(saldo) || saldo <= 0){
+    hideInvoice();
+    showError(5, "Nominal harus lebih dari 0!", [
+      `Input: "${nominal.value}"`,
+      `Harus berupa angka positif`
+    ]);
     return;
   }
 
   let isLower = RANK_DIVISI.includes(curRank);
   let start, used = 0, totalNaik = 0;
+  let bd = [];
 
   if(isLower){
     start = rankToStar(curRank, curDiv, curStar);
     // Simulate climbing within lower ranks first
     let current = start;
     while(true){
-      let r = starToRankLower(current).split(" ")[0];
+      let r = starToRankLower(current);
       let price = harga[r] || 0;
       if(price <= 0 || price > saldo - used) break;
+
+      // Track breakdown
+      let existing = bd.find(b => b.tier === r);
+      if(existing){
+        existing.count++;
+        existing.subtotal += price;
+      }else{
+        bd.push({ tier: r, count: 1, price: price, subtotal: price });
+      }
+
       used += price;
       current++;
       totalNaik++;
+
+      // Safety limit
+      if(totalNaik > 200) break;
     }
-    hasil.textContent =
-`--- ESTIMASI ---
-Rank Awal : ${getRankDisplay(curRank, curDiv, curStar)}
-Rank Akhir: ${starToRankLower(current - 1)}
-Naik      : ${totalNaik} ⭐
-Terpakai  : ${formatHarga(used)}
-Sisa      : ${formatHarga(saldo - used)}`;
+
+    let feeMYR = CURRENT_CURRENCY === "MYR" ? FEE_MYR : 0;
+    let total = used + feeMYR;
+
+    showInvoice(
+      "ESTIMASI NOMINAL",
+      "ESTIMASI",
+      curRank, curDiv, curStar,
+      curRank, curDiv, curStar + totalNaik,
+      totalNaik,
+      bd,
+      total,
+      feeMYR
+    );
+
+    // Override body to show estimation-specific info
+    let html = '';
+    html += `
+      <div class="invoice-row">
+        <span class="label">📍 Rank Awal</span>
+        <span class="value rank">${getRankDisplay(curRank, curDiv, curStar)}</span>
+      </div>
+      <div class="invoice-row">
+        <span class="label">🎯 Rank Akhir (est)</span>
+        <span class="value rank">${starToRankLower(current - 1)}</span>
+      </div>
+      <div class="invoice-row">
+        <span class="label">⭐ Naik</span>
+        <span class="value">${totalNaik} ⭐</span>
+      </div>
+      <div class="invoice-row">
+        <span class="label">💵 Budget</span>
+        <span class="value">${formatHarga(saldo)}</span>
+      </div>
+      <div class="invoice-row">
+        <span class="label">💸 Terpakai</span>
+        <span class="value">${formatHarga(used)}</span>
+      </div>
+      <div class="invoice-row">
+        <span class="label">💰 Sisa</span>
+        <span class="value" style="color:var(--green);">${formatHarga(saldo - used)}</span>
+      </div>
+    `;
+
+    if(bd.length > 0){
+      html += '<div class="invoice-divider"></div>';
+      html += '<div class="breakdown-title">Rincian</div>';
+      html += '<div class="invoice-breakdown">';
+      bd.forEach(item => {
+        html += `
+          <div class="breakdown-item">
+            <span class="tier-name">${item.tier}</span>
+            <span class="tier-calc">${item.count}⭐ × ${formatHarga(item.price)}</span>
+            <span class="tier-price">${formatHarga(item.subtotal)}</span>
+          </div>
+        `;
+      });
+      html += '</div>';
+    }
+
+    if(feeMYR > 0){
+      html += `
+        <div class="breakdown-item" style="background:rgba(251,191,36,0.08); border:1px solid rgba(251,191,36,0.15);">
+          <span class="tier-name" style="color:var(--yellow);">💱 Fee MYR</span>
+          <span></span>
+          <span class="tier-price" style="color:var(--yellow);">${formatHarga(feeMYR)}</span>
+        </div>
+      `;
+    }
+
+    html += `
+      <div class="invoice-total">
+        <span class="total-label">💰 TOTAL</span>
+        <span class="total-value">${formatHarga(total)}</span>
+      </div>
+    `;
+
+    invoiceBody.innerHTML = html;
+
   }else{
     // Mythic+ estimation
     start = +curStar;
@@ -472,29 +888,165 @@ Sisa      : ${formatHarga(saldo - used)}`;
       let tier = getMythicPlusTier(current);
       let price = harga[tier] || 0;
       if(price <= 0 || price > saldo - used) break;
+
+      let existing = bd.find(b => b.tier === tier);
+      if(existing){
+        existing.count++;
+        existing.subtotal += price;
+      }else{
+        bd.push({ tier: tier, count: 1, price: price, subtotal: price });
+      }
+
       used += price;
       current++;
       totalNaik++;
+
+      if(totalNaik > 200) break;
     }
-    hasil.textContent =
-`--- ESTIMASI ---
-Rank Awal : ${getRankDisplay(curRank, curDiv, curStar)}
-Rank Akhir: ${curRank} ⭐${current - 1}
-Naik      : ${totalNaik} ⭐
-Terpakai  : ${formatHarga(used)}
-Sisa      : ${formatHarga(saldo - used)}`;
+
+    let feeMYR = CURRENT_CURRENCY === "MYR" ? FEE_MYR : 0;
+    let total = used + feeMYR;
+
+    showInvoice(
+      "ESTIMASI NOMINAL",
+      "ESTIMASI",
+      curRank, curDiv, curStar,
+      curRank, curDiv, current - 1,
+      totalNaik,
+      bd,
+      total,
+      feeMYR
+    );
+
+    let html = '';
+    html += `
+      <div class="invoice-row">
+        <span class="label">📍 Rank Awal</span>
+        <span class="value rank">${getRankDisplay(curRank, curDiv, curStar)}</span>
+      </div>
+      <div class="invoice-row">
+        <span class="label">🎯 Rank Akhir (est)</span>
+        <span class="value rank">${curRank} ⭐${current - 1}</span>
+      </div>
+      <div class="invoice-row">
+        <span class="label">⭐ Naik</span>
+        <span class="value">${totalNaik} ⭐</span>
+      </div>
+      <div class="invoice-row">
+        <span class="label">💵 Budget</span>
+        <span class="value">${formatHarga(saldo)}</span>
+      </div>
+      <div class="invoice-row">
+        <span class="label">💸 Terpakai</span>
+        <span class="value">${formatHarga(used)}</span>
+      </div>
+      <div class="invoice-row">
+        <span class="label">💰 Sisa</span>
+        <span class="value" style="color:var(--green);">${formatHarga(saldo - used)}</span>
+      </div>
+    `;
+
+    if(bd.length > 0){
+      html += '<div class="invoice-divider"></div>';
+      html += '<div class="breakdown-title">Rincian</div>';
+      html += '<div class="invoice-breakdown">';
+      bd.forEach(item => {
+        html += `
+          <div class="breakdown-item">
+            <span class="tier-name">${item.tier}</span>
+            <span class="tier-calc">${item.count}⭐ × ${formatHarga(item.price)}</span>
+            <span class="tier-price">${formatHarga(item.subtotal)}</span>
+          </div>
+        `;
+      });
+      html += '</div>';
+    }
+
+    if(feeMYR > 0){
+      html += `
+        <div class="breakdown-item" style="background:rgba(251,191,36,0.08); border:1px solid rgba(251,191,36,0.15);">
+          <span class="tier-name" style="color:var(--yellow);">💱 Fee MYR</span>
+          <span></span>
+          <span class="tier-price" style="color:var(--yellow);">${formatHarga(feeMYR)}</span>
+        </div>
+      `;
+    }
+
+    html += `
+      <div class="invoice-total">
+        <span class="total-label">💰 TOTAL</span>
+        <span class="total-value">${formatHarga(total)}</span>
+      </div>
+    `;
+
+    invoiceBody.innerHTML = html;
   }
 }
 
 // ======================
-// PRICE LIST
+// PRICE LIST - Styled
 // ======================
 function showPriceList(){
-  let out="=== JOKI ===\n";
-  for(let r in PRICE) out+=`${r.padEnd(10)} : ${formatHarga(PRICE[r])}\n`;
-  out+="\n=== GENDONG ===\n";
-  for(let r in GENDONG) out+=`${r.padEnd(10)} : ${formatHarga(GENDONG[r])}\n`;
-  pricelist.textContent=out;
+  let html = '';
+
+  // Joki Rank Card
+  html += '<div class="pricelist-card">';
+  html += '<div class="pricelist-card-header joki"><span class="icon">💎</span> Joki Rank (per ⭐)</div>';
+  html += '<div class="pricelist-items">';
+
+  const tierColors = {
+    "Master": "master", "GM": "gm", "Epic": "epic", "Legend": "legend",
+    "Mythic": "mythic", "Honor": "honor", "Glory": "glory", "Immortal": "immortal"
+  };
+
+  for(let r in PRICE){
+    html += `
+      <div class="pricelist-item">
+        <span class="tier"><span class="tier-dot ${tierColors[r] || ''}"></span>${r}</span>
+        <span class="price">${formatHarga(PRICE[r])}</span>
+      </div>
+    `;
+  }
+
+  html += '</div>';
+  html += '<div class="pricelist-note">💡 Harga per bintang untuk joki rank</div>';
+  html += '</div>';
+
+  // Gendong Card
+  html += '<div class="pricelist-card">';
+  html += '<div class="pricelist-card-header gendong"><span class="icon">🔥</span> Gendong (per ⭐)</div>';
+  html += '<div class="pricelist-items">';
+
+  for(let r in GENDONG){
+    html += `
+      <div class="pricelist-item">
+        <span class="tier"><span class="tier-dot ${tierColors[r] || ''}"></span>${r}</span>
+        <span class="price">${formatHarga(GENDONG[r])}</span>
+      </div>
+    `;
+  }
+
+  html += '</div>';
+  html += '<div class="pricelist-note">💡 Harga per bintang untuk gendong</div>';
+  html += '</div>';
+
+  // Fee info
+  if(CURRENT_CURRENCY === "MYR"){
+    html += '<div class="pricelist-card">';
+    html += '<div class="pricelist-card-header" style="background:rgba(251,191,36,0.1); color:var(--yellow);"><span class="icon">💱</span> Info Tambahan</div>';
+    html += '<div class="pricelist-items">';
+    html += `
+      <div class="pricelist-item">
+        <span class="tier"><span class="tier-dot" style="background:var(--yellow);"></span>Fee MYR</span>
+        <span class="price">${formatHarga(FEE_MYR)}</span>
+      </div>
+    `;
+    html += '</div>';
+    html += '<div class="pricelist-note">💡 Fee tambahan untuk pembayaran MYR</div>';
+    html += '</div>';
+  }
+
+  pricelist.innerHTML = html;
 }
 
 // ======================
@@ -590,12 +1142,12 @@ function loadAdminPrices(){
 
   priceKeys.forEach(k => {
     const el = document.getElementById("admin_p_" + k);
-    if(el && PRICE[k]) el.value = PRICE[k];
+    if(el && PRICE[k] !== undefined) el.value = PRICE[k];
   });
 
   gendongKeys.forEach(k => {
     const el = document.getElementById("admin_g_" + k);
-    if(el && GENDONG[k]) el.value = GENDONG[k];
+    if(el && GENDONG[k] !== undefined) el.value = GENDONG[k];
   });
 
   document.getElementById("admin_fee").value = FEE_MYR;
