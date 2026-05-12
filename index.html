@@ -20,6 +20,10 @@
       --purple-soft: rgba(192,132,252,0.15);
       --yellow: #fbbf24;
       --yellow-soft: rgba(251,191,36,0.15);
+      --green: #84fab0;
+      --green-soft: rgba(132,250,176,0.15);
+      --red: #ff6b6b;
+      --red-soft: rgba(255,107,107,0.15);
       --bg: #0f0c1a;
       --bg-card: rgba(255,255,255,0.05);
       --bg-card-hover: rgba(255,255,255,0.08);
@@ -448,32 +452,342 @@
     }
 
     /* ═══════════════════════════════════════════
-       OUTPUT
+       ERROR LOG
        ═══════════════════════════════════════════ */
-    pre {
-      margin-top: 16px;
-      background: rgba(10,7,20,0.7);
-      padding: 18px;
+    .error-log {
+      display: none;
+      background: var(--red-soft);
+      border: 1px solid rgba(255,107,107,0.3);
       border-radius: var(--radius-sm);
-      white-space: pre-wrap;
-      word-break: break-word;
+      padding: 14px 16px;
+      margin-top: 14px;
       font-size: 13px;
-      font-family: 'Quicksand', sans-serif;
-      line-height: 1.7;
-      border: 1px solid rgba(255,107,157,0.1);
-      color: var(--text-dim);
-      position: relative;
+      line-height: 1.6;
+      color: #ff9e9e;
+      animation: shake 0.4s ease;
     }
 
-    pre::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 3px;
-      height: 100%;
-      background: linear-gradient(180deg, var(--pink), var(--purple));
-      border-radius: 3px 0 0 3px;
+    .error-log.show { display: block; }
+
+    .error-log .error-title {
+      font-weight: 800;
+      color: var(--red);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .error-log .error-detail {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-left: 4px;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); }
+      60% { transform: translateX(-3px); }
+      80% { transform: translateX(3px); }
+    }
+
+    /* ═══════════════════════════════════════════
+       INVOICE STYLED
+       ═══════════════════════════════════════════ */
+    .invoice-card {
+      display: none;
+      background: rgba(10,7,20,0.8);
+      border: 1px solid rgba(255,107,157,0.2);
+      border-radius: var(--radius);
+      margin-top: 16px;
+      overflow: hidden;
+      animation: box-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .invoice-card.show { display: block; }
+
+    .invoice-header {
+      background: linear-gradient(135deg, rgba(255,107,157,0.2), rgba(192,132,252,0.1));
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(255,107,157,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .invoice-header .invoice-title {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 11px;
+      color: var(--pink-light);
+      letter-spacing: 1px;
+    }
+
+    .invoice-header .invoice-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 50px;
+      background: rgba(255,107,157,0.2);
+      color: var(--pink-light);
+      border: 1px solid rgba(255,107,157,0.3);
+    }
+
+    .invoice-body {
+      padding: 20px;
+    }
+
+    .invoice-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      font-size: 13px;
+      border-bottom: 1px dashed rgba(255,255,255,0.06);
+    }
+
+    .invoice-row:last-child { border-bottom: none; }
+
+    .invoice-row .label {
+      color: var(--text-dim);
+      font-weight: 600;
+    }
+
+    .invoice-row .value {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .invoice-row .value.rank {
+      color: var(--pink-light);
+    }
+
+    .invoice-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,107,157,0.3), transparent);
+      margin: 12px 0;
+    }
+
+    .invoice-breakdown {
+      margin: 12px 0;
+    }
+
+    .breakdown-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--yellow);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .breakdown-title::before {
+      content: '✦';
+      color: var(--yellow);
+    }
+
+    .breakdown-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 10px;
+      margin: 4px 0;
+      background: rgba(255,255,255,0.03);
+      border-radius: 10px;
+      font-size: 12px;
+    }
+
+    .breakdown-item .tier-name {
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .breakdown-item .tier-calc {
+      color: var(--text-dim);
+      font-weight: 600;
+    }
+
+    .breakdown-item .tier-price {
+      font-weight: 800;
+      color: var(--pink-light);
+    }
+
+    .invoice-total {
+      background: linear-gradient(135deg, rgba(255,107,157,0.15), rgba(192,132,252,0.1));
+      border: 1px solid rgba(255,107,157,0.2);
+      border-radius: var(--radius-sm);
+      padding: 16px 20px;
+      margin-top: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .invoice-total .total-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .invoice-total .total-value {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 14px;
+      background: linear-gradient(90deg, var(--pink), var(--yellow));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .invoice-footer {
+      padding: 12px 20px;
+      background: rgba(255,255,255,0.02);
+      border-top: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-copy {
+      flex: 1;
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(132,250,176,0.3);
+      background: rgba(132,250,176,0.1);
+      color: var(--green);
+      font-family: 'Quicksand', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-copy:hover {
+      background: rgba(132,250,176,0.2);
+      transform: translateY(-1px);
+    }
+
+    .btn-copy.copied {
+      background: rgba(132,250,176,0.3);
+      border-color: var(--green);
+    }
+
+    .btn-wa {
+      flex: 1;
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(37,211,102,0.3);
+      background: rgba(37,211,102,0.1);
+      color: #25d366;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-decoration: none;
+    }
+
+    .btn-wa:hover {
+      background: rgba(37,211,102,0.2);
+      transform: translateY(-1px);
+    }
+
+    /* ═══════════════════════════════════════════
+       PRICE LIST STYLED
+       ═══════════════════════════════════════════ */
+    .pricelist-container {
+      display: grid;
+      gap: 16px;
+    }
+
+    .pricelist-card {
+      background: rgba(10,7,20,0.6);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+
+    .pricelist-card-header {
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .pricelist-card-header.joki {
+      background: linear-gradient(135deg, rgba(255,107,157,0.15), rgba(192,132,252,0.1));
+      color: var(--pink-light);
+    }
+
+    .pricelist-card-header.gendong {
+      background: linear-gradient(135deg, rgba(251,191,36,0.15), rgba(255,152,0,0.1));
+      color: var(--yellow);
+    }
+
+    .pricelist-card-header .icon {
+      font-size: 18px;
+    }
+
+    .pricelist-items {
+      padding: 8px 16px;
+    }
+
+    .pricelist-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .pricelist-item:last-child { border-bottom: none; }
+
+    .pricelist-item .tier {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .pricelist-item .tier .tier-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .tier-dot.master { background: #8b5cf6; }
+    .tier-dot.gm { background: #06b6d4; }
+    .tier-dot.epic { background: #a855f7; }
+    .tier-dot.legend { background: #f97316; }
+    .tier-dot.mythic { background: #ef4444; }
+    .tier-dot.honor { background: #eab308; }
+    .tier-dot.glory { background: #ec4899; }
+    .tier-dot.immortal { background: #6366f1; }
+
+    .pricelist-item .price {
+      font-weight: 800;
+      font-size: 13px;
+      color: var(--text);
+    }
+
+    .pricelist-note {
+      padding: 12px 18px;
+      font-size: 11px;
+      color: var(--text-faint);
+      background: rgba(255,255,255,0.02);
+      border-top: 1px solid rgba(255,255,255,0.04);
     }
 
     /* ═══════════════════════════════════════════
@@ -540,6 +854,38 @@
       0%, 100% { transform: translateY(0) rotate(0deg); }
       50% { transform: translateY(-15px) rotate(3deg); }
     }
+
+    /* ═══════════════════════════════════════════
+       ADMIN BUTTON (Main Page)
+       ═══════════════════════════════════════════ */
+    .admin-fab {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 1px solid rgba(167,139,250,0.3);
+      background: linear-gradient(135deg, rgba(167,139,250,0.2), rgba(192,132,252,0.15));
+      color: var(--purple);
+      font-size: 20px;
+      cursor: pointer;
+      z-index: 100;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(167,139,250,0.2);
+      backdrop-filter: blur(8px);
+    }
+
+    .admin-fab:hover {
+      transform: scale(1.1) rotate(15deg);
+      box-shadow: 0 8px 30px rgba(167,139,250,0.3);
+      border-color: rgba(167,139,250,0.5);
+    }
+
+    .admin-fab:active { transform: scale(0.95); }
 
     /* ═══════════════════════════════════════════
        ADMIN PANEL
@@ -711,9 +1057,6 @@
     /* ═══════════════════════════════════════════
        RESPONSIVE
        ═══════════════════════════════════════════ */
-    /* ═══════════════════════════════════════════
-       RESPONSIVE
-       ═══════════════════════════════════════════ */
     @media (max-width: 420px) {
       .wrap { padding: 14px 12px 32px; }
       .title-main { font-size: 20px; }
@@ -722,6 +1065,7 @@
       .menu-btn .icon { font-size: 20px; }
       .box { padding: 18px; }
       .header-card { padding: 22px 16px 16px; }
+      .invoice-total .total-value { font-size: 11px; }
     }
 
     @media (min-width: 768px) {
@@ -738,6 +1082,7 @@
 
     ::selection { background: rgba(255,107,157,0.25); color: #fff; }
   </style>
+<base target="_blank">
 <base target="_blank">
 </head>
 <body>
@@ -824,6 +1169,7 @@
       <input type="number" id="star1" placeholder="Bintang sekarang">
       <input type="number" id="addStar" placeholder="Tambah bintang">
       <button onclick="hitungPerBintang()">Hitung Harga</button>
+      <div class="error-log" id="error1"></div>
     </div>
 
     <!-- MENU 2 -->
@@ -842,6 +1188,7 @@
       <input type="number" id="starB" placeholder="Bintang">
 
       <button onclick="hitungAntarRank()">Hitung Harga</button>
+      <div class="error-log" id="error2"></div>
     </div>
 
     <!-- MENU 3 -->
@@ -852,6 +1199,7 @@
       <input type="number" id="starG1" placeholder="Bintang sekarang">
       <input type="number" id="addStarG" placeholder="Tambah bintang">
       <button class="gendong" onclick="hitungGendongBintang()">Hitung Harga</button>
+      <div class="error-log" id="error3"></div>
     </div>
 
     <!-- MENU 4 -->
@@ -870,6 +1218,7 @@
       <input type="number" id="starGB" placeholder="Bintang">
 
       <button class="gendong" onclick="hitungGendongRank()">Hitung Harga</button>
+      <div class="error-log" id="error4"></div>
     </div>
 
     <!-- MENU 5 -->
@@ -884,15 +1233,33 @@
       <input type="number" id="starE" placeholder="Bintang sekarang">
       <input type="number" id="nominal" placeholder="Nominal budget kamu">
       <button onclick="estimasiNominal()">Estimasi</button>
+      <div class="error-log" id="error5"></div>
     </div>
 
     <!-- MENU 6 -->
     <div class="box" id="menu6">
       <h2>📋 Price List</h2>
-      <pre id="pricelist"></pre>
+      <div class="pricelist-container" id="pricelist"></div>
     </div>
 
-    <pre id="hasil"></pre>
+    <!-- STYLED INVOICE -->
+    <div class="invoice-card" id="invoiceCard">
+      <div class="invoice-header">
+        <span class="invoice-title" id="invoiceTitle">INVOICE</span>
+        <span class="invoice-badge" id="invoiceBadge">JOKI</span>
+      </div>
+      <div class="invoice-body" id="invoiceBody">
+        <!-- Dynamic content -->
+      </div>
+      <div class="invoice-footer">
+        <button class="btn-copy" id="btnCopy" onclick="copyInvoice()">
+          <span>📋</span> Copy Invoice
+        </button>
+        <a class="btn-wa" id="btnWA" href="#" target="_blank">
+          <span>💬</span> Order WA
+        </a>
+      </div>
+    </div>
 
     <!-- ADMIN PANEL (Hidden Overlay) -->
     <div class="admin-overlay" id="adminOverlay">
@@ -955,6 +1322,9 @@
       </div>
     </div>
   </div>
+
+  <!-- Admin FAB Button -->
+  <button class="admin-fab" onclick="showAdmin()" title="Admin Panel">🔐</button>
 
   <script src="script.js"></script>
   <script>
