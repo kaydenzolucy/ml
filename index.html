@@ -2,115 +2,709 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>🐱MINRA🐱</title>
+  <title>🐱 MINRA 🐱 | Joki MLBB</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ff6b9d">
 
-  <!-- FONT RETRO -->
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Quicksand:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- MAIN CSS -->
-  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ═══════════════════════════════════════════
+       ROOT & RESET
+       ═══════════════════════════════════════════ */
+    :root {
+      --pink: #ff6b9d;
+      --pink-light: #ffb8d0;
+      --pink-soft: rgba(255,107,157,0.15);
+      --purple: #c084fc;
+      --purple-soft: rgba(192,132,252,0.15);
+      --yellow: #fbbf24;
+      --yellow-soft: rgba(251,191,36,0.15);
+      --bg: #0f0c1a;
+      --bg-card: rgba(255,255,255,0.05);
+      --bg-card-hover: rgba(255,255,255,0.08);
+      --border: rgba(255,255,255,0.1);
+      --text: #fff0f5;
+      --text-dim: rgba(255,240,245,0.6);
+      --text-faint: rgba(255,240,245,0.4);
+      --radius: 20px;
+      --radius-sm: 14px;
+      --shadow: 0 4px 20px rgba(0,0,0,0.3);
+      --shadow-glow: 0 0 30px rgba(255,107,157,0.2);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(180deg, #0f0c1a 0%, #1a0f2e 40%, #12081f 100%);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ═══════════════════════════════════════════
+       FLOATING PARTICLES (Background)
+       ═══════════════════════════════════════════ */
+    .particles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.12;
+      animation: drift linear infinite;
+    }
+
+    .p1 { width: 6px; height: 6px; background: var(--pink); top: 80%; left: 10%; animation-duration: 25s; }
+    .p2 { width: 4px; height: 4px; background: var(--purple); top: 20%; left: 80%; animation-duration: 20s; animation-delay: 3s; }
+    .p3 { width: 8px; height: 8px; background: var(--yellow); top: 50%; left: 50%; animation-duration: 30s; animation-delay: 7s; }
+    .p4 { width: 5px; height: 5px; background: var(--pink-light); top: 10%; left: 30%; animation-duration: 22s; animation-delay: 5s; }
+    .p5 { width: 3px; height: 3px; background: var(--purple); top: 70%; left: 70%; animation-duration: 18s; animation-delay: 2s; }
+    .p6 { width: 7px; height: 7px; background: var(--pink); top: 40%; left: 15%; animation-duration: 28s; animation-delay: 8s; }
+
+    @keyframes drift {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.15; }
+      90% { opacity: 0.15; }
+      100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* ═══════════════════════════════════════════
+       MAIN CONTAINER
+       ═══════════════════════════════════════════ */
+    .wrap {
+      position: relative;
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 20px 18px 40px;
+      z-index: 10;
+    }
+
+    /* ═══════════════════════════════════════════
+       HEADER CARD
+       ═══════════════════════════════════════════ */
+    .header-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 20px 20px;
+      margin-bottom: 24px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--pink), var(--purple), var(--yellow), var(--pink));
+      background-size: 300% 100%;
+      animation: rainbow-slide 4s linear infinite;
+    }
+
+    @keyframes rainbow-slide {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 300% 50%; }
+    }
+
+    .title-main {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 26px;
+      background: linear-gradient(90deg, var(--pink), var(--purple), var(--yellow));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 6px;
+      letter-spacing: 1px;
+      filter: drop-shadow(0 0 6px rgba(255,107,157,0.3));
+    }
+
+    .title-sub {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 20px;
+      color: var(--pink-light);
+      margin-bottom: 12px;
+      animation: soft-glow 3s ease-in-out infinite;
+    }
+
+    .title-sub .cat {
+      display: inline-block;
+      animation: cat-bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes cat-bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    @keyframes soft-glow {
+      0%, 100% { text-shadow: 0 0 8px rgba(255,107,157,0.4); }
+      50% { text-shadow: 0 0 16px rgba(255,107,157,0.6), 0 0 24px rgba(192,132,252,0.3); }
+    }
+
+    .tagline {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-dim);
+      letter-spacing: 1px;
+    }
+
+    /* ═══════════════════════════════════════════
+       CURRENCY (Inside header, inline, subtle)
+       ═══════════════════════════════════════════ */
+    .currency-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+      padding: 6px 14px;
+      border-radius: 50px;
+      background: rgba(255,107,157,0.1);
+      border: 1px solid rgba(255,107,157,0.2);
+      transition: all 0.3s ease;
+    }
+
+    .currency-row:hover {
+      background: rgba(255,107,157,0.2);
+      border-color: rgba(255,107,157,0.4);
+      transform: scale(1.02);
+    }
+
+    .currency-row select {
+      background: transparent;
+      border: none;
+      color: var(--pink-light);
+      font-family: 'Quicksand', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .currency-row select option {
+      background: #1a1528;
+      color: #fff;
+    }
+
+    .currency-row #rateInfo {
+      font-size: 10px;
+      color: var(--text-faint);
+      font-weight: 600;
+    }
+
+    /* ═══════════════════════════════════════════
+       MENU GRID
+       ═══════════════════════════════════════════ */
+    .menu {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .menu-btn {
+      position: relative;
+      padding: 16px 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text);
+      font-family: 'Quicksand', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      overflow: hidden;
+    }
+
+    .menu-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--pink-soft), var(--purple-soft));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .menu-btn:hover::before { opacity: 1; }
+    .menu-btn:hover {
+      transform: translateY(-3px);
+      border-color: rgba(255,107,157,0.3);
+      box-shadow: 0 8px 24px rgba(255,107,157,0.15);
+    }
+
+    .menu-btn:active { transform: translateY(-1px) scale(0.98); }
+
+    .menu-btn .icon {
+      font-size: 22px;
+      position: relative;
+      z-index: 1;
+      transition: transform 0.3s ease;
+    }
+
+    .menu-btn:hover .icon { transform: scale(1.15); }
+
+    .menu-btn .label {
+      position: relative;
+      z-index: 1;
+      line-height: 1.3;
+    }
+
+    .menu-btn.gendong::before {
+      background: linear-gradient(135deg, var(--yellow-soft), rgba(255,152,0,0.1));
+    }
+
+    .menu-btn.gendong:hover {
+      border-color: rgba(251,191,36,0.3);
+      box-shadow: 0 8px 24px rgba(251,191,36,0.15);
+    }
+
+    .menu-btn.link-btn::before {
+      background: linear-gradient(135deg, rgba(143,211,244,0.1), rgba(132,250,176,0.1));
+    }
+
+    .menu-btn.link-btn:hover {
+      border-color: rgba(143,211,244,0.3);
+      box-shadow: 0 8px 24px rgba(143,211,244,0.15);
+    }
+
+    .menu-btn.active {
+      background: linear-gradient(135deg, var(--pink-soft), var(--purple-soft));
+      border-color: rgba(255,107,157,0.4);
+      box-shadow: 0 0 20px rgba(255,107,157,0.2);
+    }
+
+    .menu-btn.link-btn { grid-column: span 2; }
+
+    /* ═══════════════════════════════════════════
+       CONTENT BOXES
+       ═══════════════════════════════════════════ */
+    .box {
+      display: none;
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow);
+      animation: box-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .box.show { display: block; }
+
+    @keyframes box-in {
+      from { opacity: 0; transform: translateY(16px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .box h2 {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text);
+    }
+
+    .box h2::after {
+      content: '';
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(90deg, var(--pink), transparent);
+      border-radius: 2px;
+      opacity: 0.4;
+    }
+
+    .box h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--pink-light);
+      margin: 18px 0 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .box h3::before {
+      content: '◆';
+      color: var(--yellow);
+      font-size: 10px;
+    }
+
+    /* ═══════════════════════════════════════════
+       FORM ELEMENTS
+       ═══════════════════════════════════════════ */
+    select, input {
+      width: 100%;
+      padding: 14px 16px;
+      margin: 6px 0 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: rgba(15,10,30,0.6);
+      color: var(--text);
+      font-family: 'Quicksand', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      outline: none;
+      transition: all 0.25s ease;
+    }
+
+    select:focus, input:focus {
+      border-color: var(--pink);
+      box-shadow: 0 0 0 3px rgba(255,107,157,0.1), 0 0 12px rgba(255,107,157,0.1);
+      background: rgba(15,10,30,0.8);
+    }
+
+    select option {
+      background: #1a1528;
+      color: var(--text);
+    }
+
+    input::placeholder {
+      color: var(--text-faint);
+      font-weight: 500;
+    }
+
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    /* ═══════════════════════════════════════════
+       BOX BUTTON
+       ═══════════════════════════════════════════ */
+    .box button {
+      width: 100%;
+      padding: 16px;
+      border-radius: var(--radius-sm);
+      border: none;
+      background: linear-gradient(135deg, #ff6b9d, #ff8fab);
+      color: #fff;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(255,107,157,0.3);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    .box button::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .box button:hover::after { left: 100%; }
+    .box button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255,107,157,0.4);
+    }
+
+    .box button.gendong {
+      background: linear-gradient(135deg, #ffb347, #ff9800);
+      box-shadow: 0 4px 16px rgba(255,179,71,0.3);
+    }
+
+    .box button.gendong:hover {
+      box-shadow: 0 8px 24px rgba(255,179,71,0.4);
+    }
+
+    /* ═══════════════════════════════════════════
+       DIVIDER
+       ═══════════════════════════════════════════ */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin: 16px 0;
+    }
+
+    /* ═══════════════════════════════════════════
+       OUTPUT
+       ═══════════════════════════════════════════ */
+    pre {
+      margin-top: 16px;
+      background: rgba(10,7,20,0.7);
+      padding: 18px;
+      border-radius: var(--radius-sm);
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-size: 13px;
+      font-family: 'Quicksand', sans-serif;
+      line-height: 1.7;
+      border: 1px solid rgba(255,107,157,0.1);
+      color: var(--text-dim);
+      position: relative;
+    }
+
+    pre::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3px;
+      height: 100%;
+      background: linear-gradient(180deg, var(--pink), var(--purple));
+      border-radius: 3px 0 0 3px;
+    }
+
+    /* ═══════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════ */
+    .footer {
+      text-align: center;
+      padding: 20px;
+      margin-top: 24px;
+    }
+
+    .footer-hearts {
+      font-size: 18px;
+      margin-bottom: 8px;
+      letter-spacing: 6px;
+      opacity: 0.7;
+    }
+
+    .footer-text {
+      font-size: 11px;
+      color: var(--text-faint);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .footer-text strong {
+      color: var(--pink-light);
+      font-weight: 700;
+    }
+
+    /* ═══════════════════════════════════════════
+       GALLERY
+       ═══════════════════════════════════════════ */
+    .minra-gallery {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .minra-img {
+      position: absolute;
+      opacity: 0.05;
+      width: 70px;
+      filter: blur(2px);
+      user-select: none;
+      pointer-events: none;
+      animation: gallery-float 10s ease-in-out infinite;
+    }
+
+    .minra-img:nth-child(1) { top: 5%; left: 10%; animation-delay: 0s; }
+    .minra-img:nth-child(2) { top: 15%; left: 85%; animation-delay: 1.5s; }
+    .minra-img:nth-child(3) { top: 35%; left: 5%; animation-delay: 3s; }
+    .minra-img:nth-child(4) { top: 45%; left: 90%; animation-delay: 4.5s; }
+    .minra-img:nth-child(5) { top: 65%; left: 15%; animation-delay: 6s; }
+    .minra-img:nth-child(6) { top: 75%; left: 80%; animation-delay: 7.5s; }
+    .minra-img:nth-child(7) { top: 25%; left: 50%; animation-delay: 2s; }
+    .minra-img:nth-child(8) { top: 55%; left: 40%; animation-delay: 5s; }
+    .minra-img:nth-child(9) { top: 85%; left: 60%; animation-delay: 8s; }
+    .minra-img:nth-child(10) { top: 10%; left: 70%; animation-delay: 9.5s; }
+
+    @keyframes gallery-float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-15px) rotate(3deg); }
+    }
+
+    /* ═══════════════════════════════════════════
+       RESPONSIVE
+       ═══════════════════════════════════════════ */
+    @media (max-width: 420px) {
+      .wrap { padding: 14px 12px 32px; }
+      .title-main { font-size: 20px; }
+      .title-sub { font-size: 16px; }
+      .menu-btn { padding: 14px 8px; font-size: 12px; }
+      .menu-btn .icon { font-size: 20px; }
+      .box { padding: 18px; }
+      .header-card { padding: 22px 16px 16px; }
+    }
+
+    @media (min-width: 768px) {
+      .wrap { max-width: 580px; }
+      .menu { grid-template-columns: repeat(4, 1fr); }
+      .menu-btn.link-btn { grid-column: span 4; }
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--pink); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--pink-light); }
+
+    ::selection { background: rgba(255,107,157,0.25); color: #fff; }
+  </style>
+<base target="_blank">
 </head>
 <body>
-  <div class="container">
+  <!-- Particles -->
+  <div class="particles">
+    <div class="particle p1"></div>
+    <div class="particle p2"></div>
+    <div class="particle p3"></div>
+    <div class="particle p4"></div>
+    <div class="particle p5"></div>
+    <div class="particle p6"></div>
+  </div>
 
-    <!-- HEADER + MINI CURRENCY -->
-    <div class="header-top">
-      <h1 class="title-glow">
-        <span class="main-title">JOKI MLBB</span><br>
-        <span class="sub-title">🐱MINRA🐱</span>
-      </h1>
+  <!-- Gallery -->
+  <div class="minra-gallery">
+    <img src="img1.png" alt="" class="minra-img">
+    <img src="img2.png" alt="" class="minra-img">
+    <img src="img3.png" alt="" class="minra-img">
+    <img src="img4.png" alt="" class="minra-img">
+    <img src="img5.png" alt="" class="minra-img">
+    <img src="img6.png" alt="" class="minra-img">
+    <img src="img7.png" alt="" class="minra-img">
+    <img src="img8.png" alt="" class="minra-img">
+    <img src="img9.png" alt="" class="minra-img">
+    <img src="img10.png" alt="" class="minra-img">
+  </div>
 
-      <div class="currency-mini">
+  <div class="wrap">
+    <!-- HEADER CARD -->
+    <div class="header-card">
+      <div class="title-main">JOKI MLBB</div>
+      <div class="title-sub">
+        <span class="cat">🐱</span>MINRA<span class="cat">🐱</span>
+      </div>
+      <div class="tagline">✨ Joki Rank & Gendong Terpercaya ✨</div>
+
+      <!-- Currency inside header, subtle -->
+      <div class="currency-row">
         <select id="currency" onchange="changeCurrency()">
           <option value="IDR">🇮🇩 IDR</option>
           <option value="MYR">🇲🇾 MYR</option>
         </select>
-        <div id="rateInfo">Memuat kurs…</div>
+        <span id="rateInfo">Memuat kurs…</span>
       </div>
-
-<!-- =========================
-MINRA GALLERY (Background Only)
-========================= -->
-<div class="minra-gallery">
-  <img src="img1.png" alt="" class="minra-img">
-  <img src="img2.png" alt="" class="minra-img">
-  <img src="img3.png" alt="" class="minra-img">
-  <img src="img4.png" alt="" class="minra-img">
-  <img src="img5.png" alt="" class="minra-img">
-  <img src="img6.png" alt="" class="minra-img">
-  <img src="img7.png" alt="" class="minra-img">
-  <img src="img8.png" alt="" class="minra-img">
-  <img src="img9.png" alt="" class="minra-img">
-  <img src="img10.png" alt="" class="minra-img">
-</div>
+    </div>
 
     <!-- MENU -->
     <div class="menu">
-      <button onclick="showMenu(1)">⭐ Joki Per Bintang</button>
-      <button onclick="showMenu(2)">🔁 Joki Antar Rank</button>
-      <button class="gendong" onclick="showMenu(3)">🔥 Gendong Per Bintang</button>
-      <button class="gendong" onclick="showMenu(4)">🔥 Gendong Antar Rank</button>
-      <button onclick="showMenu(5)">💰 Estimasi Nominal</button>
-      <button onclick="showMenu(6)">📋 Price List</button>
-      <button class="link-btn" onclick="openLink()">💌 Jangan Dibuka</button>
+      <button class="menu-btn" onclick="showMenu(1)">
+        <span class="icon">⭐</span>
+        <span class="label">Joki Per Bintang</span>
+      </button>
+      <button class="menu-btn" onclick="showMenu(2)">
+        <span class="icon">🔁</span>
+        <span class="label">Joki Antar Rank</span>
+      </button>
+      <button class="menu-btn gendong" onclick="showMenu(3)">
+        <span class="icon">🔥</span>
+        <span class="label">Gendong Per Bintang</span>
+      </button>
+      <button class="menu-btn gendong" onclick="showMenu(4)">
+        <span class="icon">🔥</span>
+        <span class="label">Gendong Antar Rank</span>
+      </button>
+      <button class="menu-btn" onclick="showMenu(5)">
+        <span class="icon">💰</span>
+        <span class="label">Estimasi Nominal</span>
+      </button>
+      <button class="menu-btn" onclick="showMenu(6)">
+        <span class="icon">📋</span>
+        <span class="label">Price List</span>
+      </button>
+      <button class="menu-btn link-btn" onclick="openLink()">
+        <span class="icon">💌</span>
+        <span class="label">Jangan Dibuka</span>
+      </button>
     </div>
 
     <!-- MENU 1 -->
     <div class="box" id="menu1">
-      <h2>Joki Per Bintang</h2>
+      <h2>⭐ Joki Per Bintang</h2>
       <select id="rank1"></select>
       <select id="div1"></select>
       <input type="number" id="star1" placeholder="Bintang sekarang">
       <input type="number" id="addStar" placeholder="Tambah bintang">
-      <button onclick="hitungPerBintang()">Hitung</button>
+      <button onclick="hitungPerBintang()">Hitung Harga</button>
     </div>
 
     <!-- MENU 2 -->
     <div class="box" id="menu2">
-      <h2>Joki Antar Rank</h2>
+      <h2>🔁 Joki Antar Rank</h2>
       <h3>Rank Awal</h3>
       <select id="rankA"></select>
       <select id="divA"></select>
       <input type="number" id="starA" placeholder="Bintang">
+
+      <div class="divider"></div>
 
       <h3>Rank Tujuan</h3>
       <select id="rankB"></select>
       <select id="divB"></select>
       <input type="number" id="starB" placeholder="Bintang">
 
-      <button onclick="hitungAntarRank()">Hitung</button>
+      <button onclick="hitungAntarRank()">Hitung Harga</button>
     </div>
 
     <!-- MENU 3 -->
     <div class="box" id="menu3">
-      <h2>Gendong Per Bintang</h2>
+      <h2>🔥 Gendong Per Bintang</h2>
       <select id="rankG1"></select>
       <select id="divG1"></select>
       <input type="number" id="starG1" placeholder="Bintang sekarang">
       <input type="number" id="addStarG" placeholder="Tambah bintang">
-      <button class="gendong" onclick="hitungGendongBintang()">Hitung</button>
+      <button class="gendong" onclick="hitungGendongBintang()">Hitung Harga</button>
     </div>
 
     <!-- MENU 4 -->
     <div class="box" id="menu4">
-      <h2>Gendong Antar Rank</h2>
+      <h2>🔥 Gendong Antar Rank</h2>
       <h3>Rank Awal</h3>
       <select id="rankGA"></select>
       <select id="divGA"></select>
       <input type="number" id="starGA" placeholder="Bintang">
+
+      <div class="divider"></div>
 
       <h3>Rank Tujuan</h3>
       <select id="rankGB"></select>
       <select id="divGB"></select>
       <input type="number" id="starGB" placeholder="Bintang">
 
-      <button class="gendong" onclick="hitungGendongRank()">Hitung</button>
+      <button class="gendong" onclick="hitungGendongRank()">Hitung Harga</button>
     </div>
 
     <!-- MENU 5 -->
     <div class="box" id="menu5">
-      <h2>Estimasi Nominal</h2>
+      <h2>💰 Estimasi Nominal</h2>
       <select id="mode">
         <option value="PRICE">Joki Rank</option>
         <option value="GENDONG">Gendong</option>
@@ -118,17 +712,25 @@ MINRA GALLERY (Background Only)
       <select id="rankE"></select>
       <select id="divE"></select>
       <input type="number" id="starE" placeholder="Bintang sekarang">
-      <input type="number" id="nominal" placeholder="Nominal">
+      <input type="number" id="nominal" placeholder="Nominal budget kamu">
       <button onclick="estimasiNominal()">Estimasi</button>
     </div>
 
     <!-- MENU 6 -->
     <div class="box" id="menu6">
-      <h2>Price List</h2>
+      <h2>📋 Price List</h2>
       <pre id="pricelist"></pre>
     </div>
 
     <pre id="hasil"></pre>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <div class="footer-hearts">💖 🌸 💖</div>
+      <div class="footer-text">
+        Made with <strong>love</strong> by <strong>MINRA</strong> 🐱
+      </div>
+    </div>
   </div>
 
   <script src="script.js"></script>
