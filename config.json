@@ -1,0 +1,27 @@
+{
+  "updated": "2026-05-13",
+  "note": "Edit harga di bawah ini, lalu save. Website akan otomatis update!",
+
+  "PRICE": {
+    "Master": 3000,
+    "GM": 4000,
+    "Epic": 5000,
+    "Legend": 6000,
+    "Mythic": 13000,
+    "Honor": 14000,
+    "Glory": 20000,
+    "Immortal": 24000
+  },
+
+  "GENDONG": {
+    "Epic": 9000,
+    "Legend": 10000,
+    "Mythic": 15000,
+    "Honor": 16000,
+    "Glory": 25000,
+    "Immortal": 35000
+  },
+
+  "FEE_MYR": 10000,
+  "FALLBACK_RATE": 0.00030
+}
