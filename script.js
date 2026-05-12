@@ -37,15 +37,15 @@ const STAR_PER_DIV = 5;
 const STAR_PER_RANK_STANDARD = 25;
 
 // Mythic+ thresholds (continuous star system)
+const MYTHIC_MAX = 24;
 const HONOR_THRESHOLD = 25;
 const GLORY_THRESHOLD = 50;
 const IMMORTAL_THRESHOLD = 100;
 
 // ======================
-// FETCH RATE (Multiple Fallbacks)
+// FETCH RATE (Multiple APIs)
 // ======================
 async function fetchRate(){
-  // Try multiple APIs in order
   const apis = [
     {
       name: "Frankfurter",
@@ -72,7 +72,7 @@ async function fetchRate(){
         const rate = api.extract(d);
         if(rate){
           RATE_IDR_TO_MYR = rate;
-          rateInfo.textContent = `1 MYR ≈ Rp${Math.round(1/RATE_IDR_TO_MYR).toLocaleString()} (${api.name})`;
+          rateInfo.textContent = `1 MYR ≈ Rp${Math.round(1/RATE_IDR_TO_MYR).toLocaleString()}`;
           return;
         }
       }
@@ -81,7 +81,6 @@ async function fetchRate(){
     }
   }
 
-  // All APIs failed, use fallback
   RATE_IDR_TO_MYR = FALLBACK_RATE;
   rateInfo.textContent = "Kurs default (offline)";
 }
@@ -171,9 +170,54 @@ function updateDivisi(rankId,divId){
 .forEach(id=>updateDivisi(id,id.replace("rank","div")));
 
 // ======================
-// GET PRICE TIER FOR STAR
+// VALIDASI INPUT
 // ======================
-function getPriceTier(starNum){
+function validateInput(rank, div, star){
+  const starNum = +star;
+  if(isNaN(starNum) || starNum < 0){
+    return { valid: false, msg: "⚠️ Bintang tidak valid!" };
+  }
+
+  if(RANK_DIVISI.includes(rank)){
+    // Ranks with divisions
+    const divIndex = DIVISI.indexOf(div);
+    if(divIndex === -1){
+      return { valid: false, msg: `⚠️ Divisi tidak valid untuk ${rank}!` };
+    }
+    if(starNum > STAR_PER_DIV){
+      return { valid: false, msg: `⚠️ ${rank} ${div} maksimal ⭐${STAR_PER_DIV}!` };
+    }
+  }else{
+    // Mythic+ ranks
+    if(rank === "Mythic" && starNum > MYTHIC_MAX){
+      return { valid: false, msg: `⚠️ Mythic maksimal ⭐${MYTHIC_MAX}!` };
+    }
+  }
+
+  return { valid: true, msg: "" };
+}
+
+// ======================
+// RANK -> TOTAL STARS (HYBRID SYSTEM)
+// ======================
+// Lower ranks: cumulative (0-99)
+// Mythic+: continuous relative (0-1000)
+function rankToStar(rank, div, star){
+  // Lower ranks with divisions
+  if(RANK_DIVISI.includes(rank)){
+    let r = RANK_ORDER.indexOf(rank);
+    return r * STAR_PER_RANK_STANDARD + (DIVISI.indexOf(div) * STAR_PER_DIV) + (+star);
+  }
+
+  // Mythic+ ranks: return relative star count
+  // Mythic 3 = 3, Honor 33 = 33, Glory 60 = 60
+  return +star;
+}
+
+// ======================
+// GET PRICE TIER FOR MYTHIC+ STAR
+// ======================
+function getMythicPlusTier(starNum){
   if(starNum >= IMMORTAL_THRESHOLD) return "Immortal";
   if(starNum >= GLORY_THRESHOLD) return "Glory";
   if(starNum >= HONOR_THRESHOLD) return "Honor";
@@ -181,165 +225,241 @@ function getPriceTier(starNum){
 }
 
 // ======================
-// RANK -> TOTAL STARS (ABSOLUTE)
+// GET RANK DISPLAY NAME
 // ======================
-// For ranks WITH divisions: calculate cumulative stars
-// For Mythic+: star is already absolute (continuous)
-function rankToStar(rank,div,star){
-  let r=RANK_ORDER.indexOf(rank);
-
-  // Ranks with divisions (Master, GM, Epic, Legend)
+function getRankDisplay(rank, div, star){
   if(RANK_DIVISI.includes(rank)){
-    return r*STAR_PER_RANK_STANDARD+(DIVISI.indexOf(div)*STAR_PER_DIV)+(+star);
+    return `${rank} ${div} ⭐${star}`;
   }
-
-  // Mythic+ ranks: star is absolute continuous count
-  // Mythic 3 = 3, Honor 34 = 34, Glory 60 = 60, Immortal 150 = 150
-  return +star;
-}
-
-// ======================
-// TOTAL STARS -> RANK DISPLAY
-// ======================
-function starToRank(total){
-  // For ranks with divisions (0-99 stars range)
-  if(total < 100){
-    let acc=0;
-    for(let r of RANK_ORDER){
-      if(r==="Mythic") break;
-      let max=STAR_PER_RANK_STANDARD;
-      if(total<acc+max){
-        let s=total-acc;
-        return `${r} ${DIVISI[Math.floor(s/STAR_PER_DIV)]} ⭐${s%STAR_PER_DIV}`;
-      }
-      acc+=max;
-    }
-  }
-
-  // Mythic+ continuous system
-  if(total >= IMMORTAL_THRESHOLD) return `Immortal ⭐${total}`;
-  if(total >= GLORY_THRESHOLD) return `Glory ⭐${total}`;
-  if(total >= HONOR_THRESHOLD) return `Honor ⭐${total}`;
-  return `Mythic ⭐${total}`;
+  return `${rank} ⭐${star}`;
 }
 
 // ======================
 // INVOICE
 // ======================
-function tampilInvoice(start,end,price,title){
-  if(end <= start){
-    hasil.textContent = "⚠️ Rank tujuan harus lebih tinggi dari rank awal!";
+function tampilInvoice(startRank, startDiv, startStar, endRank, endDiv, endStar, price, title){
+  // Validate inputs
+  const v1 = validateInput(startRank, startDiv, startStar);
+  if(!v1.valid){ hasil.textContent = v1.msg; return; }
+
+  const v2 = validateInput(endRank, endDiv, endStar);
+  if(!v2.valid){ hasil.textContent = v2.msg; return; }
+
+  // Calculate absolute positions
+  const start = rankToStar(startRank, startDiv, startStar);
+  const end = rankToStar(endRank, endDiv, endStar);
+
+  // Check if crossing from lower rank to Mythic+
+  const isStartLower = RANK_DIVISI.includes(startRank);
+  const isEndLower = RANK_DIVISI.includes(endRank);
+  const isStartMythicPlus = !isStartLower;
+  const isEndMythicPlus = !isEndLower;
+
+  let totalStars = 0;
+  let map = {};
+  RANK_ORDER.forEach(r => map[r] = { count: 0, price: price[r] || 0 });
+
+  if(isStartLower && isEndLower){
+    // Both in lower ranks: simple subtraction
+    if(end <= start){
+      hasil.textContent = "⚠️ Rank tujuan harus lebih tinggi!";
+      return;
+    }
+    totalStars = end - start;
+    for(let i = start; i < end; i++){
+      let r = starToRankLower(i);
+      map[r]++;
+    }
+  }else if(isStartMythicPlus && isEndMythicPlus){
+    // Both in Mythic+: simple subtraction
+    if(end <= start){
+      hasil.textContent = "⚠️ Rank tujuan harus lebih tinggi!";
+      return;
+    }
+    totalStars = end - start;
+    for(let i = start; i < end; i++){
+      let tier = getMythicPlusTier(i);
+      map[tier]++;
+    }
+  }else if(isStartLower && isEndMythicPlus){
+    // Crossing from lower to Mythic+
+    // 1. Stars to finish current lower rank
+    let lowerRemaining = 0;
+    let currentRankIndex = RANK_ORDER.indexOf(startRank);
+    let currentDivIndex = DIVISI.indexOf(startDiv);
+    let currentStar = +startStar;
+
+    // Stars to finish current division
+    lowerRemaining += (STAR_PER_DIV - currentStar);
+
+    // Stars to finish remaining divisions in current rank
+    lowerRemaining += (currentDivIndex) * STAR_PER_DIV;
+
+    // Stars for ranks between current and Legend
+    for(let i = currentRankIndex + 1; i < 4; i++){
+      lowerRemaining += STAR_PER_RANK_STANDARD;
+    }
+
+    // 2. Mythic+ stars
+    let mythicPlusStars = end; // end is already relative
+
+    totalStars = lowerRemaining + mythicPlusStars;
+
+    // Calculate pricing
+    // Lower rank stars
+    let lowerStarStart = start;
+    let lowerStarEnd = (currentRankIndex + 1) * STAR_PER_RANK_STANDARD;
+    for(let i = lowerStarStart; i < lowerStarEnd; i++){
+      let r = starToRankLower(i);
+      map[r]++;
+    }
+
+    // Mythic+ stars
+    for(let i = 0; i < end; i++){
+      let tier = getMythicPlusTier(i);
+      map[tier]++;
+    }
+  }else{
+    // Invalid: can't go from Mythic+ to lower rank
+    hasil.textContent = "⚠️ Tidak bisa turun dari Mythic+ ke rank bawah!";
     return;
   }
 
-  let map={},total=0;
-  RANK_ORDER.forEach(r=>map[r]=0);
-
-  for(let i=start;i<end;i++){
-    let tier = getPriceTier(i);
-    map[tier]++;
-    total+=price[tier]||0;
+  // Calculate total price
+  let total = 0;
+  for(let r of RANK_ORDER){
+    total += map[r].count * (price[r] || 0);
   }
 
-  let out=`--- ${title} ---\n`;
-  out+=`Dari: ${starToRank(start)}\n`;
-  out+=`Ke:   ${starToRank(end-1)}\n`;
-  out+=`Total: ${end-start} ⭐\n`;
-  out+=`---------------------\n`;
+  // Build output
+  let out = `--- ${title} ---\n`;
+  out += `Dari: ${getRankDisplay(startRank, startDiv, startStar)}\n`;
+  out += `Ke:   ${getRankDisplay(endRank, endDiv, endStar)}\n`;
+  out += `Total: ${totalStars} ⭐\n`;
+  out += `---------------------\n`;
 
-  for(let r of ["Mythic","Honor","Glory","Immortal"]){
-    if(map[r]>0){
-      out+=`${r.padEnd(10)} : ${map[r]} ⭐ x ${formatHarga(price[r])} = ${formatHarga(map[r]*price[r])}\n`;
+  for(let r of RANK_ORDER){
+    if(map[r].count > 0){
+      out += `${r.padEnd(10)} : ${map[r].count}⭐ x ${formatHarga(price[r])} = ${formatHarga(map[r].count * price[r])}\n`;
     }
   }
 
-  if(CURRENT_CURRENCY==="MYR"){
-    total+=FEE_MYR;
-    out+=`---------------------\n`;
-    out+=`Fee MYR     : ${formatHarga(FEE_MYR)}\n`;
+  if(CURRENT_CURRENCY === "MYR"){
+    total += FEE_MYR;
+    out += `---------------------\n`;
+    out += `Fee MYR     : ${formatHarga(FEE_MYR)}\n`;
   }
 
-  out+=`=====================\n`;
-  out+=`TOTAL        : ${formatHarga(total)}`;
-  hasil.textContent=out;
+  out += `=====================\n`;
+  out += `TOTAL        : ${formatHarga(total)}`;
+  hasil.textContent = out;
 }
 
 // ======================
-// HITUNG
+// STAR TO RANK (Lower ranks only)
+// ======================
+function starToRankLower(total){
+  let acc = 0;
+  for(let r of RANK_ORDER){
+    if(r === "Mythic") break;
+    let max = STAR_PER_RANK_STANDARD;
+    if(total < acc + max){
+      let s = total - acc;
+      return `${r} ${DIVISI[Math.floor(s / STAR_PER_DIV)]} ⭐${s % STAR_PER_DIV}`;
+    }
+    acc += max;
+  }
+  return `Mythic ⭐${total - acc}`;
+}
+
+// ======================
+// HITUNG FUNCTIONS
 // ======================
 function hitungPerBintang(){
-  const s1 = rankToStar(rank1.value,div1.value,+star1.value);
+  const s1 = rankToStar(rank1.value, div1.value, +star1.value);
   const s2 = s1 + (+addStar.value);
   if(+addStar.value <= 0){
     hasil.textContent = "⚠️ Tambah bintang harus lebih dari 0!";
     return;
   }
-  tampilInvoice(s1,s2,PRICE,"JOKI PER BINTANG");
+  tampilInvoice(rank1.value, div1.value, +star1.value, rank1.value, div1.value, s2, PRICE, "JOKI PER BINTANG");
 }
 
 function hitungAntarRank(){
-  let s1=rankToStar(rankA.value,divA.value,+starA.value);
-  let s2=rankToStar(rankB.value,divB.value,+starB.value);
-  if(s2<=s1){
-    hasil.textContent = "⚠️ Rank tujuan harus lebih tinggi dari rank awal!";
-    return;
-  }
-  tampilInvoice(s1,s2,PRICE,"JOKI ANTAR RANK");
+  tampilInvoice(rankA.value, divA.value, +starA.value, rankB.value, divB.value, +starB.value, PRICE, "JOKI ANTAR RANK");
 }
 
 function hitungGendongBintang(){
-  const s1 = rankToStar(rankG1.value,divG1.value,+starG1.value);
+  const s1 = rankToStar(rankG1.value, divG1.value, +starG1.value);
   const s2 = s1 + (+addStarG.value);
   if(+addStarG.value <= 0){
     hasil.textContent = "⚠️ Tambah bintang harus lebih dari 0!";
     return;
   }
-  tampilInvoice(s1,s2,GENDONG,"GENDONG PER BINTANG");
+  tampilInvoice(rankG1.value, divG1.value, +starG1.value, rankG1.value, divG1.value, s2, GENDONG, "GENDONG PER BINTANG");
 }
 
 function hitungGendongRank(){
-  let s1=rankToStar(rankGA.value,divGA.value,+starGA.value);
-  let s2=rankToStar(rankGB.value,divGB.value,+starGB.value);
-  if(s2<=s1){
-    hasil.textContent = "⚠️ Rank tujuan harus lebih tinggi dari rank awal!";
-    return;
-  }
-  tampilInvoice(s1,s2,GENDONG,"GENDONG ANTAR RANK");
+  tampilInvoice(rankGA.value, divGA.value, +starGA.value, rankGB.value, divGB.value, +starGB.value, GENDONG, "GENDONG ANTAR RANK");
 }
 
 // ======================
 // ESTIMASI
 // ======================
 function estimasiNominal(){
-  let harga = mode.value==="PRICE"?PRICE:GENDONG;
-  let cur=rankToStar(rankE.value,divE.value,+starE.value);
-  let saldo=+nominal.value;
+  let harga = mode.value === "PRICE" ? PRICE : GENDONG;
+  let curRank = rankE.value;
+  let curDiv = divE.value;
+  let curStar = +starE.value;
+  let saldo = +nominal.value;
 
   if(saldo <= 0){
     hasil.textContent = "⚠️ Nominal harus lebih dari 0!";
     return;
   }
 
-  let start=cur,used=0;
-  let iterations = 0;
+  let isLower = RANK_DIVISI.includes(curRank);
+  let start, used = 0, totalNaik = 0;
 
-  while(iterations < 10000){
-    let tier = getPriceTier(cur);
-    let price = harga[tier] || 0;
-    if(price <= 0 || price > saldo - used) break;
-    saldo -= price;
-    used += price;
-    cur++;
-    iterations++;
-  }
-
-  hasil.textContent=
+  if(isLower){
+    start = rankToStar(curRank, curDiv, curStar);
+    // Simulate climbing within lower ranks first
+    let current = start;
+    while(true){
+      let r = starToRankLower(current).split(" ")[0];
+      let price = harga[r] || 0;
+      if(price <= 0 || price > saldo - used) break;
+      used += price;
+      current++;
+      totalNaik++;
+    }
+    hasil.textContent =
 `--- ESTIMASI ---
-Rank Awal : ${starToRank(start)}
-Rank Akhir: ${starToRank(cur-1)}
-Naik      : ${cur-start} ⭐
+Rank Awal : ${getRankDisplay(curRank, curDiv, curStar)}
+Rank Akhir: ${starToRankLower(current - 1)}
+Naik      : ${totalNaik} ⭐
 Terpakai  : ${formatHarga(used)}
-Sisa      : ${formatHarga(saldo)}`;
+Sisa      : ${formatHarga(saldo - used)}`;
+  }else{
+    // Mythic+ estimation
+    start = +curStar;
+    let current = start;
+    while(true){
+      let tier = getMythicPlusTier(current);
+      let price = harga[tier] || 0;
+      if(price <= 0 || price > saldo - used) break;
+      used += price;
+      current++;
+      totalNaik++;
+    }
+    hasil.textContent =
+`--- ESTIMASI ---
+Rank Awal : ${getRankDisplay(curRank, curDiv, curStar)}
+Rank Akhir: ${curRank} ⭐${current - 1}
+Naik      : ${totalNaik} ⭐
+Terpakai  : ${formatHarga(used)}
+Sisa      : ${formatHarga(saldo - used)}`;
+  }
 }
 
 // ======================
