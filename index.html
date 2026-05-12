@@ -542,6 +542,176 @@
     }
 
     /* ═══════════════════════════════════════════
+       ADMIN PANEL
+       ═══════════════════════════════════════════ */
+    .admin-btn {
+      background: linear-gradient(135deg, rgba(167,139,250,0.15), rgba(192,132,252,0.15)) !important;
+      border-color: rgba(167,139,250,0.2) !important;
+    }
+    .admin-btn:hover {
+      box-shadow: 0 8px 24px rgba(167,139,250,0.25) !important;
+      border-color: rgba(167,139,250,0.4) !important;
+    }
+
+    .admin-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15,12,26,0.95);
+      backdrop-filter: blur(16px);
+      z-index: 1000;
+      overflow-y: auto;
+      padding: 20px;
+    }
+    .admin-overlay.show { display: block; }
+
+    .admin-container {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 20px 0 40px;
+    }
+
+    .admin-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .admin-header h2 {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 18px;
+      color: var(--pink-light);
+      margin-bottom: 8px;
+    }
+    .admin-header p {
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .admin-close {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text);
+      font-size: 20px;
+      cursor: pointer;
+      z-index: 1001;
+      transition: all 0.3s ease;
+    }
+    .admin-close:hover {
+      background: var(--pink);
+      transform: rotate(90deg);
+    }
+
+    .admin-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .admin-card h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--pink-light);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .price-edit-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .price-edit-row:last-child { border-bottom: none; }
+    .price-edit-label {
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .price-edit-input {
+      width: 140px;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: rgba(15,10,30,0.6);
+      color: var(--text);
+      font-family: 'Quicksand', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      text-align: right;
+      outline: none;
+      transition: all 0.25s ease;
+    }
+    .price-edit-input:focus {
+      border-color: var(--pink);
+      box-shadow: 0 0 0 3px rgba(255,107,157,0.1);
+    }
+
+    .admin-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .admin-actions button {
+      flex: 1;
+      padding: 14px;
+      border-radius: var(--radius-sm);
+      border: none;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .btn-save {
+      background: linear-gradient(135deg, #84fab0, #8fd3f4);
+      color: #0f3d2e;
+    }
+    .btn-save:hover { transform: translateY(-2px); }
+    .btn-export {
+      background: var(--bg-card);
+      border: 1px solid var(--border) !important;
+      color: var(--text);
+    }
+    .btn-export:hover { border-color: var(--pink) !important; }
+
+    .admin-notice {
+      background: rgba(255,107,157,0.1);
+      border: 1px solid rgba(255,107,157,0.2);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      margin-bottom: 20px;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+    .admin-notice strong { color: var(--pink-light); }
+
+    .admin-output {
+      display: none;
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: var(--radius-sm);
+      background: rgba(10,7,20,0.8);
+      border: 1px solid var(--border);
+      font-size: 11px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .admin-output.show { display: block; }
+
+    /* ═══════════════════════════════════════════
+       RESPONSIVE
+       ═══════════════════════════════════════════ */
+    /* ═══════════════════════════════════════════
        RESPONSIVE
        ═══════════════════════════════════════════ */
     @media (max-width: 420px) {
@@ -723,6 +893,59 @@
     </div>
 
     <pre id="hasil"></pre>
+
+    <!-- ADMIN PANEL (Hidden Overlay) -->
+    <div class="admin-overlay" id="adminOverlay">
+      <button class="admin-close" onclick="closeAdmin()">✕</button>
+      <div class="admin-container">
+        <div class="admin-header">
+          <h2>🔐 Admin Harga</h2>
+          <p>Edit harga langsung dari sini~ ✨</p>
+        </div>
+
+        <div class="admin-notice">
+          <strong>💡 Cara pakai:</strong><br>
+          1. Edit harga di bawah ini<br>
+          2. Klik <strong>"Simpan"</strong> untuk update langsung<br>
+          3. Klik <strong>"Export JSON"</strong> untuk copy ke GitHub<br>
+          4. Paste ke file <strong>config.json</strong> di repo GitHub
+        </div>
+
+        <div class="admin-card">
+          <h3>💎 Joki Rank (per ⭐)</h3>
+          <div class="price-edit-row"><span class="price-edit-label">Master</span><input class="price-edit-input" type="number" id="admin_p_Master" value="3000"></div>
+          <div class="price-edit-row"><span class="price-edit-label">GM</span><input class="price-edit-input" type="number" id="admin_p_GM" value="4000"></div>
+          <div class="price-edit-row"><span class="price-edit-label">Epic</span><input class="price-edit-input" type="number" id="admin_p_Epic" value="5000"></div>
+          <div class="price-edit-row"><span class="price-edit-label">Legend</span><input class="price-edit-input" type="number" id="admin_p_Legend" value="6000"></div>
+          <div class="price-edit-row"><span class="price-edit-label">Mythic</span><input class="price-edit-input" type="number" id="admin_p_Mythic" value="13000"></div>
+          <div class="price-edit-row"><span class="price-edit-label">Honor</span><input class="price-edit-input" type="number" id="admin_p_Honor" value="14000"></div>
+          <div class="price-edit-row"><span class="price-edit-label">Glory</span><input class="price-edit-input" type="number" id="admin_p_Glory" value="20000"></div>
+          <div class="price-edit-row"><span class="price-edit-label">Immortal</span><input class="price-edit-input" type="number" id="admin_p_Immortal" value="24000"></div>
+        </div>
+
+        <div class="admin-card">
+          <h3>🔥 Gendong (per ⭐)</h3>
+          <div class="price-edit-row"><span class="price-edit-label">Epic</span><input class="price-edit-input" type="number" id="admin_g_Epic" value="9000"></div>
+          <div class="price-edit-row"><span class="price-edit-label">Legend</span><input class="price-edit-input" type="number" id="admin_g_Legend" value="10000"></div>
+          <div class="price-edit-row"><span class="price-edit-label">Mythic</span><input class="price-edit-input" type="number" id="admin_g_Mythic" value="15000"></div>
+          <div class="price-edit-row"><span class="price-edit-label">Honor</span><input class="price-edit-input" type="number" id="admin_g_Honor" value="16000"></div>
+          <div class="price-edit-row"><span class="price-edit-label">Glory</span><input class="price-edit-input" type="number" id="admin_g_Glory" value="25000"></div>
+          <div class="price-edit-row"><span class="price-edit-label">Immortal</span><input class="price-edit-input" type="number" id="admin_g_Immortal" value="35000"></div>
+        </div>
+
+        <div class="admin-card">
+          <h3>💱 Lainnya</h3>
+          <div class="price-edit-row"><span class="price-edit-label">Fee MYR</span><input class="price-edit-input" type="number" id="admin_fee" value="10000"></div>
+        </div>
+
+        <div class="admin-actions">
+          <button class="btn-save" onclick="savePrices()">💾 Simpan</button>
+          <button class="btn-export" onclick="exportJSON()">📋 Export JSON</button>
+        </div>
+
+        <div class="admin-output" id="adminOutput"></div>
+      </div>
+    </div>
 
     <!-- FOOTER -->
     <div class="footer">
