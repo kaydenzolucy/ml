@@ -1,23 +1,47 @@
 // ======================
-// PRICE & GENDONG (PER STAR)
+// DYNAMIC PRICE CONFIG (loaded from config.json)
 // ======================
-const PRICE = {
-  Master:3000, GM:4000, Epic:5000, Legend:6000,
-  Mythic:13000, Honor:14000, Glory:20000, Immortal:24000
-};
-
-const GENDONG = {
-  Epic:9000, Legend:10000, Mythic:15000,
-  Honor:16000, Glory:25000, Immortal:35000
-};
+let PRICE = {};
+let GENDONG = {};
+let FEE_MYR = 10000;
+let FALLBACK_RATE = 0.00030;
 
 // ======================
 // CURRENCY CONFIG
 // ======================
 let CURRENT_CURRENCY = "IDR";
 let RATE_IDR_TO_MYR = 0.00030;
-const FALLBACK_RATE = 0.00030;
-const FEE_MYR = 10000;
+
+// ======================
+// LOAD CONFIG FROM JSON
+// ======================
+async function loadConfig(){
+  try{
+    const r = await fetch("config.json", { cache: "no-store" });
+    if(r.ok){
+      const d = await r.json();
+      if(d.PRICE) PRICE = d.PRICE;
+      if(d.GENDONG) GENDONG = d.GENDONG;
+      if(d.FEE_MYR) FEE_MYR = d.FEE_MYR;
+      if(d.FALLBACK_RATE) FALLBACK_RATE = d.FALLBACK_RATE;
+      console.log("✅ Config loaded!");
+      return true;
+    }
+  }catch(e){
+    console.log("❌ Failed to load config:", e);
+  }
+  // Fallback to default prices
+  PRICE = {
+    Master:3000, GM:4000, Epic:5000, Legend:6000,
+    Mythic:13000, Honor:14000, Glory:20000, Immortal:24000
+  };
+  GENDONG = {
+    Epic:9000, Legend:10000, Mythic:15000,
+    Honor:16000, Glory:25000, Immortal:35000
+  };
+  console.log("⚠️ Using default prices");
+  return false;
+}
 
 // ======================
 // ELEMENTS
@@ -48,11 +72,6 @@ const IMMORTAL_THRESHOLD = 100;
 async function fetchRate(){
   const apis = [
     {
-      name: "Frankfurter",
-      url: "https://api.frankfurter.app/latest?from=IDR&to=MYR",
-      extract: (d) => d?.rates?.MYR
-    },
-    {
       name: "ExchangeRate-API",
       url: "https://api.exchangerate-api.com/v4/latest/IDR",
       extract: (d) => d?.rates?.MYR
@@ -60,6 +79,11 @@ async function fetchRate(){
     {
       name: "Exchangerate.host",
       url: "https://api.exchangerate.host/latest?base=IDR&symbols=MYR",
+      extract: (d) => d?.rates?.MYR
+    },
+    {
+      name: "Frankfurter",
+      url: "https://api.frankfurter.app/latest?from=IDR&to=MYR",
       extract: (d) => d?.rates?.MYR
     }
   ];
@@ -476,9 +500,13 @@ function showPriceList(){
 // ======================
 // INIT
 // ======================
-fetchRate();
-showMenu(1);
-showPriceList();
+(async function init(){
+  await loadConfig();
+  loadLocalConfig(); // Override with localStorage if exists
+  await fetchRate();
+  showMenu(1);
+  showPriceList();
+})();
 
 // ======================
 // MINRA GALLERY
@@ -540,3 +568,117 @@ window.addEventListener("resize", () => {
     img.dataset.baseY = pos.y;
   });
 });
+
+// ======================
+// ADMIN PANEL FUNCTIONS
+// ======================
+function showAdmin(){
+  document.getElementById("adminOverlay").classList.add("show");
+  loadAdminPrices();
+  document.body.style.overflow = "hidden";
+}
+
+function closeAdmin(){
+  document.getElementById("adminOverlay").classList.remove("show");
+  document.body.style.overflow = "";
+}
+
+function loadAdminPrices(){
+  // Load current prices into admin form
+  const priceKeys = ["Master","GM","Epic","Legend","Mythic","Honor","Glory","Immortal"];
+  const gendongKeys = ["Epic","Legend","Mythic","Honor","Glory","Immortal"];
+
+  priceKeys.forEach(k => {
+    const el = document.getElementById("admin_p_" + k);
+    if(el && PRICE[k]) el.value = PRICE[k];
+  });
+
+  gendongKeys.forEach(k => {
+    const el = document.getElementById("admin_g_" + k);
+    if(el && GENDONG[k]) el.value = GENDONG[k];
+  });
+
+  document.getElementById("admin_fee").value = FEE_MYR;
+}
+
+function savePrices(){
+  // Read from admin form
+  const priceKeys = ["Master","GM","Epic","Legend","Mythic","Honor","Glory","Immortal"];
+  const gendongKeys = ["Epic","Legend","Mythic","Honor","Glory","Immortal"];
+
+  priceKeys.forEach(k => {
+    const el = document.getElementById("admin_p_" + k);
+    if(el) PRICE[k] = +el.value;
+  });
+
+  gendongKeys.forEach(k => {
+    const el = document.getElementById("admin_g_" + k);
+    if(el) GENDONG[k] = +el.value;
+  });
+
+  FEE_MYR = +document.getElementById("admin_fee").value;
+
+  // Save to localStorage
+  const config = {
+    updated: new Date().toISOString(),
+    PRICE: PRICE,
+    GENDONG: GENDONG,
+    FEE_MYR: FEE_MYR,
+    FALLBACK_RATE: FALLBACK_RATE
+  };
+  localStorage.setItem("minra_config", JSON.stringify(config));
+
+  // Update displays
+  showPriceList();
+
+  // Show success
+  const output = document.getElementById("adminOutput");
+  output.textContent = "✅ Harga berhasil disimpan!\n\nHarga baru akan langsung aktif di website ini.\nUntuk update permanen, klik 'Export JSON' dan paste ke config.json di GitHub.";
+  output.classList.add("show");
+
+  // Hide after 3 seconds
+  setTimeout(() => output.classList.remove("show"), 5000);
+}
+
+function exportJSON(){
+  const config = {
+    updated: new Date().toISOString().split("T")[0],
+    note: "Edit harga di bawah ini, lalu save. Website akan otomatis update!",
+    PRICE: PRICE,
+    GENDONG: GENDONG,
+    FEE_MYR: FEE_MYR,
+    FALLBACK_RATE: FALLBACK_RATE
+  };
+
+  const json = JSON.stringify(config, null, 2);
+
+  // Copy to clipboard
+  navigator.clipboard.writeText(json).then(() => {
+    const output = document.getElementById("adminOutput");
+    output.textContent = "📋 JSON sudah di-copy!\n\nCara update di GitHub:\n1. Buka config.json di repo GitHub\n2. Klik tombol ✏️ Edit\n3. Hapus semua isi, paste JSON ini\n4. Scroll bawah, isi 'Update harga' di commit message\n5. Klik 'Commit changes'\n\n✨ Website akan update dalam 1-2 menit!";
+    output.classList.add("show");
+  }).catch(() => {
+    const output = document.getElementById("adminOutput");
+    output.textContent = json + "\n\n⚠️ Gagal auto-copy. Silakan copy manual di atas.";
+    output.classList.add("show");
+  });
+}
+
+// Load from localStorage on startup (overrides config.json)
+function loadLocalConfig(){
+  try{
+    const saved = localStorage.getItem("minra_config");
+    if(saved){
+      const d = JSON.parse(saved);
+      if(d.PRICE) PRICE = d.PRICE;
+      if(d.GENDONG) GENDONG = d.GENDONG;
+      if(d.FEE_MYR) FEE_MYR = d.FEE_MYR;
+      if(d.FALLBACK_RATE) FALLBACK_RATE = d.FALLBACK_RATE;
+      console.log("✅ Loaded from localStorage");
+      return true;
+    }
+  }catch(e){
+    console.log("❌ localStorage error:", e);
+  }
+  return false;
+}
